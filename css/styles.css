@@ -1,0 +1,466 @@
+﻿/* **************************  Style By Tag Name**********************************/
+body
+{
+   
+    font-family:Calibri;
+   
+    font-weight:bold;
+    background-image:url('../img/bg2.jpg');
+   /* color:#7C7A7B;*/
+  
+}
+label
+{
+     text-align:right;
+}
+
+hr
+{
+    color:#EE494C;
+}
+
+input
+{
+	font-family:Calibri;
+    vertical-align:top;
+    font-size:1.0em;
+    border-radius: 5px;
+    border:1px solid #DDDDDD;
+	height:27px;
+}
+
+select
+{
+	font-family:Calibri;
+    vertical-align:top;
+    font-size:1.0em;
+    border-radius: 5px;
+    border:1px solid #DDDDDD;
+	height:28px;
+}
+textarea
+{
+    vertical-align:top;
+    font-size:1.0em;
+    border-radius: 5px;
+	font-family:Calibri;
+    border:1px solid #DDDDDD;
+	
+}
+/* **************************  Style By Element Id **********************************/
+#konektlogo
+{
+    position:absolute;
+    top:1%;
+    left:2%;
+}
+
+
+#header
+{
+    background:url('../img/footer.jpg');
+    background-repeat:repeat;
+   background-image:cover;
+   position:absolute;
+   top:0%;
+   left:0%;
+   width:100%;
+    color:#6E6E6E;
+    height:8%;
+	 min-height:8%;
+}
+
+#content
+{
+  
+    position:absolute;
+    width:96%;
+    height:80%;
+    left:2%;
+    min-height:80%;
+    top:9%;
+    background-image:url('../img/contentbg.jpg');
+    background-size:100%;
+	overflow:auto;
+}
+
+#leftContent
+{
+    position:absolute;
+    left:1%;
+    width:44%;
+    height:100%;
+	min-height:100%;
+  /*  background-color:#F2EFF1; */
+    padding-top:0%;
+  /*  border-right:1px solid #ee4c4e; */
+  /*  border-bottom:6px solid #ee4c4e; */
+}
+
+
+#rightContent
+{
+    position:absolute;
+    right:1%;
+    width:55%;
+    height:100%;
+	 min-height:100%;
+  /* background-color:#F2EFF1; */
+    padding-top:0%;
+   /* border-bottom:6px solid #ee4c4e; */
+}
+
+#customerfilter
+{
+    margin-left:3%;
+    margin-right:3%;
+	border-radius: 5px;
+	width:50% ;
+	font-size:1.2em;
+	 
+}
+
+#tablefilter
+{
+    margin-left:2%;
+    margin-right:2%;
+	border-radius: 5px;
+	width:25%;
+	font-size:1.0em;
+}
+
+#txtfilterdate
+{
+    border-radius: 5px;
+	width:16%;
+	font-size:1.0em;
+	margin-right:2%;
+}
+
+#drpPax
+{
+     width:85%;
+}
+#tabs
+{
+    width:87%;
+    height:78%;
+    border:none;
+}
+
+#tabs-1,#tabs-2,#tabs-3,#tabs-4
+{
+     height:88%;
+     overflow-y:auto;
+     overflow-x:auto;
+  text-align:center;
+}
+
+#footer
+{
+      background:url('../img/footer.jpg');
+    background-repeat:repeat;
+   background-image:cover;
+   position:fixed;
+   height:10%;
+   bottom:0%;
+   left:0%;
+   width:100%;
+}
+
+#spTotalCheckins, #spTotalPax
+{
+    font-size:2.2em;
+}
+
+#popupdiv
+{
+	
+	left: 40%;
+	position: absolute;
+	top: 40%; z-index: 9999;
+	display: block;
+}
+/*
+#lblDate
+{
+     margin-left:3%;
+     margin-right:18%;
+    vertical-align:top;
+    font-size:1.2em;
+    font-family:Calibri;
+}
+
+#lblTime
+{
+    margin-left:4%;
+     margin-right:2%;
+    vertical-align:top;
+    font-size:1.2em;
+    font-family:Calibri;
+}
+
+#txtDate
+{
+    width:20%;
+  
+}
+
+#txtTime
+{
+    width:18%;
+    margin-right:10%;
+}
+
+#txtPax
+{
+    width:40%;
+    margin-left:19%;
+    vertical-align:bottom;
+}
+*/
+/* **************************  Style By Class Name**********************************/
+.clock
+{
+    position:absolute;
+    top:25%;
+    left:45%;
+
+}
+
+.Filter
+{
+    vertical-align:middle;
+    margin-left:1%;
+    font-size:1em;
+    font-family:Arial Narrow;
+    color:#A0A0A0;
+}
+.Filter1
+{
+    vertical-align:middle;
+    padding-left:2%;
+    font-size:1em;
+    font-family:Arial Narrow;
+    color:#A0A0A0;
+}
+.namefields
+{
+   width:20%;float:left;text-align:right;margin-bottom:2%;
+}
+
+.textfields
+{
+    width:80%;float:left;margin-bottom:2%;
+}
+
+
+.FieldName
+{
+    margin-left:3%;
+    vertical-align:top;
+    font-family:Calibri;
+}
+
+
+.FieldBox
+{
+    
+	
+	width:70%;
+	margin-right:1%;
+	margin-left:10%;
+	/*float:right;*/
+}
+
+
+.SubmitButton
+{
+  /* 
+    width:110px;
+    height:38px;
+
+    vertical-align:top;
+*/
+}
+
+.SubmitButton1
+{
+  /*  
+    width:245px;
+    height:94px;
+    font-size:1.5em;
+    margin-right:2%;
+    margin-left:2%;
+    margin-top:1%;
+*/
+    vertical-align:middle;
+}
+.SubmitButton2
+{
+   /* margin-right:15px;
+    margin-left:15px;
+    width:200px;
+    height:80px;
+    font-size:1em;
+    white-space:normal;
+    vertical-align:bottom; 
+	 */
+}
+
+.staricon
+{
+    width:32px;
+    height:33px;
+}
+
+
+.red_line
+{
+width:100%;
+position:absolute;
+z-index:1;
+background-color:#ee4c4e;
+height:0.7%;
+left:0%;
+}
+   
+.radiooption
+{
+    margin-left:4%;
+	font-family:Calibri;
+}
+
+.searchbox
+{
+    margin-top:5%;
+    padding-bottom:2%;
+  
+    border-bottom:4px dotted #DEDEDE;
+}
+.searchbox1
+{
+     margin-top:5%;
+    margin-left:3%;
+    margin-bottom:4%;
+}
+.controlbox
+{
+   margin-bottom:2%;
+   width:100%;
+   font-size:1.0em;
+}
+
+.buttonbox
+{
+
+   margin-top:68%;
+   margin-left:28%; 
+  
+}
+
+.hdlogout
+{
+    position:absolute;
+    top:25%;
+    right: 4%;
+
+}
+
+
+.DetailBox
+{
+    position:relative;
+    font-size:0.85em !important;
+    color:#7C7A7B;
+    width:100%;
+    /*border:1px solid #DDDDDD;
+    padding:1% 1% 1% 1%;*/
+}
+
+.buttonpanel
+{
+   position:relative;
+}
+
+.spanField
+{
+   
+}
+
+.spanText
+{
+ 
+}
+
+.loading
+{
+	z-index:1;
+	position:fixed;
+	top:50%;
+	left:50%;
+}
+.wrapword{
+white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+white-space: -pre-wrap;      /* Opera 4-6 */
+white-space: -o-pre-wrap;    /* Opera 7 */
+white-space: pre-wrap;       /* css-3 */
+word-wrap: normal;       /* Internet Explorer 5.5+ */
+white-space: normal;
+}
+
+.ckmsgbtn {
+	-moz-box-shadow:inset 0px 3px 2px 1px #f29c93;
+	-webkit-box-shadow:inset 0px 3px 2px 1px #f29c93;
+	box-shadow:inset 0px 3px 2px 1px #f29c93;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fe1a00), color-stop(1, #ce0100) );
+	background:-moz-linear-gradient( center top, #fe1a00 5%, #ce0100 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fe1a00', endColorstr='#ce0100');
+	background-color:#fe1a00;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:2px solid #d83526;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:16px;
+	font-weight:bold;
+	padding:3px 18px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #b23e35;
+}.ckmsgbtn:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ce0100), color-stop(1, #fe1a00) );
+	background:-moz-linear-gradient( center top, #ce0100 5%, #fe1a00 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ce0100', endColorstr='#fe1a00');
+	background-color:#ce0100;
+}
+
+.restbtn {
+	-moz-box-shadow:inset 0px 3px 2px 1px #ffffff;
+	-webkit-box-shadow:inset 0px 3px 2px 1px #ffffff;
+	box-shadow:inset 0px 3px 2px 1px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:2px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:arial;
+	font-size:16px;
+	font-weight:bold;
+	padding:3px 9px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}.restbtn:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+
+

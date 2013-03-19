@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <!--------------------
+LOGIN FORM
+by: Amit Jakhu
+www.amitjakhu.com
+--------------------->
+    <!--META-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1">
+    <title>Konekt Concierge | Login Screen</title>
+    <!--SCRIPTS-->
+    <script type="text/javascript" src="js/jquery1.9.0.js"></script>
+    <!--STYLESHEETS-->
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <!--Slider-in icons-->
+    <script type="text/javascript">
+        if (sessionStorage.CSID != null && sessionStorage.CSID != "") {
+            window.location.href = "AppScreen.html";
+        }
+        $(document).ready(function () {
+
+
+            // ************These are to set default values for login screen *****************
+            $("#txtUserName").val('');
+            $("#txtPassword").val('');
+            $(".username").focus(function () {
+                $(".user-icon").css("left", "-48px");
+            });
+            $(".username").blur(function () {
+                $(".user-icon").css("left", "0px");
+            });
+
+            $(".password").focus(function () {
+                $(".pass-icon").css("left", "-48px");
+            });
+            $(".password").blur(function () {
+                $(".pass-icon").css("left", "0px");
+            });
+
+        });
+
+        function AuthenticateUser() {
+            $('#wrapper').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
+            var name = $.trim($("#txtUserName").val());
+            var pass = $.trim($("#txtPassword").val());
+
+
+            //************** AJAX CALL TO FETCH OUTLET DETAILS *************************
+
+            $.ajax({
+                type: "POST",
+                url: 'http://beta.mobikontech.com:8181/ConciergeAPI.php,
+                // url: 'http://192.168.1.52:8090/ConciergeAPI.php,
+                  data : {'tp': 'AUTH','u': name,'p':pass},
+                contentType: "application/json; charset=utf-8",
+                dataType: 'jsonp',
+                jsonpCallback: 'jsonpCBDTFn',
+                success: function (data) {
+                    if (data[0].Success == 1) {
+                        // alert(data[0].csid);
+                        sessionStorage.CSID = data[0].csid;
+                        sessionStorage.Acid = data[0].acid;
+                        sessionStorage.OutletId = data[0].eid;
+                        sessionStorage.BrkFastStart = data[0].bkfs;
+                        sessionStorage.BrkFastEnd = data[0].bkfe;
+                        sessionStorage.LunchStart = data[0].ls;
+                        sessionStorage.LunchEnd = data[0].le;
+                        sessionStorage.DinnerStart = data[0].ds;
+                        sessionStorage.DinnerEnd = data[0].de;
+                        sessionStorage.CountryCode = data[0].cc;
+                        window.location.href = "AppScreen.html";
+                        $(".loading").remove();
+                    }
+                    else {
+                        $("#txtUserName").val('');
+                        $("#txtPassword").val('');
+                        $("#lblInvalid").css('display', 'block');
+                        $(".loading").remove();
+                    }
+
+
+                }
+            });
+
+            function jsonpCBDTFn() {       /* JSON CALL BACK FOR LOGIN AUTHENTICATION */
+
+            }
+        }
+    </script>
+</head>
+<body>
+    <!--WRAPPER-->
+    <div id="wrapper">
+        <!--SLIDE-IN ICONS-->
+        <div class="user-icon">
+        </div>
+        <div class="pass-icon">
+        </div>
+        <!--END SLIDE-IN ICONS-->
+        <!--LOGIN FORM-->
+        <form name="login-form" class="login-form" action="javascript:AuthenticateUser();"
+        method="post">
+        <!--HEADER-->
+        <div class="header">
+            <!--TITLE-->
+            <h1>
+                Login Form</h1>
+            <!--END TITLE-->
+            <!--DESCRIPTION-->
+            <span>Fill out the form below to login.</span><!--END DESCRIPTION-->
+        </div>
+        <!--END HEADER-->
+        <!--CONTENT-->
+        <div class="content">
+            <!--USERNAME-->
+            <input id="txtUserName" type="text" placeholder="Enter Name Here" class="input username"
+                required /><!--END USERNAME-->
+            <!--PASSWORD-->
+            <input id="txtPassword" type="password" placeholder="Enter Password Here" class="input password"
+                required /><!--END PASSWORD-->
+        </div>
+        <!--END CONTENT-->
+        <!--FOOTER-->
+        <div class="footer">
+            <lable id="lblInvalid" style="display: none; color: Red;">**Invalid Credentials</lable>
+            <!--LOGIN BUTTON-->
+            <input type="submit" name="submit" value="Login" class="ckmsgbtn" /><!--END LOGIN BUTTON-->
+        </div>
+        <!--END FOOTER-->
+        </form>
+        <!--END LOGIN FORM-->
+    </div>
+    <!--END WRAPPER-->
+    <!--GRADIENT-->
+    <div class="gradient">
+    </div>
+    <!--END GRADIENT-->
+</body>
+</html>
