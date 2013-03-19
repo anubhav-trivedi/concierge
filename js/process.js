@@ -32,7 +32,7 @@ $(document).ready(function () {
         selectedList: 4
     });
 
-    $('#drpCCC option[value="' + sessionStorage.CountryCode + '"]').attr('selected', 'selected');
+    $('#drpCCC option[value="' + sessionStorage.CountryCode + '"]').prop('selected', 'selected');
 
     //    $("#drpPreference").multiselect("widget").find(":checkbox").each(function () {
     //        this.click(function () {
