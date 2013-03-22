@@ -1579,11 +1579,11 @@ function ValidateFields() {
         return false;
     }
 
-//    else if (Table == "") {
-//        $('#txtTable').attr('placeholder', 'Please enter Table Number');
-//        $('#txtTable').css('border', '1px solid #F51500');
-//        return false;
-//    }
+    else if (Table == "") {
+        $('#txtTable').attr('placeholder', 'Please enter Table Number');
+        $('#txtTable').css('border', '1px solid #F51500');
+        return false;
+    }
 
     return true;
 
