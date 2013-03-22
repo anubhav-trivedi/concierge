@@ -4,8 +4,9 @@
 // **** CopyRight : Mobikon Asia Technologies Pte. Ltd.********
 
 //var API = "";
- var API = 'http://beta.mobikontech.com:8181/ConciergeAPI.php';
+ //var API = 'http://beta.mobikontech.com:8181/ConciergeAPI.php';
 //var API = 'http://192.168.1.52:8090/ConciergeAPI.php';
+var API = 'http://70.38.78.105:8181/ConciergeAPI.php';
 var today = '';     // This  mm-dd-yy
 var today1 = '';    // This is yyyy-mm-dd
 var time = '';
@@ -299,7 +300,8 @@ $(document).ready(function () {
     $("#tabs").tabs();
     //************ Token Input Call To Fetch Customer Details*****************
 
-    $("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
+    $("#customerfilter").tokenInput("http://70.38.78.105:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
+	   //$("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + //"&accountid=" + acid + "&tp=GCI");
     // $("#customerfilter").tokenInput("http://192.168.1.52:8090/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
 
 
