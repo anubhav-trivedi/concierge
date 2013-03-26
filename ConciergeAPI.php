@@ -1160,14 +1160,17 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 							$Response .= "</Request>";						
 							$Response = "data=" . $Response;
 																							
-								$file = 'data.txt';
+								//$file = 'data.txt';
+								$file = 'concibkdata.txt';
 								$handle = fopen($file, 'a');
 								$logTime = new DateTime();
 								$logTime= $logTime->format('Y-m-d H:i:s');
+								fwrite($handle, "--------------------------------------------------------------------------------------------------");
+								fwrite($handle,"\r\n");								
 								fwrite($handle, $Response. "\r\n" . $logTime);
-								fwrite($handle, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@". "\r\n");
+								fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n");
 								fclose($handle);
-	
+
 							set_time_limit(0);							
 							$url = $GLOBALS['gSendMessageURL'] . "SendMessage";
 							
@@ -1185,7 +1188,7 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 							$retVal=curl_exec($ch);
 							
 							// close cURL resource, and free up system resources
-							curl_close($ch);      										
+							curl_close($ch);      												
 							
 							//async_call($url, $Response);
 							//http://codeissue.com/issues/i64e175d21ea182/how-to-make-asynchronous-http-calls-using-php						
@@ -1287,21 +1290,35 @@ function GenerateResponse($custrow,$outrow,$type)
 	$ManagerSubject ='';
 	$CustSubject ='';
 	
+	$AccId = $outrow['AccountId'];
 	$EntityId = $outrow['EntityId'];
 	
 	/* Get messages from xml */
 	$objDOM = new DOMDocument();
 	$objDOM->load("concimessages.xml");
-	//$xml = LoadXml('concimessages.xml'); 
-	//$account = $objDOM->getElementsByTagName("note");
-	
-	$xml_account = $objDOM->getElementsByTagName("Account");
 
-	$i = 0;
-	while ($xml_account->item($i) && $xml_account->item($i)->getAttribute('EntityId') != $EntityId)
-	{
-		$i += 1;
+	$accnodes = '';
+	$Exact_Account = '';	
+	
+	$myxpath    = new DOMXPath($objDOM);
+	$accnodes = $myxpath->query('//Account[@AccountId="'. $AccId .'" and @EntityId="'. $EntityId .'"]');
+
+	if ($accnodes ->length > 0) {	
+		$Exact_Account = $accnodes->item(0); 
 	}
+	else{
+		$accnodes = '';			
+		$accnodes = $myxpath->query('//DefaultMsg');		
+		$Exact_Account = $accnodes->item(0); 		
+	}
+		
+	/*	$xml_account = $objDOM->getElementsByTagName("Account");
+
+		$i = 0;
+		while ($xml_account->item($i) && $xml_account->item($i)->getAttribute('EntityId') != $EntityId)
+		{
+			$i += 1;
+		}
 		//echo $xml_account->item($i)->nodeValue;	
 		//get the value of the first node:
 		//$sniper->item(0)->nodeValue
@@ -1309,7 +1326,7 @@ function GenerateResponse($custrow,$outrow,$type)
 
 		//$sniper->item(0)->getAttribute('level')
 		
-		$Exact_Account = $xml_account->item($i); 
+		$Exact_Account = $xml_account->item($i); 		*/
 					
 		switch ($type) 
 		{
@@ -1353,7 +1370,8 @@ function GenerateResponse($custrow,$outrow,$type)
 				#$ManagerEmailTxt =	ResolveTags($Exact_Account->getElementsByTagName("BookingMEmail")->item(0)->nodeValue,$custrow);  
 				
 				/*	Offer send mail 	*/
-				/*	Offer send mail 	*/						
+				/*	Offer send mail 	*/	
+			
 				break;
 			case 'Amend':	
 
