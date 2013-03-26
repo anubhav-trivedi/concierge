@@ -4,9 +4,9 @@
 // **** CopyRight : Mobikon Asia Technologies Pte. Ltd.********
 
 //var API = "";
- //var API = 'http://beta.mobikontech.com:8181/ConciergeAPI.php';
+ var API = 'http://beta.mobikontech.com:8181/ConciergeAPI.php';
 //var API = 'http://192.168.1.52:8090/ConciergeAPI.php';
-var API = 'http://70.38.78.105:8181/ConciergeAPI.php';
+//var API = 'http://70.38.78.105:8181/ConciergeAPI.php';
 var today = '';     // This  mm-dd-yy
 var today1 = '';    // This is yyyy-mm-dd
 var time = '';
@@ -1176,8 +1176,8 @@ function CancelBooking(bid) {
 }
 
 function showoffers() {
-    $('#basic-modal-content10').modal();
-    $('#basic-modal-content10').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
+    
+    $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
     var DiningType = $('input[name=custype]:radio:checked').val();
     var Pax = $('#txtPax').val();
     var BookingDate = $('#txtDate').val();
@@ -1197,14 +1197,15 @@ function showoffers() {
         success: function (data) {
 
             if (data[0].Success == 1) {
-
+				$('#basic-modal-content10').modal();
                 SpecificOffers(data);
                 $('.loading').remove();
             }
             else {
                 $('.loading').remove();
-                $('#sofrtab').html('<tr><td>No Offers Found</td></tr><tr><td><input type="button" class="ckmsgbtn" id="proceed" onclick="Booking(this);" value="Proceed" /></td></tr>');
-            
+                //$('.simplemodal-close').click();
+               // $('#sofrtab').html('<tr><td>No Offers Found</td></tr><tr><td><input type="button" class="ckmsgbtn" id="proceed" onclick="Booking(this);" value="Proceed" /></td></tr>');
+                Booking(this);
             }
 
         },
@@ -1392,6 +1393,11 @@ function Booking(obj) {
                 $('#gtofr').removeAttr('disabled');
                 $('#skofr').removeAttr('disabled');
             }
+			 else if (data[0].Success == -1) {
+                $('.loading').remove();
+                $('.simplemodal-close').click();
+                $().toastmessage('showSuccessToast', "Table already booked");
+            }
             else {
                 $('.loading').remove();
                 $('#gtofr').removeAttr('disabled');
@@ -1407,6 +1413,7 @@ function Booking(obj) {
             $('#gtofr').removeAttr('disabled');
             RefreshDynamicDivs();
             $().toastmessage('showErrorToast', "Request Timed Out.");
+			$().toastmessage('showErrorToast', "Some Error Occured.");
         }
     });
 }
