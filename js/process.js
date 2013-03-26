@@ -1412,7 +1412,6 @@ function Booking(obj) {
             $('.simplemodal-close').click();
             $('#gtofr').removeAttr('disabled');
             RefreshDynamicDivs();
-            $().toastmessage('showErrorToast', "Request Timed Out.");
 			$().toastmessage('showErrorToast', "Some Error Occured.");
         }
     });
