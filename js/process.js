@@ -300,8 +300,8 @@ $(document).ready(function () {
     $("#tabs").tabs();
     //************ Token Input Call To Fetch Customer Details*****************
 
-    $("#customerfilter").tokenInput("http://70.38.78.105:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
-	   //$("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + //"&accountid=" + acid + "&tp=GCI");
+   // $("#customerfilter").tokenInput("http://70.38.78.105:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
+	   $("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
     // $("#customerfilter").tokenInput("http://192.168.1.52:8090/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
 
 
@@ -342,7 +342,7 @@ $(document).ready(function () {
                 $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to retreive checked-in tables.");
             }
         });
-    }, 30000);
+    }, 60000);
 
     //*************************AJAX CALL FOR GET TABLES ACCORDING TO PREFERENCES*************************************
     var p = '{"csid":' + csid + ',"prefs":"","bdt":"' + today + '","bt":"' + time + '"}';
@@ -1392,6 +1392,7 @@ function Booking(obj) {
                 $('#hdnTno').val('');
                 $('#gtofr').removeAttr('disabled');
                 $('#skofr').removeAttr('disabled');
+                $('#drpSex').val('Male');
             }
 			 else if (data[0].Success == -1) {
                 $('.loading').remove();
@@ -1455,6 +1456,7 @@ function resetFields() {
                     $('#txtName').attr('placeholder', '');
                     $('#txtEmail').attr('placeholder', '');
                     $('#txtMobile').attr('placeholder', '');
+                    $('#drpSex').val('Male');
                     while (tbnarr.length > 0) {
                         tbnarr.pop();
                     }
@@ -2022,7 +2024,6 @@ function DynamicAvailableTables() {
                 caps = parseInt(caps, 10) + parseInt(temp[0].PrefTblDtls[i].mcap, 10);
 			    str = str + "<img src=\"images/" + temp[0].PrefTblDtls[i].scap + "_marked.png\" onclick=\"changeIcon(this," + i + ");\" /></a></div>";
 			 
-                
             }
             
             else {
@@ -2119,6 +2120,12 @@ function DynamicReleaseTable(data) {
 }
 
 function changeIcon(obj, i) {
+    while (tbnarr.length > 0) {
+        tbnarr.pop();
+    }
+    while (tbiarr.length > 0) {
+        tbiarr.pop();
+    }
         var temp = $.parseJSON(sessionStorage.Avl);
         var tbl = $(obj).attr('src');
 
@@ -2395,7 +2402,7 @@ function FlashReleaseButton(data) {
                 $('.flrl').effect("highlight", {}, 1000)
             }, 1000);
 
-            setTimeout(function () { clearInterval(timer); }, 10000);
+            setTimeout(function () { clearInterval(timer); }, 5000);
         }
         else {
             $('.flrl').stop();
