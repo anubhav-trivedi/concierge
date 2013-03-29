@@ -266,11 +266,14 @@ $(document).ready(function () {
     $('#txtTime').click(function () {
         $('#txtTable').val('');
         $('#hdnTno').val('');
+        sessionStorage.tid = "";
+        sessionStorage.tnm = "";
     });
 
     $('#txtPax').click(function () {
         $('#txtTable').val('');
         $('#hdnTno').val('');
+
     });
 
     $("#drpPreference").change(function () {
@@ -300,8 +303,8 @@ $(document).ready(function () {
     $("#tabs").tabs();
     //************ Token Input Call To Fetch Customer Details*****************
 
-   // $("#customerfilter").tokenInput("http://70.38.78.105:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
-	   $("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
+    // $("#customerfilter").tokenInput("http://70.38.78.105:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
+    $("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
     // $("#customerfilter").tokenInput("http://192.168.1.52:8090/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
 
 
@@ -2002,6 +2005,7 @@ function GetAvailableTables() {
 var caps = 0;
 
 function DynamicAvailableTables() {
+
     caps = parseInt("0", 10);
     var temp = $.parseJSON(sessionStorage.Avl);
     $('#paxcal').html('');
@@ -2120,12 +2124,7 @@ function DynamicReleaseTable(data) {
 }
 
 function changeIcon(obj, i) {
-    while (tbnarr.length > 0) {
-        tbnarr.pop();
-    }
-    while (tbiarr.length > 0) {
-        tbiarr.pop();
-    }
+
         var temp = $.parseJSON(sessionStorage.Avl);
         var tbl = $(obj).attr('src');
 
@@ -2219,8 +2218,7 @@ function changeIcon(obj, i) {
 function AddTable() {
 
     if (caps >= parseInt($('#txtPax').val(), 10)) {
-
-        if (sessionStorage.tid == "" && $('#hdnStatus').val() != "") {
+     if (sessionStorage.tid == "" && $('#hdnStatus').val() != "") {
 
             tbiarr.shift();
             tbnarr.shift();
