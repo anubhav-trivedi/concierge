@@ -106,7 +106,7 @@ $(document).ready(function () {
     });
     */
     function SetTimings() {
-
+        
         var bs = sessionStorage.BrkFastStart;
         var be = sessionStorage.BrkFastEnd;
         var ls = sessionStorage.LunchStart;
@@ -263,13 +263,13 @@ $(document).ready(function () {
 	    defaultTime: ''
 	});
 
-    $('#txtTime').click(function () {
+ /*   $('#txtTime').click(function () {
         $('#txtTable').val('');
         $('#hdnTno').val('');
         sessionStorage.tid = "";
         sessionStorage.tnm = "";
     });
-
+*/
     $('#txtPax').click(function () {
         $('#txtTable').val('');
         $('#hdnTno').val('');
@@ -2372,6 +2372,10 @@ function SetTime(val) {
     $('#txtTime').val(val);
     $('#txtTime').focus();
     $('.simplemodal-close').click();
+    $('#txtTable').val('');
+    $('#hdnTno').val('');
+    sessionStorage.tid = "";
+    sessionStorage.tnm = "";
 }
 
 
