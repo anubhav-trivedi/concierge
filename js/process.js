@@ -1432,7 +1432,7 @@ function resetFields() {
                     var dispdate = dateFormat(new Date(), "dispDate", false)
                     $('#txtName').val('');
                     $('#txtName').removeAttr('disabled');
-                    $('#drpCCC').val('91');
+                    $('#drpCCC option[value="' + sessionStorage.CountryCode + '"]').prop('selected', 'selected');
                     $('#drpCCC').removeAttr('disabled');
                     $('#txtMobile').val('');
                     $('#txtMobile').removeAttr('disabled');
