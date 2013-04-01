@@ -557,10 +557,14 @@ function SetCheckinoutMessages($input)
 		$inputDecode =json_decode($input);
 		
 		$ConciergeSettingId = $inputDecode->{'csid'};
-		$CheckInSms = str_replace("'","''",trim($inputDecode->{'chkisms'}));
-		$CheckInEmail = str_replace("'","''",trim($inputDecode->{'chkiemail'}));
-		$CheckOutSms = str_replace("'","''",trim($inputDecode->{'chkosms'}));
-		$CheckOutEmail = str_replace("'","''",trim($inputDecode->{'chkoemail'}));
+		//$CheckInSms = str_replace("'","''",trim($inputDecode->{'chkisms'}));
+		//$CheckInEmail = str_replace("'","''",trim($inputDecode->{'chkiemail'}));
+		//$CheckOutSms = str_replace("'","''",trim($inputDecode->{'chkosms'}));
+		//$CheckOutEmail = str_replace("'","''",trim($inputDecode->{'chkoemail'}));		
+		$CheckInSms = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkisms'})),null,'UTF-8') ));  
+		$CheckInEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkiemail'})),null,'UTF-8') ));  
+		$CheckOutSms = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkosms'})),null,'UTF-8') ));  
+		$CheckOutEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkoemail'})),null,'UTF-8') )); 
 		#$BookingDate = $inputDecode->{'dt'};
 		
 		$aResults ='';
