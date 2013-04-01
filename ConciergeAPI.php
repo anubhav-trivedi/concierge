@@ -1565,6 +1565,8 @@ function ResolveTags($Message, $Row)
 	$Message = str_replace("[[RequestTime]]",$Row["RequestTime"],$Message);
 	$Message = str_replace("[[NoOfPeople]]",$Row["NoOfPeople"],$Message);
 	$Message = str_replace("[[OutletName]]",$Row["OutletName"],$Message);
+	$Message = str_replace("[[CountryCallingCode]]",$Row["CountryCallingCode"],$Message);			
+	$Message = str_replace("[[Cell_Number]]",$Row["Cell_Number"],$Message);		
 	
 	return $Message;
 }
