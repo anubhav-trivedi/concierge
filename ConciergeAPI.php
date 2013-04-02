@@ -2,7 +2,6 @@
 
 <?php 
 
-
 $FromDate = '';
 $ConnLink = '';
 
@@ -19,11 +18,13 @@ if(ISSET($_REQUEST['u']))
 if(ISSET($_REQUEST['p']))
 	$password = $_REQUEST['p'];	
 	
-$gSendMessageURL = "http://beta.mobikontech.com/konekt/service/konektapi.asmx/";
+//$gSendMessageURL = "http://beta.mobikontech.com/konekt/service/konektapi.asmx/";
+//$gSendMessageURL = "http://beta.mobikontech.com/konekt/service/konektapi.asmx/";
+$gSendMessageURL = "http://getkonekt.com/konekt/service/konektapi.asmx/";
 
 if(ISSET($_REQUEST['tp']))
 		$type = $_REQUEST['tp'];
-
+		
 if(ISSET($_REQUEST['d']))
 		$data = $_REQUEST['d'];
 			
@@ -96,7 +97,11 @@ if(ISSET($_REQUEST['d']))
 		case 'GPREFTBL':	
 			//get tables based on preference
 			GetPreferencebasedTables($data);
-			break;		
+			break;
+		//case 'SOFFBT':	
+			//send selected offer and book table
+		//	SendOfferWithBooking($data);
+		//	break;			
 		case 'AUTH':	
 			//authenticate login
 			Authenticate($loginName,$password);
@@ -178,8 +183,9 @@ else
 
 
 function ConnectToMySQL() {
-    $con = mysql_connect("192.168.1.52","conci","Mobikontech");
-	//$con = mysql_connect("localhost:3307","root","Marijuana@77");		
+    //$con = mysql_connect("192.168.1.52","conci","Mobikontech");
+	//$con = mysql_connect("localhost:3307","root","Marijuana@77");	
+	$con = mysql_connect("localhost:3306","root","");		
     if (!$con)
     {
       die('Could not connect: ' . mysql_error());
@@ -190,8 +196,9 @@ function ConnectToMySQL() {
 
 function ConnectToMySQLi() {
     
-	$mysqli = new mysqli("192.168.1.52","conci","Mobikontech");
-	//$mysqli =new mysqli("localhost:3307","root","Marijuana@77");	
+	//$mysqli = new mysqli("192.168.1.52","conci","Mobikontech");
+//$mysqli =new mysqli("localhost:3307","root","Marijuana@77");	
+$mysqli =new mysqli("localhost:3306","root","");
     if (mysqli_connect_errno())
     {
       die('Could not connect: ' . mysqli_connect_error());
@@ -217,8 +224,8 @@ function Authenticate($loginName,$password)
 			$ConnLink = ConnectToMySQL();
 			mysql_select_db("konektconci", $ConnLink);
 			
-	$sql = "CALL AuthUser('".$loginName."','".$password."');";
-						
+	$sql = "CALL AuthUser('".$loginName."','".$password."')";
+		
 	$result = mysql_query($sql);
 	
 	if (mysql_affected_rows()<=0) 
@@ -230,15 +237,14 @@ function Authenticate($loginName,$password)
 		while($row = mysql_fetch_array($result))
 		{
 			  $aResults[] = array( "oid"=>$row['OID'],"csid"=>$row['ConciergeSettingId'],"acid"=>$row['AccountId'] ,"eid"=>$row['EntityId'],
-"bkfs"=>$row['BreakfastStart'],"bkfe"=>$row['BreakfastEnd'],"ls"=>$row['LunchStart'],"le"=>$row['LunchEnd'],"ds"=>$row['DinnerStart']
-,"de"=>$row['DinnerEnd'],"cc"=>$row['CountryCallingCode'],"Success"=>1);
+"bkfs"=>$row['BreakfastStart'],"bkfe"=>$row['BreakfastEnd'],"ls"=>$row['LunchStart'],"le"=>$row['LunchEnd'],"ds"=>$row['DinnerStart'],"de"=>$row['DinnerEnd']
+,"cc"=>$row['CountryCallingCode'],"Success"=>1);
 
 			   
 		}
 	}
-		mysql_close($ConnLink);			
+	mysql_close($ConnLink);			
 		$json_response = json_encode($aResults);
-			
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
 			$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
@@ -424,7 +430,9 @@ function GetBookings($input)
 			$cresult = $BookingDate->format('Y-m-d');	
 			
 			$SQL = "CALL GetBookingDetails(".$ConciergeSettingId.",'".$cresult."','".$SearchText."','".$DineType."');"; 			
-									
+			#$SQL = "CALL GetBookingDetails('651908e1-72d0-4260-81a2-1e498dd3cc96','c473bc69-229d-4832-a599-60c7eedf50e5','2013-01-31','');";
+			
+			
 			$result = mysql_query($SQL) or die(mysql_error());  
 		
 			if (mysql_affected_rows()<=0) {					
@@ -564,7 +572,7 @@ function SetCheckinoutMessages($input)
 		$CheckInSms = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkisms'})),null,'UTF-8') ));  
 		$CheckInEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkiemail'})),null,'UTF-8') ));  
 		$CheckOutSms = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkosms'})),null,'UTF-8') ));  
-		$CheckOutEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkoemail'})),null,'UTF-8') )); 
+		$CheckOutEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkoemail'})),null,'UTF-8') ));  
 		#$BookingDate = $inputDecode->{'dt'};
 		
 		$aResults ='';
@@ -1023,6 +1031,7 @@ function SetCheckinTable($input)
 
 
 
+
 function SetBookTable($input)
 {
 		/* Parse xml */
@@ -1278,6 +1287,8 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 		# Return the response
 		echo $json_response;
 }
+
+
 
 function GenerateResponse($custrow,$outrow,$type)
 {	
@@ -1560,6 +1571,8 @@ $RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=
 					
 		return $RetVal;						
 }
+
+
 
 function ResolveTags($Message, $Row)
 {
@@ -2567,6 +2580,14 @@ function GetBookingBasedOffers($input)
 				echo $json_response;
 }
 
+function SendOfferWithBooking($input)
+{
+	
+	
+}
+
+
+
 
 function GetCustomerProfile($xml)
 {
@@ -2708,7 +2729,8 @@ function SetPreferenses($input)
 function SetConciergeOffers($input)
 {		
 		
-		 //echo $input;
+		
+		  //echo $input;
 		  $inputDecode =json_decode($input);
 		  
 		  
@@ -2740,6 +2762,7 @@ function SetConciergeOffers($input)
 		  $aResults ='';
 		  $ConnLink ='';
 		
+		
 		try
 		{
 			$ConnLink = ConnectToMySQL();
@@ -2770,7 +2793,7 @@ function SetConciergeOffers($input)
 			'".$NoOfOffers."','".$Criteria."','".$VoucherValidForSources."','".$SMSText."','".$EmailText."','".$SysDatetime."',
 			'".$AboutThisOffer."','".$NoOfPAX."','".$PAXCriteria."','".$IsSynced."');";
 										
-			echo $sql;
+			//echo $sql;
 			$result = mysql_query($sql) or die(mysql_error());  
 			
 		
