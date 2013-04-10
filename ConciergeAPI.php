@@ -1288,7 +1288,45 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 		echo $json_response;
 }
 
-
+function GenerateOccasionString($Msg,$custrow)
+{
+	$CustomString = "";
+	$ModifiedString= "";
+	
+	$ModifiedString= $Msg;
+	
+	$pos = strpos($ModifiedString, "[[OccasionString]]");
+	if($pos !== false)
+	{
+		//OccasionString exists
+		if($custrow["BDayDM"] !="")
+		{
+			if($custrow["BookDM"] == $custrow["BDayDM"])
+			{
+				$CustomString = "This customer having birthday on ". $custrow["DisplayBirthday"] . " ";
+			}
+		}						
+		if($custrow["AnnvDM"] !="")
+		{
+			if($custrow["BookDM"] == $custrow["AnnvDM"])
+			{
+				if($CustomString != "")
+				{
+					$CustomString .= " and  anniversary on ". $custrow["DisplayAnniversary"] . " ";
+				}
+				else
+				{
+					$CustomString = "This customer having anniversary on ". $custrow["DisplayAnniversary"] . " ";
+				}
+			}
+		}
+		
+		$ModifiedString = str_replace("[[OccasionString]]",$CustomString,$ModifiedString);			
+	}
+	
+	return $ModifiedString;
+					
+}
 
 function GenerateResponse($custrow,$outrow,$type)
 {	
@@ -1354,14 +1392,24 @@ function GenerateResponse($custrow,$outrow,$type)
 				$CustEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
 				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
 				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 				
-				
+								
 				$ManagerSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
 				getElementsByTagName("Manager")->item(0)->getElementsByTagName("SMS")->item(0)
 				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
 				
+				/*	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/	
+				/*  GenerateOccasionString converts [[OccasionString]] to birthday, anniversary message. */ 	
+				$ManagerSMSTxt = GenerateOccasionString($ManagerSMSTxt,$custrow);
+				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/
+				
 				$ManagerEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
 				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
 				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 	
+				
+				/*	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/
+				$ManagerEmailTxt = GenerateOccasionString($ManagerEmailTxt,$custrow);							
+				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/				
+				
 				
 				$CustSubject = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
 				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
@@ -1402,10 +1450,18 @@ function GenerateResponse($custrow,$outrow,$type)
 				getElementsByTagName("Manager")->item(0)->getElementsByTagName("SMS")->item(0)
 				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
 				
+				/*	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/
+				$ManagerSMSTxt = GenerateOccasionString($ManagerSMSTxt,$custrow);
+				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/		
+				
 				$ManagerEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
 				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
 				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 	
 				
+				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/		
+				$ManagerEmailTxt = GenerateOccasionString($ManagerEmailTxt,$custrow);
+				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/						
+								
 				$CustSubject = ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
 				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
 				->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow); 
