@@ -69,7 +69,7 @@ $(document).ready(function () {
     $('#txtDate').val(dispdate);
 
     //****** Below code displays time rounded to 15 min interval ************
-  //  var currentTimeRounded = new Date().getHours() + ":" + (15 * Math.round(new Date().getMinutes() / 15));
+    //  var currentTimeRounded = new Date().getHours() + ":" + (15 * Math.round(new Date().getMinutes() / 15));
     //  var dtime = dateFormat("1900/1/1 " + currentTimeRounded, "shortTime", false);
     //******************************
     var dtime = dateFormat(new Date(), "shortTime", false);
@@ -79,7 +79,7 @@ $(document).ready(function () {
         var dtime = dateFormat(new Date(), "shortTime", false);
         $('#txtTime').val(dtime);
     }, 1000);
-  
+
 
     //  alert(today);
     //   alert(currentts);
@@ -355,7 +355,7 @@ $(document).ready(function () {
 
             error: function () {
 
-               // $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to retreive checked-in tables.");
+                // $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to retreive checked-in tables.");
             }
         });
     }, 60000);
@@ -450,6 +450,7 @@ $(document).ready(function () {
                 $('#outer_tablel').html('<tr><td>No Bookings Found</td></tr>');
                 $('#outer_tabled').html('<tr><td>No Bookings Found</td></tr>');
                 $('#outer_tabledi').html('<tr><td>No Bookings Found</td></tr>');
+                sessionStorage.BookingDetails = null;
             }
         },
 
@@ -1786,7 +1787,7 @@ function RefreshDynamicDivs() {
         contentType: "application/json; charset=utf-8",
         dataType: 'jsonp',
         jsonpCallback: 'jsonpCBDTFn12',
-		timeout: 20000,
+        timeout: 20000,
         success: function (data) {
 
             if (data[0].Success == 1) {
@@ -1821,12 +1822,21 @@ function RefreshDynamicDivs() {
             else {
 
                 $('.loading').remove();
-               // $().toastmessage('showErrorToast', "Some Error Occured! Please try again");
+                $('#outer_tableb').html('<tr><td>No Bookings Found</td></tr>');
+                $('#outer_tablel').html('<tr><td>No Bookings Found</td></tr>');
+                $('#outer_tabled').html('<tr><td>No Bookings Found</td></tr>');
+                $('#outer_tabledi').html('<tr><td>No Bookings Found</td></tr>');
+                sessionStorage.BookingDetails = null;
+                // $().toastmessage('showErrorToast', "Some Error Occured! Please try again");
             }
         },
 
         error: function () {
             $('.loading').remove();
+            $('#outer_tableb').html('<tr><td>No Bookings Found</td></tr>');
+            $('#outer_tablel').html('<tr><td>No Bookings Found</td></tr>');
+            $('#outer_tabled').html('<tr><td>No Bookings Found</td></tr>');
+            $('#outer_tabledi').html('<tr><td>No Bookings Found</td></tr>');
             $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to refresh the tabs.");
         }
     });
