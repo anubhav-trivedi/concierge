@@ -4,11 +4,11 @@
 	<Booking>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]]. [[OccasionString]] ]]></Body>			
 			</SMS>
 			<Email>
 				<Subject><![CDATA[New Table Booking]]></Subject>
-				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]. [[OccasionString]] ]]></Body>				
 			</Email>
 		</Manager>
 		<Customer>
@@ -28,11 +28,11 @@
 	<Amend>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]. [[OccasionString]] ]]></Body>
 			</SMS>
 			<Email>
 				<Subject><![CDATA[Concierge : Table Booking Amend]]></Subject>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]. [[OccasionString]] ]]></Body>					
 			</Email>
 		</Manager>
 		<Customer>
@@ -77,11 +77,11 @@
 	<Booking>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</SMS>
 			<Email>
 				<Subject><![CDATA[New Table Booking]]></Subject>
-				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</Email>
 		</Manager>
 		<Customer>
@@ -101,11 +101,11 @@
 	<Amend>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</SMS>
 			<Email>
 				<Subject><![CDATA[Concierge : Table Booking Amend]]></Subject>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</Email>
 		</Manager>
 		<Customer>
@@ -151,11 +151,11 @@
  	<Booking>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</SMS>
 			<Email>
 				<Subject><![CDATA[New Table Booking]]></Subject>
-				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</Email>
 		</Manager>
 		<Customer>
@@ -175,11 +175,11 @@
 	<Amend>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</SMS>
 			<Email>
 				<Subject><![CDATA[Concierge : Table Booking Amend]]></Subject>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</Email>
 		</Manager>
 		<Customer>
@@ -225,11 +225,11 @@
  	<Booking>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A request for table booking has come.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</SMS>
 			<Email>
 				<Subject><![CDATA[New Table Booking]]></Subject>
-				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table is booked.Details are as: Name: [[CustomerName]];Mobile: [[Cell_Number]];Email: [[CustomerEmail]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</Email>
 		</Manager>
 		<Customer>
@@ -249,11 +249,11 @@
 	<Amend>
 		<Manager>
 			<SMS>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</SMS>
 			<Email>
 				<Subject><![CDATA[Concierge : Table Booking Amend]]></Subject>
-				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]] ]]></Body>
+				<Body><![CDATA[A table request is amended.Details are as: Name: [[CustomerName]];Request date: [[RequestDate]] at  [[RequestTime]];No of People: [[NoOfPeople]]  [[OccasionString]] ]]></Body>
 			</Email>
 		</Manager>
 		<Customer>
