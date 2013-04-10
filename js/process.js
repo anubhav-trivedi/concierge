@@ -2188,7 +2188,20 @@ function DynamicReleaseTable(data) {
             }
             str = str + "<div align='center'><span>" + Tabname[k] + "</span><br />";
             str = str + "<a align='center' href=\"javascript:void(0);\" onclick=\"ReleaseTable(" + data[0].RelTbls[i].cbid + ");\">";
-            str = str + "<img src=\"images/" + Tabcap[k] + "_booked.png\" /></a></div>";
+//*******************************
+            var scap = "";
+            var scaps = new Array();
+            scaps = ["1", "2", "3", "4", "5", "6", "8", "10", "12", "20"];
+            if ($.inArray(Tabcap[k], scaps) != -1) {
+                str = str + "<img src=\"images/" + Tabcap[k] + "_booked.png\" /></a></div>";
+            }
+            else {
+
+                str = str + "<img src=\"images/default_booked.png\" /></a></div>";
+            }
+//********************************
+
+            
             str = str + "<div align='center'>" + data[0].RelTbls[i].cnm + "</div>";
             str = str + "</td>";
            
