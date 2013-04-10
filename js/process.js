@@ -67,7 +67,20 @@ $(document).ready(function () {
 
     $('#txtfilterdate').val(dispdate);
     $('#txtDate').val(dispdate);
-    // $('#txtTime').val(time);
+
+    //****** Below code displays time rounded to 15 min interval ************
+  //  var currentTimeRounded = new Date().getHours() + ":" + (15 * Math.round(new Date().getMinutes() / 15));
+    //  var dtime = dateFormat("1900/1/1 " + currentTimeRounded, "shortTime", false);
+    //******************************
+    var dtime = dateFormat(new Date(), "shortTime", false);
+    $('#txtTime').val(dtime);
+    //********** below code updates the time every 15 minutes
+    setInterval(function () {
+        var dtime = dateFormat(new Date(), "shortTime", false);
+        $('#txtTime').val(dtime);
+    }, 1000);
+  
+
     //  alert(today);
     //   alert(currentts);
     timestamp = currentts;
@@ -106,7 +119,7 @@ $(document).ready(function () {
     });
     */
     function SetTimings() {
-        
+
         var bs = sessionStorage.BrkFastStart;
         var be = sessionStorage.BrkFastEnd;
         var ls = sessionStorage.LunchStart;
@@ -263,13 +276,13 @@ $(document).ready(function () {
 	    defaultTime: ''
 	});
 
- /*   $('#txtTime').click(function () {
-        $('#txtTable').val('');
-        $('#hdnTno').val('');
-        sessionStorage.tid = "";
-        sessionStorage.tnm = "";
+    /*   $('#txtTime').click(function () {
+    $('#txtTable').val('');
+    $('#hdnTno').val('');
+    sessionStorage.tid = "";
+    sessionStorage.tnm = "";
     });
-*/
+    */
     $('#txtPax').click(function () {
         $('#txtTable').val('');
         $('#hdnTno').val('');
@@ -312,7 +325,7 @@ $(document).ready(function () {
     
     *** SAMPLE ON HOW TO PARSE JSON  ***
     var json = '{"result":true,"count":1}',
-    obj = JSON && JSON.parse(json) || $.parseJSON(json);;
+    obj = JSON && JSON.parse(json) || $.parseJSON(json);
 
     alert(obj.count);
     */
@@ -342,7 +355,7 @@ $(document).ready(function () {
 
             error: function () {
 
-                $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to retreive checked-in tables.");
+               // $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to retreive checked-in tables.");
             }
         });
     }, 60000);
@@ -368,6 +381,53 @@ $(document).ready(function () {
         }
 
     });
+
+
+    //********** Below call is to fetch profiles according to time***********
+
+    var chr = new Date().getHours();
+    var cmin = new Date().getMinutes();
+    var csec = new Date().getSeconds();
+    if (chr < 10) { chr = '0' + chr } if (cmin < 10) { cmin = '0' + cmin } if (csec < 10) { csec = '0' + csec }
+    ctime = chr + ':' + cmin + ':' + csec;
+
+    if (ctime > sessionStorage.BrkFastStart && ctime < sessionStorage.BrkFastEnd) {
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"b"}';
+    }
+    else if (ctime > sessionStorage.LunchStart && ctime < sessionStorage.LunchEnd) {
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"l"}';
+    }
+    else if (ctime > sessionStorage.DinnerStart && ctime < sessionStorage.DinnerEnd) {
+
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"d"}';
+    }
+    else {
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":""}';
+    }
+
+
+    $.ajax({
+        type: "POST",
+        url: API,
+        data: { 'd': a, 'tp': 'GBT' },
+        contentType: "application/json; charset=utf-8",
+        dataType: 'jsonp',
+        jsonpCallback: 'jsonpCBDTFn18',
+        timeout: 20000,
+        success: function (data) {
+
+            if (data[0].Success == 1) {
+                sessionStorage.SBookingDetails = JSON.stringify(data);
+
+            }
+
+        },
+
+        error: function () {
+            // $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Bookings.");
+        }
+    });
+    //****************************************************************
     // Below Call is to  Get Booking Details
 
     var i = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":""}';
@@ -383,8 +443,6 @@ $(document).ready(function () {
 
             if (data[0].Success == 1) {
                 sessionStorage.BookingDetails = JSON.stringify(data);
-
-                //alert(temp[0].BDtls[0].CBId);
                 dynamicDivs(data);
             }
             else {
@@ -449,7 +507,6 @@ $(document).ready(function () {
 
                 for (var i = 0; i < data[0].PrefDtls.length; i++) {
                     $('#drpPreference').append("<option value=\"" + data[0].PrefDtls[i].StPrefId + "\">" + data[0].PrefDtls[i].Pref + "</option>");
-
                 }
                 $('#drpPreference').multiselect('refresh');   /* This is to refresh the list. Refresh is default method in plugin*/
                 $('#drpPreference').multiselect('uncheckAll');   /*This method is to unselect all options*/
@@ -524,14 +581,7 @@ $(document).ready(function () {
     });
 
 
-
-
-
-
-
-
     //**************************AJAX CALL FOR BADGER - GET BOOKING NOTIFICATIONS***********************************
-
 
 
     $(function () {
@@ -640,6 +690,10 @@ $(document).ready(function () {
     }
 
     function jsonpCBDTFn17() {		/* JSON CALL BACK FOR FETCHING OFFERS ACCORDING TO BOOKING DATE TIME */
+
+    }
+
+    function jsonpCBDTFn18() {		/* JSON CALL BACK FOR FETCHING BOOKINGS ACCORDING TO TIME */
 
     }
 
@@ -762,7 +816,6 @@ $(document).ready(function () {
                     $('#ddp').html(data[0].CoverStats[0].DinnerPAXDined);
                 }
 
-
             },
 
             error: function () {
@@ -815,7 +868,8 @@ function dynamicDivs(data) {
         else {
             strText = strText + " <td style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'>" + data[0].BDtls[i].Cell_Number + "</td>";
 
-        } strText = strText + " <td style='width:50%;'>";
+        }
+        strText = strText + " <td style='width:50%;'>";
         strText = strText + " <div style='float:left;text-align:right;width:40%;'>Pax :</div>";
         strText = strText + " <div style='text-align:left;float:left;width:60%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].Pax + "</div>";
         strText = strText + " </td>";
@@ -1224,10 +1278,7 @@ function showoffers() {
 }
 
 function bookTable() {
-    if (sessionStorage.BookingDetails != null) {
-        var temp = $.parseJSON(sessionStorage.BookingDetails);
-    }
-    //var arr = temp[0].BDtls
+    
 
     $('#txtName').css('border', '1px solid #DDDDDD');
     $('#txtMobile').css('border', '1px solid #DDDDDD');
@@ -1258,10 +1309,12 @@ function bookTable() {
     var Note = escape($('#txtNote').val());
     var BookingStatus = $('#hdnStatus').val();
     var CheckedInStatus = $('#hdnChecked').val();
-
+    
+	
     //***** Below Code is for Confirmation pop up in case of Table Booking ****
-
+	
     if (ValidateFields()) {
+	
         $.confirm({
             'title': 'Submit Confirmation',
             'message': 'You are about to submit details of ' + Name + ' for ' + Pax + ' people at ' + BookingDate + ',' + BookingTime + ' <br />Do you want to Continue?',
@@ -1310,7 +1363,7 @@ function Booking(obj) {
 
     if (hours < 10) { hours = '0' + hours } if (minutes < 10) { minutes = '0' + minutes } if (seconds < 10) { seconds = '0' + seconds }
     currentts = today + " " + hours + ":" + minutes + ":" + seconds;
-  //  debugger;
+
     $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
     $('#basic-modal-content10').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
    // setTimeout(function () { $(".loading").remove(); $().toastmessage('showErrorToast', "Request Timed Out."); $('.simplemodal-close').click(); }, 15000)
@@ -1384,7 +1437,8 @@ function Booking(obj) {
                 $('#txtPax').val('');
                 $('#txtDate').val(dispdate);
                 $('#txtDate').removeAttr('disabled');
-                $('#txtTime').val('');
+                var dtime = dateFormat(new Date(), "shortTime", false);
+                $('#txtTime').val(dtime);
                 $('#txtTime').removeAttr('disabled');
                 $('#txtTable').val('');
                 $('#txtNote').val('');
@@ -1432,7 +1486,7 @@ function resetFields() {
                     var dispdate = dateFormat(new Date(), "dispDate", false)
                     $('#txtName').val('');
                     $('#txtName').removeAttr('disabled');
-                    $('#drpCCC option[value="' + sessionStorage.CountryCode + '"]').prop('selected', 'selected');
+                    $('#drpCCC').val('91');
                     $('#drpCCC').removeAttr('disabled');
                     $('#txtMobile').val('');
                     $('#txtMobile').removeAttr('disabled');
@@ -1441,7 +1495,8 @@ function resetFields() {
                     $('#txtPax').val('');
                     $('#txtDate').val(dispdate);
                     $('#txtDate').removeAttr('disabled');
-                    $('#txtTime').val('');
+                    var dtime = dateFormat(new Date(), "shortTime", false);
+                    $('#txtTime').val(dtime);
                     $('#txtTime').removeAttr('disabled');
                     $('#txtTable').val('');
                     $('#txtNote').val('');
@@ -1597,6 +1652,17 @@ function ValidateFields() {
         $('#txtTable').css('border', '1px solid #F51500');
         return false;
     }
+    else if (sessionStorage.SBookingDetails != null) {
+
+        var temp = $.parseJSON(sessionStorage.SBookingDetails);
+		for(var i=0;i<temp[0].BDtls.length;i++) {
+		    
+		    if (Name.toLowerCase() == temp[0].BDtls[i].CustomerName.toLowerCase() && (Cell_Number == temp[0].BDtls[i].Cell_Number || Email.toLowerCase() == temp[0].BDtls[i].EmailId.toLowerCase())) {
+			  $().toastmessage('showWarningToast', "Oops! We're sorry but you cannot make a second booking!");
+			  return false;
+			}
+		}
+    }
 
     return true;
 
@@ -1652,13 +1718,7 @@ function postCheckInOutMsgs() {
     $('#basic-modal-content4').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
     //String.prototype.escapeSpecialChars = function() { return this.replace(/\\/g, "\\"). replace(/\n/g, "\\n"). replace(/\r/g, "\\r"). replace(/\t/g, "\\t"). replace(/\f/g, "\\f"); }
     var myJSON = '{"csid":' + csid + ',"chkisms":"' + escape($('#txtCIsms').val()) + '","chkiemail":"' + escape($('#txtCIeml').val()) + '","chkosms":"' + escape($('#txtCOsms').val()) + '","chkoemail":"' + escape($('#txtCOeml').val()) + '"}';
-    //alert(myJSON);
-    //var myJSONString = JSON.stringify(myJSON);
-    //alert(myJSONString);
-    //var myEscapedJSONString = myJSONString.escapeSpecialChars();
 
-
-    //alert(myEscapedJSONString);
     $.ajax({
         type: "POST",
         url: API,
@@ -2016,22 +2076,34 @@ function DynamicAvailableTables() {
     for (var i = 0; i < temp[0].PrefTblDtls.length; i++) {
         str = str + "<td style='border:1px solid'>";
         str = str + "<div align='center'><span>" + temp[0].PrefTblDtls[i].tnm +"(" + temp[0].PrefTblDtls[i].scap + ")</span><br />";
+		var scap = "";
+		var scaps = new Array();
+		scaps = ["1","2","3","4","5","6","8","10","12","20"];
+		if($.inArray(temp[0].PrefTblDtls[i].scap,scaps) != -1)
+		{
+		    scap = temp[0].PrefTblDtls[i].scap;			
+		}
+		else
+		{
+		 
+			scap = "default";		
+		}
         if (temp[0].PrefTblDtls[i].ias == "A") {
 
-            str = str + "<img src=\"images/" + temp[0].PrefTblDtls[i].scap + ".png\" onclick=\"changeIcon(this," + i + ");\" /></a></div>";
+            str = str + "<img src=\"images/" + scap + ".png\" onclick=\"changeIcon(this," + i + ");\" /></a></div>";
         }
         else if (temp[0].PrefTblDtls[i].ias == "NA") {
-            str = str + "<img src=\"images/" + temp[0].PrefTblDtls[i].scap + "_na.png\" /></a></div>";
+            str = str + "<img src=\"images/" + scap + "_na.png\" /></a></div>";
         }
         else {
             if (jQuery.inArray(temp[0].PrefTblDtls[i].tblno, tbiarr) != -1) {
                 caps = parseInt(caps, 10) + parseInt(temp[0].PrefTblDtls[i].mcap, 10);
-			    str = str + "<img src=\"images/" + temp[0].PrefTblDtls[i].scap + "_marked.png\" onclick=\"changeIcon(this," + i + ");\" /></a></div>";
+			    str = str + "<img src=\"images/" + scap + "_marked.png\" onclick=\"changeIcon(this," + i + ");\" /></a></div>";
 			 
             }
             
             else {
-                str = str + "<img src=\"images/" + temp[0].PrefTblDtls[i].scap + "_booked.png\" /></a>";
+                str = str + "<img src=\"images/" + scap + "_booked.png\" /></a>";
             }
         }
        // str = str + "<div><span>Seating Capacity: " + temp[0].PrefTblDtls[i].scap + "</span>";
@@ -2134,13 +2206,25 @@ function changeIcon(obj, i) {
 
         tempi = tbiarr;
         tempn = tbnarr;
-
+		var scap = "";
+		var scaps = new Array();
+		scaps = ["1","2","3","4","5","6","8","10","12","20"];
+		if($.inArray(temp[0].PrefTblDtls[i].scap,scaps) != -1)
+		{
+		    scap = temp[0].PrefTblDtls[i].scap;			
+		}
+		else
+		{
+		 
+			scap = "default";		
+		}
         if ($("#hdnStatus").val() != "") {
 
             //   alert("in edit");
             // alert(tbnarr + "--" + tbiarr);
-            if (tbl == "images/" + temp[0].PrefTblDtls[i].scap + "_marked.png") {
-                $(obj).attr("src", "images/" + temp[0].PrefTblDtls[i].scap + ".png");
+			
+            if (tbl == "images/" + scap + "_marked.png") {
+                $(obj).attr("src", "images/" + scap + ".png");
                 caps = caps - parseInt(temp[0].PrefTblDtls[i].mcap, 10);
 
                 tempn.pop(temp[0].PrefTblDtls[i].tnm);
@@ -2156,7 +2240,7 @@ function changeIcon(obj, i) {
             }
             else {
              if (caps < parseInt($('#txtPax').val(), 10)) {
-                $(obj).attr("src", "images/" + temp[0].PrefTblDtls[i].scap + "_marked.png");
+                $(obj).attr("src", "images/" + scap + "_marked.png");
                 caps = caps + parseInt(temp[0].PrefTblDtls[i].mcap, 10);
               
                     tempn.push(temp[0].PrefTblDtls[i].tnm + " ");
@@ -2178,8 +2262,8 @@ function changeIcon(obj, i) {
         }
         else {
             // alert("in normal");
-            if (tbl == "images/" + temp[0].PrefTblDtls[i].scap + "_marked.png") {
-                $(obj).attr("src", "images/" + temp[0].PrefTblDtls[i].scap + ".png");
+            if (tbl == "images/" + scap + "_marked.png") {
+                $(obj).attr("src", "images/" + scap + ".png");
                 caps = caps - parseInt(temp[0].PrefTblDtls[i].mcap, 10);
                 tbnarr.pop(temp[0].PrefTblDtls[i].tnm);
                 tbiarr.pop(temp[0].PrefTblDtls[i].tblno);
@@ -2194,7 +2278,7 @@ function changeIcon(obj, i) {
             }
             else {
               if (caps < parseInt($('#txtPax').val(), 10)) {
-                $(obj).attr("src", "images/" + temp[0].PrefTblDtls[i].scap + "_marked.png");
+                $(obj).attr("src", "images/" + scap + "_marked.png");
                 caps = caps + parseInt(temp[0].PrefTblDtls[i].mcap, 10);
                 tbnarr.push(temp[0].PrefTblDtls[i].tnm + " ");
                 tbiarr.push(temp[0].PrefTblDtls[i].tblno);
@@ -2416,6 +2500,15 @@ function FlashReleaseButton(data) {
 
 function FetchProfile(i) {
     $('#basic-modal-content12').modal();
+}
+
+
+function PrintWindow() {
+    var url = "printscreen.html";
+    var windowName = "Bookings";
+    window.open(url, windowName, "width=700,height=500,scrollbars=yes");
+
+    event.preventDefault();
 }
 /*
 function GetAllOffers (){
