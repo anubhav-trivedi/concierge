@@ -75,7 +75,7 @@ $(document).ready(function () {
     var dtime = dateFormat(new Date(), "shortTime", false);
     $('#txtTime').val(dtime);
     //********** below code updates the time every 15 minutes
-    setInterval(function () {
+   var timerinterval = setInterval(function () {
         var dtime = dateFormat(new Date(), "shortTime", false);
         $('#txtTime').val(dtime);
     }, 1000);
@@ -160,7 +160,7 @@ $(document).ready(function () {
 
                 count++;
 
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html());'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval("+ timerinterval +");'>" + tim + "</a></td>";
             }
             timings += "</tr></table>";
 
@@ -195,7 +195,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html());'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval(" + timerinterval + ");'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -236,7 +236,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html());'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval(" + timerinterval + ");'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -1440,6 +1440,10 @@ function Booking(obj) {
                 $('#txtDate').removeAttr('disabled');
                 var dtime = dateFormat(new Date(), "shortTime", false);
                 $('#txtTime').val(dtime);
+                var timerinterval = setInterval(function () {
+                    var dtime = dateFormat(new Date(), "shortTime", false);
+                    $('#txtTime').val(dtime);
+                }, 1000);
                 $('#txtTime').removeAttr('disabled');
                 $('#txtTable').val('');
                 $('#txtNote').val('');
@@ -1498,6 +1502,10 @@ function resetFields() {
                     $('#txtDate').removeAttr('disabled');
                     var dtime = dateFormat(new Date(), "shortTime", false);
                     $('#txtTime').val(dtime);
+                    var timerinterval = setInterval(function () {
+                        var dtime = dateFormat(new Date(), "shortTime", false);
+                        $('#txtTime').val(dtime);
+                    }, 1000);
                     $('#txtTime').removeAttr('disabled');
                     $('#txtTable').val('');
                     $('#txtNote').val('');
