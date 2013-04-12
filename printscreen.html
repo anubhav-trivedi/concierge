@@ -12,7 +12,7 @@
             for (i = 0; i < temp[0].BDtls.length; i++) {
 
                 var strText = "";
-                strText = strText + "<tr><td>" + parseInt(i+1, 10) + ".</td><td>" + temp[0].BDtls[i].CustomerName + "</td><td>" + temp[0].BDtls[i].Gender + "</td>";
+                strText = strText + "<tr><td>" + parseInt(i+1, 10) + ".</td><td>" + temp[0].BDtls[i].CustomerName + "</td>";
                 if (temp[0].BDtls[i].Cell_Number != "" && temp[0].BDtls[i].Cell_Number != null) {
                     strText = strText + "<td>" + temp[0].BDtls[i].CountryCallingCode + '-' + temp[0].BDtls[i].Cell_Number + "</td>";
                 }
@@ -20,7 +20,7 @@
                     strText = strText + "<td>" + temp[0].BDtls[i].Cell_Number + "</td>";
                 }
                 strText = strText + "<td>" + temp[0].BDtls[i].EmailId + "</td><td>" + temp[0].BDtls[i].Pax + "</td><td>" + temp[0].BDtls[i].DisplayDate + "</td><td>" + temp[0].BDtls[i].DisplayTime + "</td><td>" + temp[0].BDtls[i].SeatingPrefNames + "</td><td>" + temp[0].BDtls[i].TableNos + "</td>";
-                if (temp[0].BDtls[i].BookingSource == "Facebook") {
+              /*  if (temp[0].BDtls[i].BookingSource == "Facebook") {
                     strText = strText + "<td>Facebook</td>";
                 }
                 else if (temp[0].BDtls[i].BookingType == "Walking") {
@@ -29,7 +29,7 @@
                 else {
                     strText = strText + "<td>Calling</td>";
                 }
-                
+                */
                 strText = strText + "</tr>";
 
 
@@ -44,7 +44,7 @@
     });
 
 </script>
-<style>
+<style type="text/css"  media="screen">
 .ckmsgbtn {
 	-moz-box-shadow:inset 0px 3px 2px 1px #f29c93;
 	-webkit-box-shadow:inset 0px 3px 2px 1px #f29c93;
@@ -73,16 +73,36 @@
 }
 td
 {
-    font-family:Calibri;
     border:1px solid #dddddd;
+    font-family:Calibri;
+    font-size:1em;
+}
+#outer_table
+{
+    width:100%;
 }
 </style>
+
+<style type="text/css"  media="print">
+td
+{
+    font-family:Calibri;
+    font-size:8pt;
+    border:1px solid #dddddd;
+}
+
+.ckmsgbtn
+{
+    display:none;
+}
+</style>
+
 </head>
 <body>
 <input type = "button" class="ckmsgbtn" onclick="window.print();" value="Print" />
-<table id='outer_table' align="left" style="width:100%;" border="0" cellpadding="0" cellspacing="0">
+<table id='outer_table' align="left" border="0" cellpadding="0" cellspacing="0">
 
- <tr style="font-weight:bold"><td>S.No</td><td>Name</td><td>Sex</td><td>Mobile</td><td>Email</td><td>Pax</td><td>Date</td><td>Time</td><td>Preferences</td><td>Tables</td><td>Type</td></tr>
+ <tr style="font-weight:bold"><td>S.No</td><td>Name</td><td>Mobile</td><td>Email</td><td>Pax</td><td>Date</td><td>Time</td><td>Preferences</td><td>Tables</td></tr>
  
 </table>
 
