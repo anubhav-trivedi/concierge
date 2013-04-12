@@ -1,11 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <!--------------------
-LOGIN FORM
-by: Amit Jakhu
-www.amitjakhu.com
---------------------->
     <!--META-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1">
@@ -47,12 +42,13 @@ www.amitjakhu.com
             var pass = $.trim($("#txtPassword").val());
 
 
-            //************** AJAX CALL TO FETCH OUTLET DETAILS *************************
+      //************** AJAX CALL TO FETCH OUTLET DETAILS *************************
 
             $.ajax({
                 type: "POST",
                 url: 'http://beta.mobikontech.com:8181/ConciergeAPI.php',
-                // url: 'http://192.168.1.52:8090/ConciergeAPI.php',
+             //    url: 'http://192.168.1.52:8090/ConciergeAPI.php',
+              //  url : 'http://70.38.78.105:8181/ConciergeAPI.php',
                   data : {'tp': 'AUTH','u': name,'p':pass},
                 contentType: "application/json; charset=utf-8",
                 dataType: 'jsonp',
