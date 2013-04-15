@@ -21,6 +21,8 @@ if (sessionStorage.CSID == null || sessionStorage.CSID == "") {
 var csid = sessionStorage.CSID;
 var acid = sessionStorage.Acid;
 var eid = sessionStorage.OutletId;
+var timerinterval = "";
+dtime = "";
 $(document).ready(function () {
     $("#drpPreference").click(function () {
         $('.simplemodal-close').click();
@@ -70,13 +72,13 @@ $(document).ready(function () {
 
     //****** Below code displays time rounded to 15 min interval ************
     //  var currentTimeRounded = new Date().getHours() + ":" + (15 * Math.round(new Date().getMinutes() / 15));
-    //  var dtime = dateFormat("1900/1/1 " + currentTimeRounded, "shortTime", false);
+    //  dtime = dateFormat("1900/1/1 " + currentTimeRounded, "shortTime", false);
     //******************************
-    var dtime = dateFormat(new Date(), "shortTime", false);
+    dtime = dateFormat(new Date(), "shortTime", false);
     $('#txtTime').val(dtime);
     //********** below code updates the time every 15 minutes
-   var timerinterval = setInterval(function () {
-        var dtime = dateFormat(new Date(), "shortTime", false);
+    timerinterval = setInterval(function () {
+        dtime = dateFormat(new Date(), "shortTime", false);
         $('#txtTime').val(dtime);
     }, 1000);
 
@@ -1438,10 +1440,10 @@ function Booking(obj) {
                 $('#txtPax').val('');
                 $('#txtDate').val(dispdate);
                 $('#txtDate').removeAttr('disabled');
-                var dtime = dateFormat(new Date(), "shortTime", false);
+                dtime = dateFormat(new Date(), "shortTime", false);
                 $('#txtTime').val(dtime);
-                var timerinterval = setInterval(function () {
-                    var dtime = dateFormat(new Date(), "shortTime", false);
+                timerinterval = setInterval(function () {
+                    dtime = dateFormat(new Date(), "shortTime", false);
                     $('#txtTime').val(dtime);
                 }, 1000);
                 $('#txtTime').removeAttr('disabled');
@@ -1500,10 +1502,10 @@ function resetFields() {
                     $('#txtPax').val('');
                     $('#txtDate').val(dispdate);
                     $('#txtDate').removeAttr('disabled');
-                    var dtime = dateFormat(new Date(), "shortTime", false);
+                    dtime = dateFormat(new Date(), "shortTime", false);
                     $('#txtTime').val(dtime);
-                    var timerinterval = setInterval(function () {
-                        var dtime = dateFormat(new Date(), "shortTime", false);
+                    timerinterval = setInterval(function () {
+                        dtime = dateFormat(new Date(), "shortTime", false);
                         $('#txtTime').val(dtime);
                     }, 1000);
                     $('#txtTime').removeAttr('disabled');
@@ -2518,8 +2520,8 @@ function FlashReleaseButton(data) {
            var timer = setInterval(function () {
                 $('.flrl').effect("highlight", {}, 1000)
             }, 1000);
-
-            setTimeout(function () { clearInterval(timer); }, 5000);
+            clearTimeout(stm);
+            var stm = setTimeout(function () { clearInterval(timer); }, 5000);
         }
         else {
             $('.flrl').stop();
