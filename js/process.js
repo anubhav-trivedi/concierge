@@ -1789,6 +1789,9 @@ function BadgerCallBack() {
 
 function RefreshDynamicDivs() {
     $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
+    var dispdate = dateFormat(new Date(), "dispDate", false);
+     $('#txtfilterdate').val(dispdate);
+     $('#tablefilter').val('');
     var i = '{"csid":' + csid + ',"dt":"' + today + '","st":"","dit":""}';
     $.ajax({
         type: "POST",
@@ -2434,13 +2437,13 @@ function SearchBookings() {
                 else if (data[0].BDtls[0].Category == "Dinner") {
                     $("#tabs").tabs({ active: 2 });
                 }
-                var date = $('#txtfilterdate').val(dispdate);
-                var text = $('#tablefilter').val('');
+               // var date = $('#txtfilterdate').val(dispdate);
+               // var text = $('#tablefilter').val('');
                 $('.loading').remove();
             }
             else {
-                var date = $('#txtfilterdate').val(dispdate);
-                var text = $('#tablefilter').val('');
+               // var date = $('#txtfilterdate').val(dispdate);
+               // var text = $('#tablefilter').val('');
                 $('#outer_tableb').html('<tr><td>No Bookings Found</td></tr>');
                 $('#outer_tablel').html('<tr><td>No Bookings Found</td></tr>');
                 $('#outer_tabled').html('<tr><td>No Bookings Found</td></tr>');
