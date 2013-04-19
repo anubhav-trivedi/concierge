@@ -238,7 +238,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval(" + timerinterval + ");'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval(" + timerinterval + "); '>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -385,50 +385,7 @@ $(document).ready(function () {
     });
 
 
-    //********** Below call is to fetch profiles according to time***********
-
-    var chr = new Date().getHours();
-    var cmin = new Date().getMinutes();
-    var csec = new Date().getSeconds();
-    if (chr < 10) { chr = '0' + chr } if (cmin < 10) { cmin = '0' + cmin } if (csec < 10) { csec = '0' + csec }
-    ctime = chr + ':' + cmin + ':' + csec;
-
-    if (ctime > sessionStorage.BrkFastStart && ctime < sessionStorage.BrkFastEnd) {
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"b"}';
-    }
-    else if (ctime > sessionStorage.LunchStart && ctime < sessionStorage.LunchEnd) {
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"l"}';
-    }
-    else if (ctime > sessionStorage.DinnerStart && ctime < sessionStorage.DinnerEnd) {
-
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"d"}';
-    }
-    else {
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":""}';
-    }
-
-
-    $.ajax({
-        type: "POST",
-        url: API,
-        data: { 'd': a, 'tp': 'GBT' },
-        contentType: "application/json; charset=utf-8",
-        dataType: 'jsonp',
-        jsonpCallback: 'jsonpCBDTFn18',
-        timeout: 20000,
-        success: function (data) {
-
-            if (data[0].Success == 1) {
-                sessionStorage.SBookingDetails = JSON.stringify(data);
-
-            }
-
-        },
-
-        error: function () {
-            // $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Bookings.");
-        }
-    });
+   
     //****************************************************************
     // Below Call is to  Get Booking Details
 
@@ -1559,6 +1516,7 @@ function ValidatePaxNumber(elementValue) {
 
 
 function ValidateFields() {
+
     var Name = $.trim($('#txtName').val());
     //alert(Name);
     var Cell_Number = $.trim($('#txtMobile').val());
@@ -1580,6 +1538,10 @@ function ValidateFields() {
     if (chr < 10) { chr = '0' + chr } if (cmin < 10) { cmin = '0' + cmin } if (csec < 10) { csec = '0' + csec }
     var vtime = chr + ':' + cmin + ':' + csec;
    // alert(parseInt(d1.getMinutes(),10) - parseInt(cmin,10));
+   
+  
+   
+   
     if (Name == "") {
         $('#txtName').attr('placeholder', 'Please enter name');
         $('#txtName').css('border', '1px solid #F51500');
@@ -1663,8 +1625,8 @@ function ValidateFields() {
         $('#txtTable').css('border', '1px solid #F51500');
         return false;
     }
-    else if (sessionStorage.SBookingDetails != null) {
-
+    else if (sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "") {
+	
         var temp = $.parseJSON(sessionStorage.SBookingDetails);
 		for(var i=0;i<temp[0].BDtls.length;i++) {
 		    
@@ -2496,6 +2458,7 @@ function SetTime(val) {
     $('#hdnTno').val('');
     sessionStorage.tid = "";
     sessionStorage.tnm = "";
+	GetSBookings();      // This function Gets Specific Booking for lunch,dinner,brunch
 }
 
 
@@ -2545,6 +2508,56 @@ function PrintWindow() {
     window.open(url, windowName, "width=700,height=500,scrollbars=yes");
 
     event.preventDefault();
+}
+
+function GetSBookings()
+{
+    var Time = $.trim($('#txtTime').val());
+    var d2 = new Date('1900/01/01 ' + Time);
+    var BookingTime = dateFormat(d2, "isoTime", false);
+    //********** Below call is to fetch profiles according to time***********
+   
+    if (BookingTime >= sessionStorage.BrkFastStart && BookingTime <= sessionStorage.BrkFastEnd) {
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"b"}';
+    }
+    else if (BookingTime >= sessionStorage.LunchStart && BookingTime <= sessionStorage.LunchEnd) {
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"l"}';
+    }
+    else if (BookingTime >= sessionStorage.DinnerStart && BookingTime <= sessionStorage.DinnerEnd) {
+
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"d"}';
+    }
+    else {
+        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":""}';
+    }
+
+    $.ajax({
+        type: "POST",
+        url: API,
+        data: { 'd': a, 'tp': 'GBT' },
+        contentType: "application/json; charset=utf-8",
+        dataType: 'jsonp',
+        jsonpCallback: 'jsonpCBDTFn18',
+        timeout: 20000,
+        success: function (data) {
+
+            if (data[0].Success == 1) {
+                sessionStorage.SBookingDetails = JSON.stringify(data);
+            }
+			else
+			{
+				sessionStorage.SBookingDetails = "";
+			}
+
+        },
+
+        error: function () {
+		     sessionStorage.SBookingDetails = "";
+            // $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Bookings.");
+        }
+    });
+	
+	//**********************************************************************************
 }
 /*
 function GetAllOffers (){
