@@ -1058,7 +1058,7 @@ function AmendBooking(i) {
                     var Cell_Number = temp[0].BDtls[i].Cell_Number;
                     var Email = temp[0].BDtls[i].EmailId;
                     var Pax = temp[0].BDtls[i].Pax;
-					var d = new Date(temp[0].BDtls[i].DisplayDate +" " +temp[0].BDtls[i].BookingTime);
+                    var d = new Date(temp[0].BDtls[i].DisplayDate + " " + temp[0].BDtls[i].BookingTime);
                     var BookingDate = dateFormat(d, "dispDate", false);
                     var d1 = new Date(BookingDate + " " + temp[0].BDtls[i].BookingTime);
                     var BookingTime = dateFormat(d1, "shortTime", false);
@@ -1073,10 +1073,10 @@ function AmendBooking(i) {
                     var Status = temp[0].BDtls[i].BookingStatus;
                     var SysDate = currentts;
                     var tnarr = new Array();
-                    var tiarr = new Array();				
+                    var tiarr = new Array();
                     sessionStorage.tid = TabId;
                     sessionStorage.tnm = TabNo;
-					
+
                     tiarr = TabId.split(",");
                     tnarr = TabNo.split(",");
                     for (var j = 0; j < tnarr.length; j++) {
@@ -1084,7 +1084,8 @@ function AmendBooking(i) {
                         tbiarr.push(tiarr[j]);
                     }
 
-                     // alert(tbnarr + "--" + tbiarr);
+                    clearInterval(timerinterval);
+                    // alert(tbnarr + "--" + tbiarr);
                     $('#txtName').css('border', '1px solid #DDDDDD');
                     $('#txtMobile').css('border', '1px solid #DDDDDD');
                     $('#txtEmail').css('border', '1px solid #DDDDDD');
@@ -1529,6 +1530,8 @@ function ValidateFields() {
     var BookingTime = dateFormat(d2, "isoTime", false);
     var d1 = new Date($('#txtDate').val() + " " + BookingTime);
     var BookingDate = dateFormat(d1, "shortDate", false);
+    var BookingStatus = $('#hdnStatus').val();
+
     var day = new Date();
     day = dateFormat(day, "shortDate", false);
     var chr = new Date().getHours();
@@ -1625,7 +1628,7 @@ function ValidateFields() {
         $('#txtTable').css('border', '1px solid #F51500');
         return false;
     }
-    else if (sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "") {
+    else if (BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "") {
 	
         var temp = $.parseJSON(sessionStorage.SBookingDetails);
 		for(var i=0;i<temp[0].BDtls.length;i++) {
