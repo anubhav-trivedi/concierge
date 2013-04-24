@@ -1063,9 +1063,9 @@ function SetBookTable($input)
 		$RequestNote = str_replace("'","''",trim($inputDecode->{'reqnt'}));
 		$Source = $inputDecode->{'source'};
 		$Gender = $inputDecode->{'gen'};
-		$SeatingPreferenceIDs = $inputDecode->{'spref'};	//may be empty in new case
-		$TableIDs = $inputDecode->{'tabid'};
-		$TableNos = $inputDecode->{'tabno'};
+		$SeatingPreferenceIDs = str_replace("'","''",trim($inputDecode->{'spref'}));	//may be empty in new case
+		$TableIDs = str_replace("'","''",trim($inputDecode->{'tabid'}));
+		$TableNos = str_replace("'","''",trim($inputDecode->{'tabno'}));
 		
 		$DeviceDateTime = $inputDecode->{'sysdt'};
 		$OfferId =  $inputDecode->{'offid'};
