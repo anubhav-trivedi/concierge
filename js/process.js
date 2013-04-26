@@ -6,7 +6,7 @@
 //var API = "";
  var API = 'http://beta.mobikontech.com:8181/ConciergeAPI.php';
 //var API = 'http://192.168.1.52:8090/ConciergeAPI.php';
-//var API = 'http://70.38.78.105:8181/ConciergeAPI.php';
+//var API = 'http://getkonekt.com:8181/ConciergeAPI.php';
 var today = '';     // This  mm-dd-yy
 var today1 = '';    // This is yyyy-mm-dd
 var time = '';
@@ -22,7 +22,18 @@ var csid = sessionStorage.CSID;
 var acid = sessionStorage.Acid;
 var eid = sessionStorage.OutletId;
 var timerinterval = "";
-dtime = "";
+var dtime = "";
+
+function timercontrol()
+{
+   dtime = dateFormat(new Date(), "shortTime", false);
+    $('#txtTime').val(dtime);
+    //********** below code updates the time every 1 second
+    timerinterval = setInterval(function () {
+        dtime = dateFormat(new Date(), "shortTime", false);
+        $('#txtTime').val(dtime);
+    }, 1000);
+}
 $(document).ready(function () {
     $("#drpPreference").click(function () {
         $('.simplemodal-close').click();
@@ -74,14 +85,8 @@ $(document).ready(function () {
     //  var currentTimeRounded = new Date().getHours() + ":" + (15 * Math.round(new Date().getMinutes() / 15));
     //  dtime = dateFormat("1900/1/1 " + currentTimeRounded, "shortTime", false);
     //******************************
-    dtime = dateFormat(new Date(), "shortTime", false);
-    $('#txtTime').val(dtime);
-    //********** below code updates the time every 15 minutes
-    timerinterval = setInterval(function () {
-        dtime = dateFormat(new Date(), "shortTime", false);
-        $('#txtTime').val(dtime);
-    }, 1000);
-
+   
+		timercontrol();
 
     //  alert(today);
     //   alert(currentts);
@@ -162,7 +167,7 @@ $(document).ready(function () {
 
                 count++;
 
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval("+ timerinterval +");'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
             }
             timings += "</tr></table>";
 
@@ -197,7 +202,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval(" + timerinterval + ");'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -238,7 +243,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='SetTime($(this).html()); clearInterval(" + timerinterval + "); '>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -249,8 +254,6 @@ $(document).ready(function () {
             timings += "<br/>";
 
         $('#basic-modal-content11').html(timings);
-
-
 
     }
 
@@ -318,7 +321,7 @@ $(document).ready(function () {
     $("#tabs").tabs();
     //************ Token Input Call To Fetch Customer Details*****************
 
-    // $("#customerfilter").tokenInput("http://70.38.78.105:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
+    // $("#customerfilter").tokenInput("http://getkonekt.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
     $("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
     // $("#customerfilter").tokenInput("http://192.168.1.52:8090/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
 
@@ -850,7 +853,7 @@ function dynamicDivs(data) {
         strText = strText + " </td>";
         strText = strText + " </tr>";
         strText = strText + " <tr>";
-        strText = strText + " <td class='wrapword' style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'><span style='color:#104E7F'>Prefrences : </span>" + data[0].BDtls[i].SeatingPrefNames + "</td>";
+        strText = strText + " <td class='wrapword' style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'><span style='color:#104E7F'>Preferences : </span>" + data[0].BDtls[i].SeatingPrefNames + "</td>";
         strText = strText + " <td style='width:50%;'>";
         strText = strText + " <div style='float:left;text-align:right;width:40%;'>Table :</div>";
         strText = strText + " <div class='wrapword' style='text-align:left;float:left;width:60%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].TableNos + "</div>";
@@ -865,10 +868,13 @@ function dynamicDivs(data) {
         if (data[0].BDtls[i].CheckedIn == "No" && data[0].BDtls[i].BookingDate == today1 && data[0].BDtls[i].TableNos != "") {
             strText = strText + " <a href='javascript:void(0)' onclick='TableCheckIn(" + data[0].BDtls[i].CBId + ",\"" + data[0].BDtls[i].BookingTime + "\");'><img src='img/checkinbutton.jpg' style='padding-right:2%'></a>";
         }
-        if (data[0].BDtls[i].CheckOutStatus == "n") {
+        if (data[0].BDtls[i].CheckOutStatus == "n" && data[0].BDtls[i].BookingDate >= today1) {
             strText = strText + " <a href='javascript:void(0)' onclick='AmendBooking(" + i + ");'><img src='img/editbutton.jpg' style='padding-right:2%'></a>";
             strText = strText + "<a href='javascript:void(0)' onclick='CancelBooking(" + data[0].BDtls[i].CBId + ");'><img src='img/cancelbooking.jpg' style='padding-right:2%'></a>";
         }
+		else if(data[0].BDtls[i].BookingDate < today1){
+		    strText = strText + "<span style='color:red'></span>";
+		}
         else {
             strText = strText + "<span style='color:red'>Checked Out</span>";
         }
@@ -1308,6 +1314,7 @@ function bookTable() {
 }
 
 function Booking(obj) {
+clearInterval(timerinterval);
     $('#gtofr').attr('disabled', 'true');
     $('#skofr').attr('disabled', 'true');
 
@@ -1398,12 +1405,7 @@ function Booking(obj) {
                 $('#txtPax').val('');
                 $('#txtDate').val(dispdate);
                 $('#txtDate').removeAttr('disabled');
-                dtime = dateFormat(new Date(), "shortTime", false);
-                $('#txtTime').val(dtime);
-                timerinterval = setInterval(function () {
-                    dtime = dateFormat(new Date(), "shortTime", false);
-                    $('#txtTime').val(dtime);
-                }, 1000);
+                timercontrol();
                 $('#txtTime').removeAttr('disabled');
                 $('#txtTable').val('');
                 $('#txtNote').val('');
@@ -1460,12 +1462,7 @@ function resetFields() {
                     $('#txtPax').val('');
                     $('#txtDate').val(dispdate);
                     $('#txtDate').removeAttr('disabled');
-                    dtime = dateFormat(new Date(), "shortTime", false);
-                    $('#txtTime').val(dtime);
-                    timerinterval = setInterval(function () {
-                        dtime = dateFormat(new Date(), "shortTime", false);
-                        $('#txtTime').val(dtime);
-                    }, 1000);
+                    timercontrol();
                     $('#txtTime').removeAttr('disabled');
                     $('#txtTable').val('');
                     $('#txtNote').val('');
@@ -1506,7 +1503,7 @@ function ValidateEmail(elementValue) {
     return emailPattern.test(elementValue);
 }
 function ValidateMobileNumber(elementValue) {
-    var mob_num = /^\d{1,11}$/;
+    var mob_num = /^\d{1,10}$/;
     return mob_num.test(elementValue);
 }
 
@@ -1542,9 +1539,7 @@ function ValidateFields() {
     var vtime = chr + ':' + cmin + ':' + csec;
    // alert(parseInt(d1.getMinutes(),10) - parseInt(cmin,10));
    
-  
-   
-   
+
     if (Name == "") {
         $('#txtName').attr('placeholder', 'Please enter name');
         $('#txtName').css('border', '1px solid #F51500');
@@ -1557,7 +1552,6 @@ function ValidateFields() {
         $('#txtEmail').attr('placeholder', 'Please enter Mobile Number or Email');
         $('#txtEmail').css('border', '1px solid #F51500');
         return false;
-
 
     }
     else if (Cell_Number != "" && !ValidateMobileNumber(Cell_Number)) {
@@ -1740,7 +1734,6 @@ function FetchCheckInOutMsgs() {
                 $('#txtCOsms').val(unescape(data[0].ChkMsg[0].ChkOSms));
                 $('#txtCOeml').val(unescape(data[0].ChkMsg[0].ChkOEmail));
             }
-
         },
 		error: function(){
 		 $().toastmessage('showErrorToast', "Some Error Occured");
@@ -1863,7 +1856,7 @@ function ThirdPartyBookings(data) {
         strText = strText + " </td>";
         strText = strText + " </tr>";
         strText = strText + " <tr>";
-        strText = strText + " <td style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'><span style='color:#104E7F'>Prefrences : </span>" + data[0].BDtls[i].SeatingPrefNames + "</td>";
+        strText = strText + " <td style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'><span style='color:#104E7F'>Preferences : </span>" + data[0].BDtls[i].SeatingPrefNames + "</td>";
         strText = strText + " <td style='width:50%;'>";
         strText = strText + " <div style='float:left;text-align:right;width:40%;'>Table:</div>";
         strText = strText + " <div style='text-align:left;float:left;width:60%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].TableNos + "</div>";
