@@ -1766,6 +1766,7 @@ function RefreshDynamicDivs() {
 
                 //alert(temp[0].BDtls[0].CBId);
                 dynamicDivs(data);
+				RefreshCounter();
                 var chr = new Date().getHours();
                 var cmin = new Date().getMinutes();
                 var csec = new Date().getSeconds();
@@ -1788,7 +1789,7 @@ function RefreshDynamicDivs() {
                     $("#tabs").tabs({ active: 3 });
                 }
                 $('.loading').remove();
-
+			
             }
             else {
 
