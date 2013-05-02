@@ -435,7 +435,7 @@ $(document).ready(function () {
         contentType: "application/json; charset=utf-8",
         dataType: 'jsonp',
         jsonpCallback: 'jsonpCBDTFn4',
-        timeout: 20000,
+       // timeout: 20000,
         success: function (data) {
             if (data[0].TotChk != "" && data[0].TotChk != null && data[0].TotPax != "" && data[0].TotPax != null) {
 
@@ -2427,7 +2427,7 @@ function RefreshCounter() {
         contentType: "application/json; charset=utf-8",
         dataType: 'jsonp',
         jsonpCallback: 'jsonpCBDTFn4',
-		timeout: 20000,
+		//timeout: 20000,
         success: function (data) {
             if (data[0].TotChk != "" && data[0].TotChk != null && data[0].TotPax != "" && data[0].TotPax != null) {
 
