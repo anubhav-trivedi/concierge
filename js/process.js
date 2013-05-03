@@ -533,7 +533,6 @@ $(document).ready(function () {
 
             }
 
-
         },
 
         error: function () {
@@ -846,17 +845,20 @@ function dynamicDivs(data) {
         strText = strText + " </tr>";
 
         strText = strText + " <tr>";
-        strText = strText + " <td style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'></td>"
-        strText = strText + " <td style='width:50%;'>";
-        strText = strText + " <div style='float:left;text-align:right;width:40%;'>Time :</div>";
+        strText = strText + " <td style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'>"
+		strText = strText + " <div style='float:left;text-align:left;width:20%;'>Table :</div>";
+		strText = strText + " <div class='wrapword' style='text-align:left;float:left;width:80%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].TableNos + "</div>";
+        strText = strText + " </td>";
+		strText = strText + " <td style='width:50%;'>";
+        strText = strText + " <div style='float:left;text-align:right;width:40%;'>Booking Time :</div>";
         strText = strText + " <div style='text-align:left;float:left;width:60%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].DisplayTime + "</div>";
         strText = strText + " </td>";
         strText = strText + " </tr>";
         strText = strText + " <tr>";
         strText = strText + " <td class='wrapword' style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'><span style='color:#104E7F'>Preferences : </span>" + data[0].BDtls[i].SeatingPrefNames + "</td>";
         strText = strText + " <td style='width:50%;'>";
-        strText = strText + " <div style='float:left;text-align:right;width:40%;'>Table :</div>";
-        strText = strText + " <div class='wrapword' style='text-align:left;float:left;width:60%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].TableNos + "</div>";
+        strText = strText + " <div style='float:left;text-align:right;width:40%;'>Check-In Time :</div>";
+        strText = strText + " <div style='text-align:left;float:left;width:60%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].CheckInTime + "</div>";
         strText = strText + " </td>";
         strText = strText + " </tr>";
         strText = strText + " <tr>";
@@ -905,7 +907,6 @@ function dynamicDivs(data) {
             }
             else
                 $('#outer_tableb').append(strText);
-
         }
 
         if (data[0].BDtls[i].Category == 'Lunch') {
@@ -2441,7 +2442,7 @@ function RefreshCounter() {
 
         error: function () {
 
-            $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Total Checkins and Pax.");
+         //   $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Total Checkins and Pax.");
         }
     });
 }
