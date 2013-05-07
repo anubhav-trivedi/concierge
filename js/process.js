@@ -1000,8 +1000,9 @@ function TableCheckIn(bid,btime) {
                                 }
                                 else if (data[0].Success == -2) {
                                     $('.loading').remove();
-                                    $().toastmessage('showWarningToast', "Table can only be checked in <br \> + - 15 minutes from booking time.<br \> Please edit this booking to check-in");
-                                }
+                                   // $().toastmessage('showWarningToast', "Table can only be checked in <br \> + - 15 minutes from booking time.<br \> Please edit this booking to check-in");
+                                   $().toastmessage('showWarningToast', "Sorry, Outlet timing is over.");
+							   }
                                 else {
                                     $('.loading').remove();
                                     $().toastmessage('showErrorToast', "Table Checked In Failed");
