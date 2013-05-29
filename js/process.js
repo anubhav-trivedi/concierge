@@ -1061,7 +1061,18 @@ function AmendBooking(i) {
                     var temp = $.parseJSON(sessionStorage.BookingDetails);
                     var ConciergeSettingId = temp[0].BDtls[i].CSId;
                     var ConciergeBookingId = temp[0].BDtls[i].CBId;
-                    var Name = temp[0].BDtls[i].CustomerName;
+					var TName = temp[0].BDtls[i].CustomerName.split('. ');
+					
+					if(TName[0] == "Mr" || TName[0] == "Ms")
+					{
+					  var Title = TName[0];
+                      var Name = TName[1];
+					}
+					else
+					{
+						var Title = "";
+						var Name = temp[0].BDtls[i].CustomerName;
+					}
                     var CountryCallingCode = temp[0].BDtls[i].CountryCallingCode;
                     var Cell_Number = temp[0].BDtls[i].Cell_Number;
                     var Email = temp[0].BDtls[i].EmailId;
@@ -1102,7 +1113,8 @@ function AmendBooking(i) {
                     $('#txtName').attr('placeholder', '');
                     $('#txtEmail').attr('placeholder', '');
                     $('#txtMobile').attr('placeholder', '');
-
+ 
+					$('#drpTitle').val(Title);
                     $('#txtName').val(Name);
                     $('#txtName').attr('disabled', 'true');
                     $('#drpCCC').val(CountryCallingCode);
@@ -1337,11 +1349,14 @@ clearInterval(timerinterval);
     $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
     $('#basic-modal-content10').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
    // setTimeout(function () { $(".loading").remove(); $().toastmessage('showErrorToast', "Request Timed Out."); $('.simplemodal-close').click(); }, 15000)
-    var Name = $('#txtName').val();
-    var Email = $('#txtEmail').val();
-    var Pax = $('#txtPax').val();
+    if($('#drpTitle').val() != "")
+	 var Name = $('#drpTitle').val() +'. '+$.trim($('#txtName').val());
+	else
+     var Name = $.trim($('#txtName').val());	
+    var Email = $.trim($('#txtEmail').val());
+    var Pax = $.trim($('#txtPax').val());
     var Cell_Country = $('#drpCCC').val();
-    var Cell_Number = $('#txtMobile').val();
+    var Cell_Number = $.trim($('#txtMobile').val());
     var RequestNote = $('#txtNote').val();
     var d2 = new Date('1900/01/01 ' + $('#txtTime').val());
     var BookingTime = dateFormat(d2, "isoTime", false);
