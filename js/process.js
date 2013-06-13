@@ -1533,7 +1533,7 @@ function ValidatePaxNumber(elementValue) {
 function ValidateFields() {
 
     var Name = $.trim($('#txtName').val());
-    //alert(Name);
+    
     var Cell_Number = $.trim($('#txtMobile').val());
     var Email = $.trim($('#txtEmail').val());
     var Pax = $.trim($('#txtPax').val());
@@ -1642,9 +1642,43 @@ function ValidateFields() {
     else if (BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "") {
 	
         var temp = $.parseJSON(sessionStorage.SBookingDetails);
+		
 		for(var i=0;i<temp[0].BDtls.length;i++) {
-		    
-		    if (Name.toLowerCase() == temp[0].BDtls[i].CustomerName.toLowerCase() && (Cell_Number == temp[0].BDtls[i].Cell_Number || Email.toLowerCase() == temp[0].BDtls[i].EmailId.toLowerCase())) {
+		
+		// CODE ADDED BY ANUBHAV FOR REPEAT ENTRY VALIDATION
+		var TName = temp[0].BDtls[i].CustomerName.split('. ');
+			var SName = "";	
+			var SCell = "";
+			var SEmail = "";
+					if(TName[0] == "Mr" || TName[0] == "Ms")
+					{
+			
+                       SName = TName[1];
+					}
+					else
+					{
+			
+						 SName = temp[0].BDtls[i].CustomerName;
+					}
+					
+					if(temp[0].BDtls[i].Cell_Number == "")
+					{
+					    SCell = "null";
+					}
+					else
+					{
+					   SCell = temp[0].BDtls[i].Cell_Number;
+					}
+					
+					if(temp[0].BDtls[i].EmailId == "")
+					{
+					    SEmail = "null";
+					}
+					else
+					{
+					   SEmail = temp[0].BDtls[i].EmailId;
+					}
+		    if (Name.toLowerCase() == SName.toLowerCase() && (Cell_Number == SCell || Email.toLowerCase() == SEmail.toLowerCase())) {
 			  $().toastmessage('showWarningToast', "Oops! We're sorry but you cannot make a second booking!");
 			  return false;
 			}
