@@ -562,7 +562,20 @@
             var arrItems = new Array();
             arrItems = item.split(" - ");
 
-            $('#txtName').val($.trim(arrItems[0]));
+		var TName = arrItems[0].split('. ');
+					
+					if(TName[0] == "Mr" || TName[0] == "Ms")
+					{
+					  $('#drpTitle').val(TName[0]);
+                      $('#txtName').val($.trim(TName[1]));
+					}
+					else
+					{
+						 $('#drpTitle').val("");
+						 $('#txtName').val($.trim(arrItems[0]));
+					}	
+			
+        
             $('#txtMobile').val($.trim(arrItems[1]));
             $('#txtEmail').val($.trim(arrItems[2]));
 
