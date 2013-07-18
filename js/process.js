@@ -118,6 +118,9 @@ $(document).ready(function () {
         $('#basic-modal-content11').modal();
     });
 
+	//$('#txtCIeml').jqte();
+	
+	//$('#txtCOeml').jqte();
 
     /*
     $('.intable').click(function () {
@@ -139,7 +142,7 @@ $(document).ready(function () {
         var count = 0;
         var tim = "";
         //BREAKFAST TIME DISPLAY
-        if (bs != null) {
+        if (bs != null && bs != "00:00:00" && be != "00:00:00") {
             timings += "<div style='width:100%;color:#1C94C4;font-size:1.8em' align='center'>Please Select Booking Time</div>";
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%; margin-top:3%'>";
             timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Breakfast</td></tr>";
@@ -176,7 +179,7 @@ $(document).ready(function () {
             timings += "<br/>";
 
         //LUNCH TIME DISPLAY
-        if (ls != null) {
+        if (ls != null && ls != "00:00:00" && le != "00:00:00") {
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%' >";
             timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Lunch</td></tr>";
 
@@ -212,16 +215,16 @@ $(document).ready(function () {
         if (timings != "")
             timings += "<br/>";
         //DINNER TIME DISPLAY
-        if (ds != null) {
+        if (ds != null && ds != "00:00:00" && de != "00:00:00") {
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%' >";
             timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Dinner</td></tr>";
 
             var dst = new Date('1900/1/1 ' + ds);
-
+			strHr = dst.getHours();
             var det = new Date('1900/1/1 ' + de);
             endHr = det.getHours();
 
-            if (endHr == 0)
+            if (endHr < strHr)
                 det = new Date('1900/1/2 ' + de);
 
             count = 0;
@@ -482,7 +485,7 @@ $(document).ready(function () {
         }
     });
     //*************************AJAX CALL FOR FETCHING CHECK  IN OUT MESSAGES*************************************
-
+/*
     var l = '{"csid":' + csid + '}';
     $.ajax({
         type: "POST",
@@ -498,9 +501,11 @@ $(document).ready(function () {
             if (data[0].Success == 1) {
 
                 $('#txtCIsms').val(unescape(data[0].ChkMsg[0].ChkISms));
-                $('#txtCIeml').val(unescape(data[0].ChkMsg[0].ChkIEmail));
+                $('#txtCIeml').html(unescape(data[0].ChkMsg[0].ChkIEmail));
                 $('#txtCOsms').val(unescape(data[0].ChkMsg[0].ChkOSms));
-                $('#txtCOeml').val(unescape(data[0].ChkMsg[0].ChkOEmail));
+                $('#txtCOeml').html(unescape(data[0].ChkMsg[0].ChkOEmail));
+				 $('#txtCIeml').jqte();
+				 $('#txtCOeml').jqte();
             }
         },
 
@@ -509,7 +514,7 @@ $(document).ready(function () {
             $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get your messages.");
         }
     });
-
+*/
 
     //*************************AJAX CALL FOR OFFERS*************************************
     var m = '{"csid":' + csid + '}';
@@ -1532,8 +1537,7 @@ function ValidatePaxNumber(elementValue) {
 
 function ValidateFields() {
 
-    var Name = $.trim($('#txtName').val());
-    
+    var Name = $.trim($('#txtName').val());    
     var Cell_Number = $.trim($('#txtMobile').val());
     var Email = $.trim($('#txtEmail').val());
     var Pax = $.trim($('#txtPax').val());
@@ -1545,10 +1549,20 @@ function ValidateFields() {
     var d1 = new Date($('#txtDate').val() + " " + BookingTime);
     var BookingDate = dateFormat(d1, "shortDate", false);
     var BookingStatus = $('#hdnStatus').val();
-
+	
     var day = new Date();
     day = dateFormat(day, "shortDate", false);
-    var chr = new Date().getHours();
+	
+	// This is added for better booking date and time validation when period of booking is over a day 03/07/2013
+	var BookingDateTime = dateFormat(BookingDate + " " + BookingTime, "custDate", false);
+	var de = dateFormat(day + " " + sessionStorage.DinnerEnd, "custDate", false);
+	var ds = dateFormat(day + " " + sessionStorage.DinnerStart, "custDate", false);
+	var ls = dateFormat(day + " " + sessionStorage.LunchStart, "custDate", false);
+	var le = dateFormat(day + " " + sessionStorage.LunchEnd, "custDate", false);
+	var bs = dateFormat(day + " " + sessionStorage.BrkFastStart, "custDate", false);
+	var be = dateFormat(day + " " + sessionStorage.BrkFastEnd, "custDate", false);
+	//********************************************************************************************
+	var chr = new Date().getHours();
     var cmin = new Date().getMinutes();
     var csec = new Date().getSeconds();
    
@@ -1627,8 +1641,8 @@ function ValidateFields() {
 
         return false;
     }
-    else if (BookingTime < sessionStorage.BrkFastStart || BookingTime > sessionStorage.BrkFastEnd && BookingTime < sessionStorage.LunchStart || BookingTime > sessionStorage.LunchEnd && BookingTime < sessionStorage.DinnerStart || BookingTime > sessionStorage.DinnerEnd) {
-
+    //else if (BookingTime <= sessionStorage.BrkFastStart || BookingTime >= sessionStorage.BrkFastEnd && BookingTime <= sessionStorage.LunchStart || BookingTime >= sessionStorage.LunchEnd && BookingTime <= sessionStorage.DinnerStart && BookingTime >= sessionStorage.DinnerEnd) {
+else if (BookingDateTime <= bs || BookingDateTime >= be && BookingDateTime <= ls || BookingDateTime >= le && BookingDateTime <= ds && BookingDateTime >= de) {
         $().toastmessage('showWarningToast', "Invalid Time <br \> Your time must fall in Outlet's Timings.");
         $('#txtTime').css('border', '1px solid #F51500');
         return false;
@@ -1738,9 +1752,8 @@ function PreBooking(obj) {
 function postCheckInOutMsgs() {
     $('#basic-modal-content4').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
     //String.prototype.escapeSpecialChars = function() { return this.replace(/\\/g, "\\"). replace(/\n/g, "\\n"). replace(/\r/g, "\\r"). replace(/\t/g, "\\t"). replace(/\f/g, "\\f"); }
-    var myJSON = '{"csid":' + csid + ',"chkisms":"' + escape($('#txtCIsms').val()) + '","chkiemail":"' + escape($('#txtCIeml').val()) + '","chkosms":"' + escape($('#txtCOsms').val()) + '","chkoemail":"' + escape($('#txtCOeml').val()) + '"}';
-
-    $.ajax({
+   var myJSON = '{"csid":' + csid + ',"chkisms":"' + escape($('#txtCIsms').val()) + '","chkiemail":"' + escape($('#txtCIeml').val()) + '","chkosms":"' + escape($('#txtCOsms').val()) + '","chkoemail":"' + escape($('#txtCOeml').val()) + '"}';
+   $.ajax({
         type: "POST",
         url: API,
         data: { 'd': myJSON, 'tp': 'SCHKIOM' },
@@ -1781,9 +1794,11 @@ function FetchCheckInOutMsgs() {
         success: function (data) {
             if (data[0].Success == 1) {
                 $('#txtCIsms').val(unescape(data[0].ChkMsg[0].ChkISms));
-                $('#txtCIeml').val(unescape(data[0].ChkMsg[0].ChkIEmail));
+                $('#txtCIeml').html(unescape(data[0].ChkMsg[0].ChkIEmail));
                 $('#txtCOsms').val(unescape(data[0].ChkMsg[0].ChkOSms));
-                $('#txtCOeml').val(unescape(data[0].ChkMsg[0].ChkOEmail));
+                $('#txtCOeml').html(unescape(data[0].ChkMsg[0].ChkOEmail));
+				 $('#txtCIeml').jqte();
+				 $('#txtCOeml').jqte();
             }
         },
 		error: function(){
