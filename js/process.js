@@ -179,7 +179,7 @@ $(document).ready(function () {
             timings += "<br/>";
 
         //LUNCH TIME DISPLAY
-        if (ls != null && ls != "00:00:00" && le != "00:00:00") {
+        if (ls != null && ls != "00:00:00") {
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%' >";
             timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Lunch</td></tr>";
 
@@ -215,7 +215,7 @@ $(document).ready(function () {
         if (timings != "")
             timings += "<br/>";
         //DINNER TIME DISPLAY
-        if (ds != null && ds != "00:00:00" && de != "00:00:00") {
+        if (ds != null && ds != "00:00:00") {
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%' >";
             timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Dinner</td></tr>";
 
