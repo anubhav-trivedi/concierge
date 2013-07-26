@@ -1,8 +1,7 @@
-﻿<!DOCTYPE html> 
+﻿<!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1">
-
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1">
     <title>Konekt Concierge | Main Screen</title>
     <script type="text/javascript" src="js/jquery1.9.0.js"></script>
     <script type="text/javascript" src="js/jqueryUI.js"></script>
@@ -17,346 +16,343 @@
     <script type="text/javascript" src="js/jquery.tokeninput.js"></script>
     <script type="text/javascript" src="js/badger.min.js"></script>
     <script type="text/javascript" src="js/dateformat.js"></script>
-	<script type="text/javascript" src="js/jquery-te-1.4.0.min.js"></script>
-
-    <link href="css/toastmessage.min.css" type="text/css" rel="stylesheet"/>
-    <link href="css/jqueryUI.css" type="text/css" rel="stylesheet"/>
-    <link href="css/jquery.multiselect.css" type="text/css" rel="stylesheet"/>
-    <link href="css/jquery.ptTimeSelect.css" type="text/css" rel="stylesheet"/>
-    <link href="css/jquery.confirm.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery-te-1.4.0.min.js"></script>
+    <link href="css/toastmessage.min.css" type="text/css" rel="stylesheet" />
+    <link href="css/jqueryUI.css" type="text/css" rel="stylesheet" />
+    <link href="css/jquery.multiselect.css" type="text/css" rel="stylesheet" />
+    <link href="css/jquery.ptTimeSelect.css" type="text/css" rel="stylesheet" />
+    <link href="css/jquery.confirm.css" type="text/css" rel="stylesheet" />
     <link href="css/styles.css" type="text/css" rel="stylesheet" />
     <link href="css/basic_ie.css" type="text/css" rel="stylesheet" />
     <link href="css/basic.css" type="text/css" rel="stylesheet" />
     <link href="css/token-input.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="css/badger.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/jquery-te-1.4.0.css" />
-	  
+    <link rel="stylesheet" type="text/css" href="css/jquery-te-1.4.0.css" />
 </head>
 <body>
-
-<div id="header"> <!--Header Container Opens-->
-
-<!--CODE TO SHOW DYNAMIC CLOCK STARTS -->
-<div class="clock" align="center">
-<!--   <div id="Date"></div>-->
-      
-          <span id="hours"></span>
-          <span id="point1">:</span>
-          <span id="min"></span>
-          <span id="point2">:</span>
-          <span id="sec"></span>
-</div>
-<!--CODE TO SHOW DYNAMIC CLOCK ENDS -->
-<div align="left"><img alt="logo" src="img/doodle_logo.png" style="position:absolute;top:0px" /> </div>
-<!--<div align="right" id="rightHeader">-->
-<div class="hdlogout"><a href="javascript:void(0);" onclick="logout();"><img src="img/logout.png" alt="lgout" /></a></div>
-<!--</div>-->
-</div>  <!--Header Container Closes-->
-
-<div id="content">  <!--Content Container Opens-->
-
-<div id="leftContent" align="left"> <!--Left Content Container Opens-->
-<div class="searchbox">
-<label class="Filter">CUSTOMER ENTRY</label><input type="text" id="customerfilter" /><!--<input type="image" src="img/searchbutton.jpg" id="btnCustomerSearch" onclick='SearchCustomerDetails();'/>-->
-</div>
-<div class="controlbox">
-<input type="radio" style="vertical-align:bottom" name="custype" id="walk" value="Walking" class="radiooption" checked="checked" /><span style="vertical-align:middle">Walking</span>  
-<input type="radio" style="vertical-align:bottom" name="custype" id="call" value="Calling" class="radiooption"  /> <span style="vertical-align:middle">Calling</span>
-</div>
-
-<div class="controlbox">
-<div class='namefields' >
-<label class="FieldName">Name</label>
-</div>
-<div class='textfields' >
-<select id="drpTitle" style="width:12%; margin-right:0%; margin-left:10%">
-<option value="Mr">Mr.</option>
-<option value="Ms">Ms.</option>
-<option value=""> </option>
-</select>
-<input type="text" id="txtName" style="width:57%; margin-right:1%;" />
-</div>
-</div>
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">Mobile</label>
-</div>
-<div class='textfields'>
-<select name="countrycode" id="drpCCC" style="width:35%; margin-right:0%; margin-left:10%">
- <option value="213">Algeria (+213)</option> 
- <option value="376">Andorra (+376)</option> 
- <option value="244">Angola (+244)</option> 
- <option value="1264">Anguilla (+1264)</option> 
- <option value="1268">Antigua &amp; Barbuda (+1268)</option> 
- <option value="599">Antilles (Dutch) (+599)</option> 
- <option value="54">Argentina (+54)</option> 
- <option value="374">Armenia (+374)</option> 
- <option value="297">Aruba (+297)</option> 
- <option value="247">Ascension Island (+247)</option> 
- <option value="61">Australia (+61)</option> 
- <option value="43">Austria (+43)</option> 
- <option value="994">Azerbaijan (+994)</option> 
- <option value="1242">Bahamas (+1242)</option> 
- <option value="973">Bahrain (+973)</option> 
- <option value="880">Bangladesh (+880)</option> 
- <option value="1246">Barbados (+1246)</option> 
- <option value="375">Belarus (+375)</option> 
- <option value="32">Belgium (+32)</option> 
- <option value="501">Belize (+501)</option> 
- <option value="229">Benin (+229)</option> 
- <option value="1441">Bermuda (+1441)</option> 
- <option value="975">Bhutan (+975)</option> 
- <option value="591">Bolivia (+591)</option> 
- <option value="387">Bosnia Herzegovina (+387)</option> 
- <option value="267">Botswana (+267)</option> 
- <option value="55">Brazil (+55)</option> 
- <option value="673">Brunei (+673)</option> 
- <option value="359">Bulgaria (+359)</option> 
- <option value="226">Burkina Faso (+226)</option> 
- <option value="257">Burundi (+257)</option> 
- <option value="855">Cambodia (+855)</option> 
- <option value="237">Cameroon (+237)</option> 
- <option value="1">Canada (+1)</option> 
- <option value="238">Cape Verde Islands (+238)</option> 
- <option value="1345">Cayman Islands (+1345)</option> 
- <option value="236">Central African Republic (+236)</option> 
- <option value="56">Chile (+56)</option> 
- <option value="86">China (+86)</option> 
- <option value="57">Colombia (+57)</option> 
- <option value="269">Comoros (+269)</option> 
- <option value="242">Congo (+242)</option> 
- <option value="682">Cook Islands (+682)</option> 
- <option value="506">Costa Rica (+506)</option> 
- <option value="385">Croatia (+385)</option> 
- <option value="53">Cuba (+53)</option> 
- <option value="90392">Cyprus North (+90392)</option> 
- <option value="357">Cyprus South (+357)</option> 
- <option value="42">Czech Republic (+42)</option> 
- <option value="45">Denmark (+45)</option> 
- <option value="2463">Diego Garcia (+2463)</option> 
- <option value="253">Djibouti (+253)</option> 
- <option value="1809">Dominica (+1809)</option> 
- <option value="1809">Dominican Republic (+1809)</option> 
- <option value="593">Ecuador (+593)</option> 
- <option value="20">Egypt (+20)</option> 
- <option value="503">El Salvador (+503)</option> 
- <option value="240">Equatorial Guinea (+240)</option> 
- <option value="291">Eritrea (+291)</option> 
- <option value="372">Estonia (+372)</option> 
- <option value="251">Ethiopia (+251)</option> 
- <option value="500">Falkland Islands (+500)</option> 
- <option value="298">Faroe Islands (+298)</option> 
- <option value="679">Fiji (+679)</option> 
- <option value="358">Finland (+358)</option> 
- <option value="33">France (+33)</option> 
- <option value="594">French Guiana (+594)</option> 
- <option value="689">French Polynesia (+689)</option> 
- <option value="241">Gabon (+241)</option> 
- <option value="220">Gambia (+220)</option> 
- <option value="7880">Georgia (+7880)</option> 
- <option value="49">Germany (+49)</option> 
- <option value="233">Ghana (+233)</option> 
- <option value="350">Gibraltar (+350)</option> 
- <option value="30">Greece (+30)</option> 
- <option value="299">Greenland (+299)</option> 
- <option value="1473">Grenada (+1473)</option> 
- <option value="590">Guadeloupe (+590)</option> 
- <option value="671">Guam (+671)</option> 
- <option value="502">Guatemala (+502)</option> 
- <option value="224">Guinea (+224)</option> 
- <option value="245">Guinea - Bissau (+245)</option> 
- <option value="592">Guyana (+592)</option> 
- <option value="509">Haiti (+509)</option> 
- <option value="504">Honduras (+504)</option> 
- <option value="852">Hong Kong (+852)</option> 
- <option value="36">Hungary (+36)</option> 
- <option value="354">Iceland (+354)</option> 
- <option value="91">India (+91)</option> 
- <option value="62">Indonesia (+62)</option> 
- <option value="98">Iran (+98)</option> 
- <option value="964">Iraq (+964)</option> 
- <option value="353">Ireland (+353)</option> 
- <option value="972">Israel (+972)</option> 
- <option value="39">Italy (+39)</option> 
- <option value="225">Ivory Coast (+225)</option> 
- <option value="1876">Jamaica (+1876)</option> 
- <option value="81">Japan (+81)</option> 
- <option value="962">Jordan (+962)</option> 
- <option value="7">Kazakhstan (+7)</option> 
- <option value="254">Kenya (+254)</option> 
- <option value="686">Kiribati (+686)</option> 
- <option value="850">Korea North (+850)</option> 
- <option value="82">Korea South (+82)</option> 
- <option value="965">Kuwait (+965)</option> 
- <option value="996">Kyrgyzstan (+996)</option> 
- <option value="856">Laos (+856)</option> 
- <option value="371">Latvia (+371)</option> 
- <option value="961">Lebanon (+961)</option> 
- <option value="266">Lesotho (+266)</option> 
- <option value="231">Liberia (+231)</option> 
- <option value="218">Libya (+218)</option> 
- <option value="417">Liechtenstein (+417)</option> 
- <option value="370">Lithuania (+370)</option> 
- <option value="352">Luxembourg (+352)</option> 
- <option value="853">Macao (+853)</option> 
- <option value="389">Macedonia (+389)</option> 
- <option value="261">Madagascar (+261)</option> 
- <option value="265">Malawi (+265)</option> 
- <option value="60">Malaysia (+60)</option> 
- <option value="960">Maldives (+960)</option> 
- <option value="223">Mali (+223)</option> 
- <option value="356">Malta (+356)</option> 
- <option value="692">Marshall Islands (+692)</option> 
- <option value="596">Martinique (+596)</option> 
- <option value="222">Mauritania (+222)</option> 
- <option value="269">Mayotte (+269)</option> 
- <option value="52">Mexico (+52)</option> 
- <option value="691">Micronesia (+691)</option> 
- <option value="373">Moldova (+373)</option> 
- <option value="377">Monaco (+377)</option> 
- <option value="976">Mongolia (+976)</option> 
- <option value="1664">Montserrat (+1664)</option> 
- <option value="212">Morocco (+212)</option> 
- <option value="258">Mozambique (+258)</option> 
- <option value="95">Myanmar (+95)</option> 
- <option value="264">Namibia (+264)</option> 
- <option value="674">Nauru (+674)</option> 
- <option value="977">Nepal (+977)</option> 
- <option value="31">Netherlands (+31)</option> 
- <option value="687">New Caledonia (+687)</option> 
- <option value="64">New Zealand (+64)</option> 
- <option value="505">Nicaragua (+505)</option> 
- <option value="227">Niger (+227)</option> 
- <option value="234">Nigeria (+234)</option> 
- <option value="683">Niue (+683)</option> 
- <option value="672">Norfolk Islands (+672)</option> 
- <option value="670">Northern Marianas (+670)</option> 
- <option value="47">Norway (+47)</option> 
- <option value="968">Oman (+968)</option> 
- <option value="680">Palau (+680)</option> 
- <option value="507">Panama (+507)</option> 
- <option value="675">Papua New Guinea (+675)</option> 
- <option value="595">Paraguay (+595)</option> 
- <option value="51">Peru (+51)</option> 
- <option value="63">Philippines (+63)</option> 
- <option value="48">Poland (+48)</option> 
- <option value="351">Portugal (+351)</option> 
- <option value="1787">Puerto Rico (+1787)</option> 
- <option value="974">Qatar (+974)</option> 
- <option value="262">Reunion (+262)</option> 
- <option value="40">Romania (+40)</option> 
- <option value="7">Russia (+7)</option> 
- <option value="250">Rwanda (+250)</option> 
- <option value="378">San Marino (+378)</option> 
- <option value="239">Sao Tome &amp; Principe (+239)</option> 
- <option value="966">Saudi Arabia (+966)</option> 
- <option value="221">Senegal (+221)</option> 
- <option value="381">Serbia (+381)</option> 
- <option value="248">Seychelles (+248)</option> 
- <option value="232">Sierra Leone (+232)</option> 
- <option value="65">Singapore (+65)</option> 
- <option value="421">Slovak Republic (+421)</option> 
- <option value="386">Slovenia (+386)</option> 
- <option value="677">Solomon Islands (+677)</option> 
- <option value="252">Somalia (+252)</option> 
- <option value="27">South Africa (+27)</option> 
- <option value="34">Spain (+34)</option> 
- <option value="94">Sri Lanka (+94)</option> 
- <option value="290">St. Helena (+290)</option> 
- <option value="1869">St. Kitts (+1869)</option> 
- <option value="1758">St. Lucia (+1758)</option> 
- <option value="249">Sudan (+249)</option> 
- <option value="597">Suriname (+597)</option> 
- <option value="268">Swaziland (+268)</option> 
- <option value="46">Sweden (+46)</option> 
- <option value="41">Switzerland (+41)</option> 
- <option value="963">Syria (+963)</option> 
- <option value="886">Taiwan (+886)</option> 
- <option value="7">Tajikstan (+7)</option> 
- <option value="66">Thailand (+66)</option> 
- <option value="228">Togo (+228)</option> 
- <option value="676">Tonga (+676)</option> 
- <option value="1868">Trinidad &amp; Tobago (+1868)</option> 
- <option value="216">Tunisia (+216)</option> 
- <option value="90">Turkey (+90)</option> 
- <option value="7">Turkmenistan (+7)</option> 
- <option value="993">Turkmenistan (+993)</option> 
- <option value="1649">Turks &amp; Caicos Islands (+1649)</option> 
- <option value="688">Tuvalu (+688)</option> 
- <option value="256">Uganda (+256)</option> 
- <option value="44">UK (+44)</option> 
- <option value="380">Ukraine (+380)</option> 
- <option value="971">United Arab Emirates (+971)</option> 
- <option value="598">Uruguay (+598)</option> 
- <option value="1">USA (+1)</option> 
- <option value="7">Uzbekistan (+7)</option> 
- <option value="678">Vanuatu (+678)</option> 
- <option value="379">Vatican City (+379)</option> 
- <option value="58">Venezuela (+58)</option> 
- <option value="84">Vietnam (+84)</option> 
- <option value="84">Virgin Islands - British (+1284)</option> 
- <option value="84">Virgin Islands - US (+1340)</option> 
- <option value="681">Wallis &amp; Futuna (+681)</option> 
- <option value="969">Yemen (North)(+969)</option> 
- <option value="967">Yemen (South)(+967)</option> 
- <option value="381">Yugoslavia (+381)</option> 
- <option value="243">Zaire (+243)</option> 
- <option value="260">Zambia (+260)</option> 
- <option value="263">Zimbabwe (+263)</option>
-  </select>
-<input type="text" id="txtMobile"  style="width:34%; margin-right:1%;" />
-</div>
-</div>
-
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">eMail</label>
-</div>
-<div class='textfields' >
-<input type="text" id="txtEmail" class="FieldBox"  />
-</div>
-</div>
-
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">Gender</label>
-</div>
-<div class='textfields'>
-<select id="drpSex" class="FieldBox">
-<option id="Male" value="Male">Male</option>
-<option id="Female" value="Female">Female</option>
-</select>
-</div>
-</div>
-
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">Pax</label>
-</div>
-<div class='textfields' >
-<input type="text" id="txtPax" style="width:65%" class="FieldBox"  />
-<img style=" vertical-align:bottom;" id="img_px" src="img/px.jpg" alt="px" />
-</div>
-</div>
-
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">Date</label>
-</div>
-<div class='textfields' >
-<input type="text" readonly="readonly" id="txtDate" style="width:27%" class="FieldBox" /><label class="FieldName">Time</label>
-<input type="text" readonly="readonly" style="margin-left:2%;width:20%" id="txtTime"  class="FieldBox" />
-</div>
-
-</div>
-
-
-<!--<div class="controlbox">
+    <div id="header">
+        <!--Header Container Opens-->
+        <!--CODE TO SHOW DYNAMIC CLOCK STARTS -->
+        <div class="clock" align="center">
+            <!--   <div id="Date"></div>-->
+            <span id="hours"></span><span id="point1">:</span> <span id="min"></span><span id="point2">
+                :</span> <span id="sec"></span>
+        </div>
+        <!--CODE TO SHOW DYNAMIC CLOCK ENDS -->
+        <div align="left">
+            <img alt="logo" src="img/doodle_logo.png" style="position: absolute; top: 0px" />
+        </div>
+        <!--<div align="right" id="rightHeader">-->
+        <div class="hdlogout">
+            <a href="javascript:void(0);" onclick="logout();">
+                <img src="img/logout.png" alt="lgout" /></a></div>
+        <!--</div>-->
+    </div>
+    <!--Header Container Closes-->
+    <div id="content">
+        <!--Content Container Opens-->
+        <div id="leftContent" align="left">
+            <!--Left Content Container Opens-->
+            <div class="searchbox">
+                <label class="Filter">
+                    CUSTOMER ENTRY</label><input type="text" id="customerfilter" /><!--<input type="image" src="img/searchbutton.jpg" id="btnCustomerSearch" onclick='SearchCustomerDetails();'/>-->
+            </div>
+            <div class="controlbox">
+                <input type="radio" style="vertical-align: bottom" name="custype" id="walk" value="Walking"
+                    class="radiooption" checked="checked" /><span style="vertical-align: middle">Walking</span>
+                <input type="radio" style="vertical-align: bottom" name="custype" id="call" value="Calling"
+                    class="radiooption" />
+                <span style="vertical-align: middle">Calling</span>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Name</label>
+                </div>
+                <div class='textfields'>
+                    <select id="drpTitle" style="width: 12%; margin-right: 0%; margin-left: 10%">
+                        <option value="Mr">Mr.</option>
+                        <option value="Ms">Ms.</option>
+                        <option value=""></option>
+                    </select>
+                    <input type="text" id="txtName" style="width: 57%; margin-right: 1%;" />
+                </div>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Mobile</label>
+                </div>
+                <div class='textfields'>
+                    <select name="countrycode" id="drpCCC" style="width: 35%; margin-right: 0%; margin-left: 10%">
+                        <option value="213">Algeria (+213)</option>
+                        <option value="376">Andorra (+376)</option>
+                        <option value="244">Angola (+244)</option>
+                        <option value="1264">Anguilla (+1264)</option>
+                        <option value="1268">Antigua &amp; Barbuda (+1268)</option>
+                        <option value="599">Antilles (Dutch) (+599)</option>
+                        <option value="54">Argentina (+54)</option>
+                        <option value="374">Armenia (+374)</option>
+                        <option value="297">Aruba (+297)</option>
+                        <option value="247">Ascension Island (+247)</option>
+                        <option value="61">Australia (+61)</option>
+                        <option value="43">Austria (+43)</option>
+                        <option value="994">Azerbaijan (+994)</option>
+                        <option value="1242">Bahamas (+1242)</option>
+                        <option value="973">Bahrain (+973)</option>
+                        <option value="880">Bangladesh (+880)</option>
+                        <option value="1246">Barbados (+1246)</option>
+                        <option value="375">Belarus (+375)</option>
+                        <option value="32">Belgium (+32)</option>
+                        <option value="501">Belize (+501)</option>
+                        <option value="229">Benin (+229)</option>
+                        <option value="1441">Bermuda (+1441)</option>
+                        <option value="975">Bhutan (+975)</option>
+                        <option value="591">Bolivia (+591)</option>
+                        <option value="387">Bosnia Herzegovina (+387)</option>
+                        <option value="267">Botswana (+267)</option>
+                        <option value="55">Brazil (+55)</option>
+                        <option value="673">Brunei (+673)</option>
+                        <option value="359">Bulgaria (+359)</option>
+                        <option value="226">Burkina Faso (+226)</option>
+                        <option value="257">Burundi (+257)</option>
+                        <option value="855">Cambodia (+855)</option>
+                        <option value="237">Cameroon (+237)</option>
+                        <option value="1">Canada (+1)</option>
+                        <option value="238">Cape Verde Islands (+238)</option>
+                        <option value="1345">Cayman Islands (+1345)</option>
+                        <option value="236">Central African Republic (+236)</option>
+                        <option value="56">Chile (+56)</option>
+                        <option value="86">China (+86)</option>
+                        <option value="57">Colombia (+57)</option>
+                        <option value="269">Comoros (+269)</option>
+                        <option value="242">Congo (+242)</option>
+                        <option value="682">Cook Islands (+682)</option>
+                        <option value="506">Costa Rica (+506)</option>
+                        <option value="385">Croatia (+385)</option>
+                        <option value="53">Cuba (+53)</option>
+                        <option value="90392">Cyprus North (+90392)</option>
+                        <option value="357">Cyprus South (+357)</option>
+                        <option value="42">Czech Republic (+42)</option>
+                        <option value="45">Denmark (+45)</option>
+                        <option value="2463">Diego Garcia (+2463)</option>
+                        <option value="253">Djibouti (+253)</option>
+                        <option value="1809">Dominica (+1809)</option>
+                        <option value="1809">Dominican Republic (+1809)</option>
+                        <option value="593">Ecuador (+593)</option>
+                        <option value="20">Egypt (+20)</option>
+                        <option value="503">El Salvador (+503)</option>
+                        <option value="240">Equatorial Guinea (+240)</option>
+                        <option value="291">Eritrea (+291)</option>
+                        <option value="372">Estonia (+372)</option>
+                        <option value="251">Ethiopia (+251)</option>
+                        <option value="500">Falkland Islands (+500)</option>
+                        <option value="298">Faroe Islands (+298)</option>
+                        <option value="679">Fiji (+679)</option>
+                        <option value="358">Finland (+358)</option>
+                        <option value="33">France (+33)</option>
+                        <option value="594">French Guiana (+594)</option>
+                        <option value="689">French Polynesia (+689)</option>
+                        <option value="241">Gabon (+241)</option>
+                        <option value="220">Gambia (+220)</option>
+                        <option value="7880">Georgia (+7880)</option>
+                        <option value="49">Germany (+49)</option>
+                        <option value="233">Ghana (+233)</option>
+                        <option value="350">Gibraltar (+350)</option>
+                        <option value="30">Greece (+30)</option>
+                        <option value="299">Greenland (+299)</option>
+                        <option value="1473">Grenada (+1473)</option>
+                        <option value="590">Guadeloupe (+590)</option>
+                        <option value="671">Guam (+671)</option>
+                        <option value="502">Guatemala (+502)</option>
+                        <option value="224">Guinea (+224)</option>
+                        <option value="245">Guinea - Bissau (+245)</option>
+                        <option value="592">Guyana (+592)</option>
+                        <option value="509">Haiti (+509)</option>
+                        <option value="504">Honduras (+504)</option>
+                        <option value="852">Hong Kong (+852)</option>
+                        <option value="36">Hungary (+36)</option>
+                        <option value="354">Iceland (+354)</option>
+                        <option value="91">India (+91)</option>
+                        <option value="62">Indonesia (+62)</option>
+                        <option value="98">Iran (+98)</option>
+                        <option value="964">Iraq (+964)</option>
+                        <option value="353">Ireland (+353)</option>
+                        <option value="972">Israel (+972)</option>
+                        <option value="39">Italy (+39)</option>
+                        <option value="225">Ivory Coast (+225)</option>
+                        <option value="1876">Jamaica (+1876)</option>
+                        <option value="81">Japan (+81)</option>
+                        <option value="962">Jordan (+962)</option>
+                        <option value="7">Kazakhstan (+7)</option>
+                        <option value="254">Kenya (+254)</option>
+                        <option value="686">Kiribati (+686)</option>
+                        <option value="850">Korea North (+850)</option>
+                        <option value="82">Korea South (+82)</option>
+                        <option value="965">Kuwait (+965)</option>
+                        <option value="996">Kyrgyzstan (+996)</option>
+                        <option value="856">Laos (+856)</option>
+                        <option value="371">Latvia (+371)</option>
+                        <option value="961">Lebanon (+961)</option>
+                        <option value="266">Lesotho (+266)</option>
+                        <option value="231">Liberia (+231)</option>
+                        <option value="218">Libya (+218)</option>
+                        <option value="417">Liechtenstein (+417)</option>
+                        <option value="370">Lithuania (+370)</option>
+                        <option value="352">Luxembourg (+352)</option>
+                        <option value="853">Macao (+853)</option>
+                        <option value="389">Macedonia (+389)</option>
+                        <option value="261">Madagascar (+261)</option>
+                        <option value="265">Malawi (+265)</option>
+                        <option value="60">Malaysia (+60)</option>
+                        <option value="960">Maldives (+960)</option>
+                        <option value="223">Mali (+223)</option>
+                        <option value="356">Malta (+356)</option>
+                        <option value="692">Marshall Islands (+692)</option>
+                        <option value="596">Martinique (+596)</option>
+                        <option value="222">Mauritania (+222)</option>
+                        <option value="269">Mayotte (+269)</option>
+                        <option value="52">Mexico (+52)</option>
+                        <option value="691">Micronesia (+691)</option>
+                        <option value="373">Moldova (+373)</option>
+                        <option value="377">Monaco (+377)</option>
+                        <option value="976">Mongolia (+976)</option>
+                        <option value="1664">Montserrat (+1664)</option>
+                        <option value="212">Morocco (+212)</option>
+                        <option value="258">Mozambique (+258)</option>
+                        <option value="95">Myanmar (+95)</option>
+                        <option value="264">Namibia (+264)</option>
+                        <option value="674">Nauru (+674)</option>
+                        <option value="977">Nepal (+977)</option>
+                        <option value="31">Netherlands (+31)</option>
+                        <option value="687">New Caledonia (+687)</option>
+                        <option value="64">New Zealand (+64)</option>
+                        <option value="505">Nicaragua (+505)</option>
+                        <option value="227">Niger (+227)</option>
+                        <option value="234">Nigeria (+234)</option>
+                        <option value="683">Niue (+683)</option>
+                        <option value="672">Norfolk Islands (+672)</option>
+                        <option value="670">Northern Marianas (+670)</option>
+                        <option value="47">Norway (+47)</option>
+                        <option value="968">Oman (+968)</option>
+                        <option value="680">Palau (+680)</option>
+                        <option value="507">Panama (+507)</option>
+                        <option value="675">Papua New Guinea (+675)</option>
+                        <option value="595">Paraguay (+595)</option>
+                        <option value="51">Peru (+51)</option>
+                        <option value="63">Philippines (+63)</option>
+                        <option value="48">Poland (+48)</option>
+                        <option value="351">Portugal (+351)</option>
+                        <option value="1787">Puerto Rico (+1787)</option>
+                        <option value="974">Qatar (+974)</option>
+                        <option value="262">Reunion (+262)</option>
+                        <option value="40">Romania (+40)</option>
+                        <option value="7">Russia (+7)</option>
+                        <option value="250">Rwanda (+250)</option>
+                        <option value="378">San Marino (+378)</option>
+                        <option value="239">Sao Tome &amp; Principe (+239)</option>
+                        <option value="966">Saudi Arabia (+966)</option>
+                        <option value="221">Senegal (+221)</option>
+                        <option value="381">Serbia (+381)</option>
+                        <option value="248">Seychelles (+248)</option>
+                        <option value="232">Sierra Leone (+232)</option>
+                        <option value="65">Singapore (+65)</option>
+                        <option value="421">Slovak Republic (+421)</option>
+                        <option value="386">Slovenia (+386)</option>
+                        <option value="677">Solomon Islands (+677)</option>
+                        <option value="252">Somalia (+252)</option>
+                        <option value="27">South Africa (+27)</option>
+                        <option value="34">Spain (+34)</option>
+                        <option value="94">Sri Lanka (+94)</option>
+                        <option value="290">St. Helena (+290)</option>
+                        <option value="1869">St. Kitts (+1869)</option>
+                        <option value="1758">St. Lucia (+1758)</option>
+                        <option value="249">Sudan (+249)</option>
+                        <option value="597">Suriname (+597)</option>
+                        <option value="268">Swaziland (+268)</option>
+                        <option value="46">Sweden (+46)</option>
+                        <option value="41">Switzerland (+41)</option>
+                        <option value="963">Syria (+963)</option>
+                        <option value="886">Taiwan (+886)</option>
+                        <option value="7">Tajikstan (+7)</option>
+                        <option value="66">Thailand (+66)</option>
+                        <option value="228">Togo (+228)</option>
+                        <option value="676">Tonga (+676)</option>
+                        <option value="1868">Trinidad &amp; Tobago (+1868)</option>
+                        <option value="216">Tunisia (+216)</option>
+                        <option value="90">Turkey (+90)</option>
+                        <option value="7">Turkmenistan (+7)</option>
+                        <option value="993">Turkmenistan (+993)</option>
+                        <option value="1649">Turks &amp; Caicos Islands (+1649)</option>
+                        <option value="688">Tuvalu (+688)</option>
+                        <option value="256">Uganda (+256)</option>
+                        <option value="44">UK (+44)</option>
+                        <option value="380">Ukraine (+380)</option>
+                        <option value="971">United Arab Emirates (+971)</option>
+                        <option value="598">Uruguay (+598)</option>
+                        <option value="1">USA (+1)</option>
+                        <option value="7">Uzbekistan (+7)</option>
+                        <option value="678">Vanuatu (+678)</option>
+                        <option value="379">Vatican City (+379)</option>
+                        <option value="58">Venezuela (+58)</option>
+                        <option value="84">Vietnam (+84)</option>
+                        <option value="84">Virgin Islands - British (+1284)</option>
+                        <option value="84">Virgin Islands - US (+1340)</option>
+                        <option value="681">Wallis &amp; Futuna (+681)</option>
+                        <option value="969">Yemen (North)(+969)</option>
+                        <option value="967">Yemen (South)(+967)</option>
+                        <option value="381">Yugoslavia (+381)</option>
+                        <option value="243">Zaire (+243)</option>
+                        <option value="260">Zambia (+260)</option>
+                        <option value="263">Zimbabwe (+263)</option>
+                    </select>
+                    <input type="text" id="txtMobile" style="width: 34%; margin-right: 1%;" />
+                </div>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        eMail</label>
+                </div>
+                <div class='textfields'>
+                    <input type="text" id="txtEmail" class="FieldBox" />
+                </div>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Gender</label>
+                </div>
+                <div class='textfields'>
+                    <select id="drpSex" class="FieldBox">
+                        <option id="Male" value="Male">Male</option>
+                        <option id="Female" value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Pax</label>
+                </div>
+                <div class='textfields'>
+                    <input type="text" id="txtPax" style="width: 65%" class="FieldBox" />
+                    <img style="vertical-align: bottom;" id="img_px" src="img/px.jpg" alt="px" />
+                </div>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Date</label>
+                </div>
+                <div class='textfields'>
+                    <input type="text" readonly="readonly" id="txtDate" style="width: 27%" class="FieldBox" /><label
+                        class="FieldName">Time</label>
+                    <input type="text" readonly="readonly" style="margin-left: 2%; width: 20%" id="txtTime"
+                        class="FieldBox" />
+                </div>
+            </div>
+            <!--<div class="controlbox">
 <div class='namefields' >
 <label class="FieldName">Time</label>
 </div>
@@ -364,108 +360,97 @@
 <input type="text" readonly="readonly" style="width:20%" id="txtTime"  class="FieldBox" />
 </div>
 </div>-->
-
-
-<!--<span style="font-size:.75em;color:#1C94C4;margin-left:25%" id="selprefs"></span>-->
-
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">Preference</label>
-</div>
-<div class='textfields' >
-<select id="drpPreference" class="FieldBox">
-
-</select>
-</div>
-</div>
-
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">Table</label>
-</div>
-<div class='textfields'>
-<input type="text" id="txtTable" style="width:65%" readonly="readonly" class="FieldBox" />
-<input type="hidden" id="hdnStatus" value="" />
-<input type="hidden" id="hdnChecked" value="" />
-<input type="hidden" id="hdnBid" value="" />
-<input type="hidden" id="hdnTno" value="" />
-<img style="vertical-align:middle" id="imgtab" src="img/imgtab.jpg" alt="tb" />
-</div>
-</div>
-
-
-<div class="controlbox">
-<div class='namefields'>
-<label class="FieldName">Note</label>
-</div>
-<div class='textfields' >
-<textarea style="margin-right:1%;margin-left:10%;" id="txtNote" rows="2" cols="30" maxlength='4000' ></textarea>
-</div>
-</div>
-
-<div class="buttonbox">
-<input type="button"  class="ckmsgbtn" value="BOOK" id="btnBook" onclick="bookTable();" />
-<input type="button"  class="restbtn" value="RESET" id="btnReset" onclick="resetFields();" />
-</div>
-</div>  <!--Left Content Container Closes-->
-
-<div id="rightContent" align="right">  <!--Right Content Container Opens-->
-
-<div class="searchbox1">
-<label class="Filter1">BOOKING DETAILS</label>
-<input type="text" id="tablefilter" /><input type="text" readonly="readonly" id="txtfilterdate" placeholder="Select Date"  /><input type="button" value="GO" class="ckmsgbtn" onclick="SearchBookings();" id="btnFilter" />
-</div>
-
-<!--Below Code Is For Rendering Multiple Tabed Div-->
-<div id="tabs">
-
-<ul>
-
-<li><a href="#tabs-1">Brunch</a></li>
-<li><a href="#tabs-2">Lunch</a></li>
-<li><a href="#tabs-3">Dinner</a></li>
-<li><a href="#tabs-4">Dined</a></li>
-<a href="javascript:void(0);" rel="0" onclick="PrintWindow();"><img src="img/print.png" title="This takes print out of bookings" alt="print" /></a>
-<a href="javascript:void(0);" onclick="RefreshDynamicDivs();"><img src="img/refresh.png" title="This refreshes the tabs" alt="refresh" /></a>
-</ul>
-<div id="tabs-1">
-<table align="left" class="DetailBox">
-<tr>
-<td id='outer_tableb' style="font-size:0.75em !important">
-
-</td>
-</tr>
-</table>
-</div>
-
-<div id="tabs-2">
-<table align="left" class="DetailBox">
-<tr>
-<td id='outer_tablel' style="font-size:0.75em !important">
-
-</td>
-</tr>
-</table>
-</div>
-
-<div id="tabs-3">
-<table align="left" class="DetailBox">
-<tr>
-<td id='outer_tabled' style="font-size:0.75em !important">
- 
-</td>
-</tr>
-</table>
-</div>
-
-<div id="tabs-4">
-<table align="left" class="DetailBox">
-
-<tr>
-<td id='outer_tabledi' style="font-size:0.75em !important">
- <!-- <table id='inner_table'  style='border:1px solid #000000; border-radius:5px;' cellpadding='1'>
+            <!--<span style="font-size:.75em;color:#1C94C4;margin-left:25%" id="selprefs"></span>-->
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Preference</label>
+                </div>
+                <div class='textfields'>
+                    <select id="drpPreference" class="FieldBox">
+                    </select>
+                </div>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Table</label>
+                </div>
+                <div class='textfields'>
+                    <input type="text" id="txtTable" style="width: 65%" readonly="readonly" class="FieldBox" />
+                    <input type="hidden" id="hdnStatus" value="" />
+                    <input type="hidden" id="hdnChecked" value="" />
+                    <input type="hidden" id="hdnBid" value="" />
+                    <input type="hidden" id="hdnTno" value="" />
+                    <img style="vertical-align: middle" id="imgtab" src="img/imgtab.jpg" alt="tb" />
+                </div>
+            </div>
+            <div class="controlbox">
+                <div class='namefields'>
+                    <label class="FieldName">
+                        Note</label>
+                </div>
+                <div class='textfields'>
+                    <textarea style="margin-right: 1%; margin-left: 10%;" id="txtNote" rows="2" cols="30"
+                        maxlength='4000'></textarea>
+                </div>
+            </div>
+            <div class="buttonbox">
+                <input type="button" class="ckmsgbtn" value="BOOK" id="btnBook" onclick="bookTable();" />
+                <input type="button" class="restbtn" value="RESET" id="btnReset" onclick="resetFields();" />
+            </div>
+        </div>
+        <!--Left Content Container Closes-->
+        <div id="rightContent" align="right">
+            <!--Right Content Container Opens-->
+            <div class="searchbox1">
+                <label class="Filter1">
+                    BOOKING DETAILS</label>
+                <input type="text" id="tablefilter" /><input type="text" readonly="readonly" id="txtfilterdate"
+                    placeholder="Select Date" /><input type="button" value="GO" class="ckmsgbtn" onclick="SearchBookings();"
+                        id="btnFilter" />
+            </div>
+            <!--Below Code Is For Rendering Multiple Tabed Div-->
+            <div id="tabs">
+                <ul>
+                    <li><a href="#tabs-1">Brunch</a></li>
+                    <li><a href="#tabs-2">Lunch</a></li>
+                    <li><a href="#tabs-3">Dinner</a></li>
+                    <li><a href="#tabs-4">Dined</a></li>
+                    <a href="javascript:void(0);" rel="0" onclick="PrintWindow();">
+                        <img src="img/print.png" title="This takes print out of bookings" alt="print" /></a>
+                    <a href="javascript:void(0);" onclick="RefreshDynamicDivs();">
+                        <img src="img/refresh.png" title="This refreshes the tabs" alt="refresh" /></a>
+                </ul>
+                <div id="tabs-1">
+                    <table align="left" class="DetailBox">
+                        <tr>
+                            <td id='outer_tableb' style="font-size: 0.75em !important">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="tabs-2">
+                    <table align="left" class="DetailBox">
+                        <tr>
+                            <td id='outer_tablel' style="font-size: 0.75em !important">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="tabs-3">
+                    <table align="left" class="DetailBox">
+                        <tr>
+                            <td id='outer_tabled' style="font-size: 0.75em !important">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="tabs-4">
+                    <table align="left" class="DetailBox">
+                        <tr>
+                            <td id='outer_tabledi' style="font-size: 0.75em !important">
+                                <!-- <table id='inner_table'  style='border:1px solid #000000; border-radius:5px;' cellpadding='1'>
     <tr>
 <td style='font-size:1.1em; color:#104E7F; font-family:Calibri; width:50%; text-align:left'>Anubhav Trivedi</td>
 <td style='width:50%;'>
@@ -512,237 +497,642 @@
 </tr>
 </table>
  <br />-->
-</td>
-</tr>
-</table>
-</div>
-</div>
-<!--Above Code Is For Rendering Multiple Tabed Div-->
-
-
-</div>    <!--Right Content Container Closes-->
-</div>   <!--Content Container Closes-->
-<!--Footer Container Opens-->
-<div id="footer" style='width:100%'> 
-<div style='position:absolute;left:6%;top:10%;'>
-<a href="javascript:void(0)" id="offerbox" onclick='GetAllOffers();'><img class="SubmitButton1" src="img/offerinfo.png" alt="offrinfo" /></a>
-<a href="javascript:void(0)" id="coverstats"><img class="SubmitButton1" src="img/coverstats.png" alt="cstats" /></a>
-<a href="javascript:void(0)" id="inoutbox" onclick='FetchCheckInOutMsgs();'><img class="SubmitButton1" src="img/inoutmsg.png" alt="inoutmsg" /></a>
-<div style='position:absolute;left:100%;top:2%;' class="flrl">
-<a id="release" href="javascript:void(0)" onclick="TablesToRelease();"><img class="SubmitButton1" src="img/release.png" alt="relese" /></a></div>
-</div>
-<div style='position:absolute;left:40%;top:40%;'>
-<img class="SubmitButton1" src="img/mobikon.png" alt="mbkn" />
-</div>
-<div style='position:absolute;left:72%;top:10%;'>
-<a href="javascript:void(0)" id="noti"><img class="SubmitButton1" src="img/NewBooking.png" alt="relese" /></a>
-</div>
-<div style='position:absolute;left:80%;top:10%;'>
-<input type='text' id='txtTotalCheckIn' readonly="readonly" style='border:none; font-family:Calibri; padding-top :0%;padding-left:5% ; background:url(img/checkin.png) no-repeat; width:25%; height:64px; font-size:2.0em; color:#ffffff' />
-<!--<img class="SubmitButton1" src="img/checkin.png"  alt="chkin" />-->
-<input type='text' id='txtTotalPax' readonly="readonly" style='border:none;font-family:Calibri;padding-top:0%;padding-left:5% ;background:url(img/pax.png) no-repeat; width:25%; height:64px; font-size:2.0em; color:#ffffff' />
-</div>
-
-</div> 
- <!--Footer Container Closes-->
- <!--Below Code Contains PopUp Div FOR AVAILABLE TABLE -->
-		<div id="basic-modal-content9">
-         <div style="font-size:1.6em;position:absolute;top:0%;left:40%;">Select Tables</div><div style="font-size:0.9em;position:absolute;top:1%;left:70%;color:#F11300" id="paxcal"></div>
-         <div style="position:absolute;width:95%;height:80%;top:5%;overflow:auto">
-            <table id="tabavl" style="width:100%">          
-           
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!--Above Code Is For Rendering Multiple Tabed Div-->
+        </div>
+        <!--Right Content Container Closes-->
+    </div>
+    <!--Content Container Closes-->
+    <!--Footer Container Opens-->
+    <div id="footer" style='width: 100%'>
+        <div style='position: absolute; left: 6%; top: 10%;'>
+            <a href="javascript:void(0)" id="offerbox" onclick='GetAllOffers();'>
+                <img class="SubmitButton1" src="img/offerinfo.png" alt="offrinfo" /></a> <a href="javascript:void(0)"
+                    id="coverstats">
+                    <img class="SubmitButton1" src="img/coverstats.png" alt="cstats" /></a>
+            <a href="javascript:void(0)" id="inoutbox" onclick='FetchCheckInOutMsgs();'>
+                <img class="SubmitButton1" src="img/inoutmsg.png" alt="inoutmsg" /></a>
+            <div style='position: absolute; left: 100%; top: 2%;' class="flrl">
+                <a id="release" href="javascript:void(0)" onclick="TablesToRelease();">
+                    <img class="SubmitButton1" src="img/release.png" alt="relese" /></a>
+            </div>
+        </div>
+        <div style='position: absolute; left: 40%; top: 40%;'>
+            <img class="SubmitButton1" src="img/mobikon.png" alt="mbkn" />
+        </div>
+        <div style='position: absolute; left: 72%; top: 10%;'>
+            <a href="javascript:void(0)" id="noti">
+                <img class="SubmitButton1" src="img/NewBooking.png" alt="relese" /></a>
+        </div>
+        <div style='position: absolute; left: 80%; top: 10%;'>
+            <input type='text' id='txtTotalCheckIn' readonly="readonly" style='border: none;
+                font-family: Calibri; padding-top: 0%; padding-left: 5%; background: url(img/checkin.png) no-repeat;
+                width: 25%; height: 64px; font-size: 2.0em; color: #ffffff' />
+            <!--<img class="SubmitButton1" src="img/checkin.png"  alt="chkin" />-->
+            <input type='text' id='txtTotalPax' readonly="readonly" style='border: none; font-family: Calibri;
+                padding-top: 0%; padding-left: 5%; background: url(img/pax.png) no-repeat; width: 25%;
+                height: 64px; font-size: 2.0em; color: #ffffff' />
+        </div>
+    </div>
+    <!--Footer Container Closes-->
+    <!--Below Code Contains PopUp Div FOR AVAILABLE TABLE -->
+    <div id="basic-modal-content9">
+        <div style="font-size: 1.6em; position: absolute; top: 0%; left: 40%;">
+            Select Tables
+        </div>
+        <div style="font-size: 0.9em; position: absolute; top: 1%; left: 70%; color: #F11300"
+            id="paxcal">
+        </div>
+        <div style="position: absolute; width: 95%; height: 80%; top: 5%; overflow: auto">
+            <table id="tabavl" style="width: 100%">
             </table>
         </div>
-         <div style="position:absolute;bottom:2%;left:2%;margin-top:4%;"><input type="button" value="Done" id="addtab"  onclick="javascript:AddTable();" class="ckmsgbtn" /></div>
-           <div style="position:absolute;bottom:2%;right:2%;width:80%;font-size:0.7em">
-           <img src="images/Grey.png" alt="Not Matching Your Preferences" /> - Doesn't Match Your Preferences
-            <img src="images/Red.png" alt="Booked" /> - Booked
-             <img src="images/Green.png" alt="Available" /> - Available
-              <img src="images/Blue.png" alt="Your Selection" /> - Your Selection
-              </div>
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>     
-
-<!--Below Code Contains PopUp Div FOR RELEASE TABLE -->
-		<div id="basic-modal-content">
-         <div style="font-size:1.6em;position:absolute;top:0%;left:40%">Occupied Tables</div>
-			<table id="tabrel" style="width:100%;margin-top:5%">           
-           
-            </table>
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-<!--Below Code Contains PopUp Div for Amend-->
-		<div id="basic-modal-content2">
-			<table>
-            <thead>Please Edit the Details<tr><td colspan="4"><hr /></td></tr></thead>
-            <tr><td>Date :</td><td><input type="text" /></td></tr>
-            <tr><td>Time :</td><td><input type="text" /></td></tr>
-            <tr><td>Pax :</td><td><select><option>1</option><option>2</option><option>3</option><option>4</option></select></td></tr>
-            <tr><td>Table No :</td><td><input type="text" /></td></tr>
-            <tr><td><br /></td></tr>
-            <tr><td><input type="button" value="Submit" /></td>
+        <div style="position: absolute; bottom: 2%; left: 2%; margin-top: 4%;">
+            <input type="button" value="Done" id="addtab" onclick="javascript:AddTable();" class="ckmsgbtn" />
+        </div>
+        <div style="position: absolute; bottom: 2%; right: 2%; width: 80%; font-size: 0.7em">
+            <img src="images/Grey.png" alt="Not Matching Your Preferences" />
+            - Doesn't Match Your Preferences
+            <img src="images/Red.png" alt="Booked" />
+            - Booked
+            <img src="images/Green.png" alt="Available" />
+            - Available
+            <img src="images/Blue.png" alt="Your Selection" />
+            - Your Selection
+        </div>
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div FOR RELEASE TABLE -->
+    <div id="basic-modal-content">
+        <div style="font-size: 1.6em; position: absolute; top: 0%; left: 40%">
+            Occupied Tables
+        </div>
+        <table id="tabrel" style="width: 100%; margin-top: 5%">
+        </table>
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for Amend-->
+    <div id="basic-modal-content2">
+        <table>
+            <thead>
+                Please Edit the Details<tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    Date :
+                </td>
+                <td>
+                    <input type="text" />
+                </td>
             </tr>
-            </table>		
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-<!--Below Code Contains PopUp Div for Book Table-->
+            <tr>
+                <td>
+                    Time :
+                </td>
+                <td>
+                    <input type="text" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Pax :
+                </td>
+                <td>
+                    <select>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Table No :
+                </td>
+                <td>
+                    <input type="text" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="Submit" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for Book Table-->
     <div id="basic-modal-content3">
-			<h3>Offers for you</h3>
-           <!-- <input type="radio" name="rdoffer" /> 20 % Discount on Bill above 2500.<br />
+        <h3>
+            Offers for you</h3>
+        <!-- <input type="radio" name="rdoffer" /> 20 % Discount on Bill above 2500.<br />
 			 <input type="radio" name="rdoffer" /> 30 % Discount on Bill above 3500.<br />
               <input type="radio" name="rdoffer" /> 50 % Discount on Bill above 5000.<br />
               <input type="button" id="bktb" value="Get Offers" /> <input type="button" value="Skip Offers" />-->
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-
-        <!--Below Code Contains PopUp Div for CheckIn Out Msgs-->
-    <div id="basic-modal-content4" style="height:95%;overflow-y:scroll !important">
-			 <h3>Set Check In and Check Out Messages</h3>
-             <h4>Check In SMS</h4>
-             <textarea id="txtCIsms" rows="5" cols="100" style="font-size:0.9em"></textarea>
-             <h4>Check In Email</h4>
-             <textarea id="txtCIeml" rows="5" cols="100" style="font-size:0.9em"></textarea>
-             <h4>Check Out SMS</h4>
-             <textarea id="txtCOsms" rows="5" cols="100" style="font-size:0.9em"></textarea>
-             <h4>Check Out Email</h4>
-             <textarea id="txtCOeml" rows="5" cols="100" style="font-size:0.9em"></textarea><br />
-             <input class="ckmsgbtn" style="margin-top:1%"  type="button" id="btn_CheckInOutMsg" value="Submit" onclick='postCheckInOutMsgs();' />
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-
-        <!--Below Code Contains PopUp Div for Offers-->
-		<div id="basic-modal-content5">
-        <h3 align="center">Active Offers</h3>
-			<table id="ofrtab" style='width:100%;font-family:Calibri'>
-          <!--  <tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>Title</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>Description</td></tr><tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>ValidOnDays</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>ValidOnTime</td></tr>-->
-            </table>		
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-          <!--Below Code Contains PopUp Div for Specific Offers-->
-		<div id="basic-modal-content10">
-        <h3>Offers for You</h3>
-        <div style="position:absolute;width:95%;height:80%;top:15%;overflow:auto">
-			<table id="sofrtab" style='width:100%;font-family:Calibri'>
-          <!--  <tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>Title</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>Description</td></tr><tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>ValidOnDays</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>ValidOnTime</td></tr>-->
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for CheckIn Out Msgs-->
+    <div id="basic-modal-content4" style="height: 95%; overflow-y: scroll !important">
+        <h3>
+            Set Check In and Check Out Messages</h3>
+        <h4>
+            Check In SMS</h4>
+        <textarea id="txtCIsms" rows="5" cols="100" style="font-size: 0.9em"></textarea>
+        <h4>
+            Check In Email</h4>
+        <textarea id="txtCIeml" rows="5" cols="100" style="font-size: 0.9em"></textarea>
+        <h4>
+            Check Out SMS</h4>
+        <textarea id="txtCOsms" rows="5" cols="100" style="font-size: 0.9em"></textarea>
+        <h4>
+            Check Out Email</h4>
+        <textarea id="txtCOeml" rows="5" cols="100" style="font-size: 0.9em"></textarea><br />
+        <input class="ckmsgbtn" style="margin-top: 1%" type="button" id="btn_CheckInOutMsg"
+            value="Submit" onclick='postCheckInOutMsgs();' />
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for Offers-->
+    <div id="basic-modal-content5">
+        <h3 align="center">
+            Active Offers</h3>
+        <table id="ofrtab" style='width: 100%; font-family: Calibri'>
+            <!--  <tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>Title</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>Description</td></tr><tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>ValidOnDays</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>ValidOnTime</td></tr>-->
+        </table>
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for Specific Offers-->
+    <div id="basic-modal-content10">
+        <h3>
+            Offers for You</h3>
+        <div style="position: absolute; width: 95%; height: 80%; top: 15%; overflow: auto">
+            <table id="sofrtab" style='width: 100%; font-family: Calibri'>
+                <!--  <tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>Title</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>Description</td></tr><tr><td style='width:25%;font-size:1.3em;color:#9DC4DF'>ValidOnDays</td><td style='width:75%;font-size:1.3em;color:#9DC4DF'>ValidOnTime</td></tr>-->
             </table>
-          </div>
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-           <!--Below Code Contains PopUp Div for Cover Stats-->
-		<div id="basic-modal-content7">
-	     <table border="0" style="width:100%" cellpadding="0" cellspacing="0">
-         <tr><td style="width:100%; text-align:center; font-size:1.5em;  color:#1C94C4" colspan="6">Current Statistics</td></tr>
-         <tr><td style="width:34%; text-align:center; font-size:1.4em; background-color:#F7B54A; color:#000000" colspan="2">Break-Fast</td><td style="width:33%; text-align:center;font-size:1.4em; background-color:#FDF6D4; color:#C77405" colspan="2">Lunch</td><td style="width:33%; text-align:center;font-size:1.4em; background-color:#F7B54A; color:#000000" colspan="2">Dinner</td></tr>
-         <tr><td style="width:18%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000">Checked-In</td><td style="width:16%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000">Pax</td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405">Checked-In</td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405">Pax</td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000">Checked-In</td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000">Pax</td></tr>
-          <tr><td style="width:18%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000"><span id="bcc"></span></td><td style="width:16%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000"><span id="bcp"></span></td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405"><span id="lcc"></span></td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405"><span id="lcp"></span></td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000"><span id="dcc"></span></td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000"><span id="dcp"></span></td></tr>
-         <tr><td style="width:100%; padding-bottom:4%" colspan="6"></td></tr>
-          
-          <tr><td style="width:100%; text-align:center; font-size:1.5em;  color:#1C94C4" colspan="6">Advance Bookings</td></tr>
-         <tr><td style="width:34%; text-align:center; font-size:1.4em; background-color:#F7B54A; color:#000000" colspan="2">Break-Fast</td><td style="width:33%; text-align:center;font-size:1.4em; background-color:#FDF6D4; color:#C77405" colspan="2">Lunch</td><td style="width:33%; text-align:center;font-size:1.4em; background-color:#F7B54A; color:#000000" colspan="2">Dinner</td></tr>
-         <tr><td style="width:18%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000">Bookings</td><td style="width:16%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000">Pax</td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405">Bookings</td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405">Pax</td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000">Bookings</td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000">Pax</td></tr>
-          <tr><td style="width:18%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000"><span id="bab"></span></td><td style="width:16%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000"><span id="bap"></span></td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405"><span id="lab"></span></td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405"><span id="lap"></span></td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000"><span id="dab"></span></td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000"><span id="dap"></span></td></tr>
-         <tr><td style="width:100%; padding-bottom:4%" colspan="6"></td></tr>
-
-         <tr><td style="width:100%; text-align:center; font-size:1.5em; color:#1C94C4" colspan="6">Day Report</td></tr>
-         <tr><td style="width:34%; text-align:center; font-size:1.4em; background-color:#F7B54A; color:#000000" colspan="2">Break-Fast</td><td style="width:33%; text-align:center;font-size:1.4em; background-color:#FDF6D4; color:#C77405" colspan="2">Lunch</td><td style="width:33%; text-align:center;font-size:1.4em; background-color:#F7B54A; color:#000000" colspan="2">Dinner</td></tr>
-         <tr><td style="width:18%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000">Checked-In</td><td style="width:16%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000">Pax</td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405">Checked-In</td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405">Pax</td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000">Checked-In</td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000">Pax</td></tr>
-          <tr><td style="width:18%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000"><span id="bdc"></span></td><td style="width:16%; text-align:center;font-size:1.0em;background-color:#F7B54A; color:#000000"><span id="bdp"></span></td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405"><span id="ldc"></span></td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#FDF6D4; color:#C77405"><span id="ldp"></span></td><td style="width:18%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000"><span id="ddc"></span></td><td style="width:16%; text-align:center;font-size:1.0em; background-color:#F7B54A; color:#000000"><span id="ddp"></span></td></tr>
-        
-         </table>
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-
-         <!--Below Code Contains PopUp Div for Table Structure-->
-		<div id="basic-modal-content6">
-				
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-
-               <!--Below Code Contains PopUp Div for BADGER NOTIFICATION DETAILS-->
-		<div id="basic-modal-content8">
-        <h2 align="center">Third Party Bookings</h2>
-			<table align="left" class="DetailBox">
+        </div>
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for Cover Stats-->
+    <div id="basic-modal-content7">
+        <table border="0" style="width: 100%" cellpadding="0" cellspacing="0">
             <tr>
-            <td id='outer_tablen'>
-
-            </td>
+                <td style="width: 100%; text-align: center; font-size: 1.5em; color: #1C94C4" colspan="6">
+                    Current Statistics
+                </td>
             </tr>
-            </table>
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
+            <tr>
+                <td style="width: 34%; text-align: center; font-size: 1.4em; background-color: #F7B54A;
+                    color: #000000" colspan="2">
+                    Break-Fast
+                </td>
+                <td style="width: 33%; text-align: center; font-size: 1.4em; background-color: #FDF6D4;
+                    color: #C77405" colspan="2">
+                    Lunch
+                </td>
+                <td style="width: 33%; text-align: center; font-size: 1.4em; background-color: #F7B54A;
+                    color: #000000" colspan="2">
+                    Dinner
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Checked-In
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Pax
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    Checked-In
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    Pax
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Checked-In
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Pax
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="bcc"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="bcp"></span>
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    <span id="lcc"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    <span id="lcp"></span>
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="dcc"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="dcp"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%; padding-bottom: 4%" colspan="6">
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%; text-align: center; font-size: 1.5em; color: #1C94C4" colspan="6">
+                    Advance Bookings
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 34%; text-align: center; font-size: 1.4em; background-color: #F7B54A;
+                    color: #000000" colspan="2">
+                    Break-Fast
+                </td>
+                <td style="width: 33%; text-align: center; font-size: 1.4em; background-color: #FDF6D4;
+                    color: #C77405" colspan="2">
+                    Lunch
+                </td>
+                <td style="width: 33%; text-align: center; font-size: 1.4em; background-color: #F7B54A;
+                    color: #000000" colspan="2">
+                    Dinner
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Bookings
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Pax
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    Bookings
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    Pax
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Bookings
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Pax
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="bab"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="bap"></span>
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    <span id="lab"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    <span id="lap"></span>
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="dab"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="dap"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%; padding-bottom: 4%" colspan="6">
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%; text-align: center; font-size: 1.5em; color: #1C94C4" colspan="6">
+                    Day Report
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 34%; text-align: center; font-size: 1.4em; background-color: #F7B54A;
+                    color: #000000" colspan="2">
+                    Break-Fast
+                </td>
+                <td style="width: 33%; text-align: center; font-size: 1.4em; background-color: #FDF6D4;
+                    color: #C77405" colspan="2">
+                    Lunch
+                </td>
+                <td style="width: 33%; text-align: center; font-size: 1.4em; background-color: #F7B54A;
+                    color: #000000" colspan="2">
+                    Dinner
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Checked-In
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Pax
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    Checked-In
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    Pax
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Checked-In
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    Pax
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="bdc"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="bdp"></span>
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    <span id="ldc"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #FDF6D4;
+                    color: #C77405">
+                    <span id="ldp"></span>
+                </td>
+                <td style="width: 18%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="ddc"></span>
+                </td>
+                <td style="width: 16%; text-align: center; font-size: 1.0em; background-color: #F7B54A;
+                    color: #000000">
+                    <span id="ddp"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for Table Structure-->
+    <div id="basic-modal-content6">
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for BADGER NOTIFICATION DETAILS-->
+    <div id="basic-modal-content8">
+        <h2 align="center">
+            Third Party Bookings</h2>
+        <table align="left" class="DetailBox">
+            <tr>
+                <td id='outer_tablen'>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
     <!--Below Code Contains PopUp Div for Timing-->
     <div id="basic-modal-content11">
-				
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-
-         <!--Below Code Contains PopUp Div for Customer Profile-->
-    <div id="basic-modal-content12">
-    <h3 align="center">Customer Profile (In Progress)</h2>
-			<table style='width:70%;color:#000000' cellspacing=6 cellpadding=6>
-            <tr><td style='width:30%;background-color:#F7B54A'>Name :</td><td style='width:70%;background-color:#FDF6D4'> Anubhav Trivedi</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Mobile :</td><td style='width:70%;background-color:#FDF6D4'> 9764441423</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Email :</td><td style='width:70%;background-color:#FDF6D4'> anubhav@mobikontech.com</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Number of Visits :</td><td style='width:70%;background-color:#FDF6D4'> 651</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Last Visited At :</td><td style='width:70%;background-color:#FDF6D4'> Coro Cafe</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Last Date of Visit :</td><td style='width:70%;background-color:#FDF6D4'> 13 Mar 2013</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Last Date of Visit :</td><td style='width:70%;background-color:#FDF6D4'> Coro Cafe</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Last Rating :</td><td style='width:70%;background-color:#FDF6D4'> 3.8</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Last Comments :</td><td style='width:70%;background-color:#FDF6D4'> [Food] - Food Was pretty good.</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>DOB :</td><td style='width:70%;background-color:#FDF6D4'> 1 July 1988</td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Annv :</td><td style='width:70%;background-color:#FDF6D4'> </td></tr>
-             <tr><td style='width:30%;background-color:#F7B54A'>Preferences :</td><td style='width:70%;background-color:#FDF6D4'> Non Smoking, Spicy Food , Coffee Deserts</td></tr>
-            </table>
-		</div>
-
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='img/basic/x.png' alt='' />
-		</div>
-       
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
+    <!--Below Code Contains PopUp Div for Customer Profile-->
+    <div id="basic-modal-content12" style=''>
+	<!-- <div style='position:absolute; top:1%; width:99%; left:0.5%;height:4%;background-color:#242424;
+	border-radius: 5px 5px 5px 5px;color:#FFFFFF;font-size:30dp;padding-top:1%;'>&nbsp;&nbsp;Customer Profile</div>
+	<div style='position:absolute;top:6%;right:7%'><img src='img/green_Flag.png' title='Premier Customer'/></div>
+        <table style='width: 100%; height:90%;margin-top:5%; color: #000000;' cellspacing='16' cellpadding='16'>
+            <tr>
+                <td>
+               <img src='img/Personal.png' /> <span style='color:#9A2F2E'>Personal Information </span>
+                    <table style='width: 100%;height:100%; color: #000000; float: left; border: 1px solid #c8c8c8;
+                        border-radius: 10px 10px 10px 10px;' cellspacing='6' cellpadding='6'>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Name :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Anubhav Trivedi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Age Group :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                20-25
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Gender :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Male
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                DOB :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                1 July
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Annv :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                9 July
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                <img src='img/Contact.png' /> <span style='verticle-align:top;color:#9A2F2E'>Contact Information</span>
+                    <table style='width:  100%;height:100%; color: #000000; float: right; border: 1px solid #c8c8c8;
+                        border-radius: 10px 10px 10px 10px;' cellspacing='6' cellpadding='6'>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Address :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Pune
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Mobile :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                8446307833
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Email :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                anubhav@mobikontech.com
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Location :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Kothrud
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+              <img src='img/Analytics.png' /> <span style='verticle-align:top;color:#9A2F2E'>  Key Analytics</span>
+                    <table style='width:  100%;height:100%; color: #000000; float: left; border: 1px solid #c8c8c8;
+                        border-radius: 10px 10px 10px 10px;' cellspacing='6' cellpadding='6'>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Last Visit :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                At Coro Cafe on 1 July,2013
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                No of Visits :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+							    1688
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Groups :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Coro Cafe
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+               <img src='img/Preferences.png' /> <span style='verticle-align:top;color:#9A2F2E'> Preferences</span>
+                    <table style='width:  100%;height:100%; color: #000000; float: right; border: 1px solid #c8c8c8;
+                        border-radius: 10px 10px 10px 10px;' cellspacing='6' cellpadding='6'>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Food :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Italian
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Dish :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Risotto with Wine
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Drinks :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Blenders Pride
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='width: 30%;color:#003B99;text-align:right'>
+                                Location :-
+                            </td>
+                            <td style='width: 70%;color:#5F5C6E;'>
+                                Coro Cafe
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+		-->
+    </div>
+    <!-- preload the images -->
+    <div style='display: none'>
+        <img src='img/basic/x.png' alt='' />
+    </div>
 </body>
 </html>
