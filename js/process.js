@@ -2581,6 +2581,11 @@ $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loadi
 				DesignCustomerProfile(respData);
 				$('.loading').remove();
 			}
+			else
+			{
+			  $('.loading').remove();
+			  $().toastmessage('showErrorToast', "Profile Not Found.");
+			}
         },
 
         error: function () {
