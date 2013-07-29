@@ -2569,12 +2569,13 @@ $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loadi
 	$.ajax({
         type: "POST",
         url: 'http://beta.mobikontech.com/konekt/Service/Query.asmx/GetCustomerProfile',	
+	// url:'http://192.168.1.51/KonektWeb/Service/Query.asmx/GetCustomerProfile',
 		data: "{'ActID':'" + ActId + "','Email':'" + Email + "','Mobile':'" + Mobile + "'}",
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         //jsonpCallback: 'jsonpCBDTFn19',
         success: function (response) {
-			if(response.d !=null || response.d.len !=0)
+			if(response.d !=null && response.d.len !=0 && response.d != "[]")
 			{
 				var respData = $.parseJSON(response.d);
 				
@@ -2589,7 +2590,7 @@ $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loadi
         },
 
         error: function () {
-		$('.loading').remove();
+			 $('.loading').remove();
              $().toastmessage('showErrorToast', "Profile Not Found.");
         }
     });
