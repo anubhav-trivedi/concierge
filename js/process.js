@@ -2605,7 +2605,7 @@ var FlagToShow="";
 var chtml = "";
 if(respData[0].last3mvisit > 5)
   FlagToShow = "<img src='img/green_Flag.png' title=''/>";
-else if(respData[0].last3mvisit >= 2) 
+else if(respData[0].last3mvisit > 2) 
     FlagToShow = "<img src='img/Yellow_Flag.png' title=''/>";
 else
    FlagToShow = "<img src='img/Red_Flag.png' title=''/>";
