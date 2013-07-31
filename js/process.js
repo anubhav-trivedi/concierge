@@ -887,17 +887,17 @@ function dynamicDivs(data) {
 		    strText = strText + "<span style='color:red'></span>";
 		}
         else {
-            strText = strText + "<span style='color:red'>Checked Out</span>";
+            strText = strText + "<span style='color:red;padding-right:2%'>Checked Out</span>";
         }
         strText = strText + "<a href='javascript:void(0)' onclick='FetchProfile(\"" + sessionStorage.Acid + "\",\"" + data[0].BDtls[i].EmailId + "\",\"" + data[0].BDtls[i].Cell_Number + "\")'><img src='img/profilebutton.jpg' class='profile'></a>";
         if (data[0].BDtls[i].BookingSource == "Facebook") {
-            strText = strText + "<img src='img/facebook.png' style='padding-right:2%'>";
+            strText = strText + "<img src='img/facebook.png' style='padding-left:2%'>";
         }
         else if (data[0].BDtls[i].BookingType == "Walking") {
-            strText = strText + "<img src='img/walking.png' style='padding-right:2%'>";
+            strText = strText + "<img src='img/walking.png' style='padding-left:2%'>";
         }
         else {
-            strText = strText + "<img src='img/phone.png' style='padding-right:2%'>";
+            strText = strText + "<img src='img/phone.png' style='padding-left:2%'>";
         }
        
           
@@ -2604,11 +2604,11 @@ function DesignCustomerProfile(respData)
 var FlagToShow="";
 var chtml = "";
 if(respData[0].last3mvisit > 5)
-  FlagToShow = "<img src='img/green_Flag.png' title='Premier Customer'/>";
+  FlagToShow = "<img src='img/green_Flag.png' title=''/>";
 else if(respData[0].last3mvisit >= 2) 
-    FlagToShow = "<img src='img/Yellow_Flag.png' title='Premier Customer'/>";
+    FlagToShow = "<img src='img/Yellow_Flag.png' title=''/>";
 else
-   FlagToShow = "<img src='img/Red_Flag.png' title='Premier Customer'/>";
+   FlagToShow = "<img src='img/Red_Flag.png' title=''/>";
    
    
    
