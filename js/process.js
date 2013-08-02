@@ -6,7 +6,7 @@
 //var API = "";
  var API = 'http://beta.mobikontech.com:8181/ConciergeAPI.php';
 //var API = 'http://192.168.1.52:8090/ConciergeAPI.php';
-//var API = 'http://getkonekt.com:8181/ConciergeAPI.php';
+// var API = 'http://getkonekt.com:8181/ConciergeAPI.php';
 var today = '';     // This  mm-dd-yy
 var today1 = '';    // This is yyyy-mm-dd
 var time = '';
@@ -1479,7 +1479,7 @@ function resetFields() {
                     var dispdate = dateFormat(new Date(), "dispDate", false)
                     $('#txtName').val('');
                     $('#txtName').removeAttr('disabled');
-                    $('#drpCCC').val('91');
+                    $('#drpCCC option[value="' + sessionStorage.CountryCode + '"]').prop('selected', 'selected');
                     $('#drpCCC').removeAttr('disabled');
                     $('#txtMobile').val('');
                     $('#txtMobile').removeAttr('disabled');
