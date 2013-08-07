@@ -136,6 +136,7 @@ $(document).ready(function () {
         var le = sessionStorage.LunchEnd;
         var ds = sessionStorage.DinnerStart;
         var de = sessionStorage.DinnerEnd;
+	 //  var de = '00:00:00';
         var timings = "";
 
         var clickFunction = ((document.ontouchstart !== null) ? 'onclick' : 'ontouchstart');
@@ -1540,7 +1541,6 @@ function ValidatePaxNumber(elementValue) {
 
 
 function ValidateFields() {
-
     var Name = $.trim($('#txtName').val());    
     var Cell_Number = $.trim($('#txtMobile').val());
     var Email = $.trim($('#txtEmail').val());
@@ -1560,6 +1560,7 @@ function ValidateFields() {
 	// This is added for better booking date and time validation when period of booking is over a day 03/07/2013
 	var BookingDateTime = dateFormat(BookingDate + " " + BookingTime, "custDate", false);
 	var de = dateFormat(day + " " + sessionStorage.DinnerEnd, "custDate", false);
+	//var de = dateFormat(day + " 00:00:00", "custDate", false);
 	var ds = dateFormat(day + " " + sessionStorage.DinnerStart, "custDate", false);
 	var ls = dateFormat(day + " " + sessionStorage.LunchStart, "custDate", false);
 	var le = dateFormat(day + " " + sessionStorage.LunchEnd, "custDate", false);
@@ -1645,8 +1646,8 @@ function ValidateFields() {
 
         return false;
     }
-    //else if (BookingTime <= sessionStorage.BrkFastStart || BookingTime >= sessionStorage.BrkFastEnd && BookingTime <= sessionStorage.LunchStart || BookingTime >= sessionStorage.LunchEnd && BookingTime <= sessionStorage.DinnerStart && BookingTime >= sessionStorage.DinnerEnd) {
-else if (BookingDateTime <= bs || BookingDateTime >= be && BookingDateTime <= ls || BookingDateTime >= le && BookingDateTime <= ds && BookingDateTime >= de) {
+    //else if (BookingTime < sessionStorage.BrkFastStart || BookingTime > sessionStorage.BrkFastEnd && BookingTime < sessionStorage.LunchStart || BookingTime > sessionStorage.LunchEnd && BookingTime < sessionStorage.DinnerStart && BookingTime > '00:00:00') {
+	else if ( (BookingDateTime < bs || BookingDateTime > be) && (BookingDateTime < ls || BookingDateTime > le) && (BookingDateTime < ds || BookingDateTime > de)) {
         $().toastmessage('showWarningToast', "Invalid Time <br \> Your time must fall in Outlet's Timings.");
         $('#txtTime').css('border', '1px solid #F51500');
         return false;
