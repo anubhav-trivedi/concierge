@@ -12,7 +12,7 @@
     <!--Slider-in icons-->
     <script type="text/javascript">
         if (sessionStorage.CSID != null && sessionStorage.CSID != "") {
-            window.location.href = "AppScreen.html";
+            window.location.href = "AppScreen.html?v=1.1";
         }
         $(document).ready(function () {
 
@@ -66,7 +66,7 @@
                         sessionStorage.DinnerStart = data[0].ds;
                         sessionStorage.DinnerEnd = data[0].de;
                         sessionStorage.CountryCode = data[0].cc;
-                        window.location.href = "AppScreen.html";
+                        window.location.href = "AppScreen.html?v=1.1";
                         $(".loading").remove();
                     }
                     else {
