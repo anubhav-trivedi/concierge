@@ -1270,9 +1270,11 @@ function showoffers() {
 
 }
 
+
+
 function bookTable() {
     
-
+//GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
     $('#txtName').css('border', '1px solid #DDDDDD');
     $('#txtMobile').css('border', '1px solid #DDDDDD');
     $('#txtEmail').css('border', '1px solid #DDDDDD');
@@ -1577,7 +1579,7 @@ function ValidateFields() {
     var vtime = chr + ':' + cmin + ':' + csec;
    // alert(parseInt(d1.getMinutes(),10) - parseInt(cmin,10));
 	
-	GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
+	
 
     if (Name == "") {
         $('#txtName').attr('placeholder', 'Please enter name');
@@ -1701,7 +1703,7 @@ function ValidateFields() {
 					{
 					   SEmail = temp[0].BDtls[i].EmailId;
 					}
-			
+		//	alert(Name +' ** '+SName);
 		    if (Name.toLowerCase() == SName.toLowerCase() && (Cell_Number == SCell || Email.toLowerCase() == SEmail.toLowerCase())) {
 			  $().toastmessage('showWarningToast', "Oops! We're sorry but you cannot make a second booking!");
 			  return false;
@@ -2636,6 +2638,7 @@ function PrintWindow() {
 
 function GetSBookings()
 {
+$('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>'); 
     var Time = $.trim($('#txtTime').val());
     var d2 = new Date('1900/01/01 ' + Time);
     var BookingTime = dateFormat(d2, "isoTime", false);
@@ -2667,17 +2670,23 @@ function GetSBookings()
 
             if (data[0].Success == 1) {
                 sessionStorage.SBookingDetails = JSON.stringify(data);
+				$('.loading').remove();
+				bookTable();
             }
 			else
 			{
 				sessionStorage.SBookingDetails = "";
+				$('.loading').remove();
+				bookTable();
 			}
 
         },
 
         error: function () {
 		     sessionStorage.SBookingDetails = "";
-            // $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Bookings.");
+			 $('.loading').remove();
+			// bookTable();
+             $().toastmessage('showErrorToast', "Connectivity Issue.  <br> Try Again.");
         }
     });
 	
