@@ -2639,23 +2639,30 @@ function PrintWindow() {
 function GetSBookings()
 {
 $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>'); 
+	
     var Time = $.trim($('#txtTime').val());
     var d2 = new Date('1900/01/01 ' + Time);
     var BookingTime = dateFormat(d2, "isoTime", false);
+	
+	var d1 = new Date($('#txtDate').val() + " " + BookingTime);
+    var BookingDate = dateFormat(d1, "shortDate", false);
+	
+	var day = new Date();
+    day = dateFormat(day, "shortDate", false);
     //********** Below call is to fetch profiles according to time***********
-   
-    if (BookingTime >= sessionStorage.BrkFastStart && BookingTime <= sessionStorage.BrkFastEnd) {
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"b"}';
-    }
-    else if (BookingTime >= sessionStorage.LunchStart && BookingTime <= sessionStorage.LunchEnd) {
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"l"}';
-    }
-    else if (BookingTime >= sessionStorage.DinnerStart && BookingTime <= sessionStorage.DinnerEnd) {
 
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":"d"}';
+    if (BookingDate == day && BookingTime >= sessionStorage.BrkFastStart && BookingTime <= sessionStorage.BrkFastEnd) {
+        var a = '{"csid": ' + csid + ',"dt":"' + BookingDate + '","st":"","dit":"b"}';
+    }
+    else if (BookingDate == day && BookingTime >= sessionStorage.LunchStart && BookingTime <= sessionStorage.LunchEnd) {
+        var a = '{"csid": ' + csid + ',"dt":"' + BookingDate + '","st":"","dit":"l"}';
+    }
+    else if (BookingDate == day && BookingTime >= sessionStorage.DinnerStart && BookingTime <= sessionStorage.DinnerEnd) {
+
+        var a = '{"csid": ' + csid + ',"dt":"' + BookingDate + '","st":"","dit":"d"}';
     }
     else {
-        var a = '{"csid": ' + csid + ',"dt":"' + today + '","st":"","dit":""}';
+        var a = '{"csid": ' + csid + ',"dt":"' + BookingDate + '","st":"","dit":""}';
     }
 
     $.ajax({
@@ -2688,8 +2695,7 @@ $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loadi
 			// bookTable();
              $().toastmessage('showErrorToast', "Connectivity Issue.  <br> Try Again.");
         }
-    });
-	
+    });	
 	//**********************************************************************************
 }
 /*
