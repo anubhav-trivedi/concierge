@@ -119,6 +119,10 @@ $(document).ready(function () {
         SetTimings();
         $('#basic-modal-content11').modal();
     });
+	
+	$('#txtDate').change(function() {
+			$('#txtTable').val('');
+	});
 
 	//$('#txtCIeml').jqte();
 	
@@ -736,6 +740,7 @@ $(document).ready(function () {
 
     $('#txtTable').click(function (e) {
         if ($('#txtTime').val() != "" && $('#txtPax').val() != "") {
+			GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
             GetAvailableTables();
             return false;
         }
@@ -746,6 +751,7 @@ $(document).ready(function () {
 
     $('#imgtab').click(function (e) {
         if ($('#txtTime').val() != "" && $('#txtPax').val() != "") {
+			GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
             GetAvailableTables();
             return false;
         }
@@ -1274,7 +1280,6 @@ function showoffers() {
 
 function bookTable() {
     
-//GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
     $('#txtName').css('border', '1px solid #DDDDDD');
     $('#txtMobile').css('border', '1px solid #DDDDDD');
     $('#txtEmail').css('border', '1px solid #DDDDDD');
@@ -2490,7 +2495,7 @@ function SearchBookings() {
         },
 
         error: function () {
-
+			$('.loading').remove();
             $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to search the bookings.");
         }
     });
@@ -2638,7 +2643,7 @@ function PrintWindow() {
 
 function GetSBookings()
 {
-$('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>'); 
+//$('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>'); 
 	
     var Time = $.trim($('#txtTime').val());
     var d2 = new Date('1900/01/01 ' + Time);
@@ -2672,28 +2677,27 @@ $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loadi
         contentType: "application/json; charset=utf-8",
         dataType: 'jsonp',
         jsonpCallback: 'jsonpCBDTFn18',
-        timeout: 20000,
+        timeout: 10000,
         success: function (data) {
 
             if (data[0].Success == 1) {
                 sessionStorage.SBookingDetails = JSON.stringify(data);
-				$('.loading').remove();
-				bookTable();
+				//$('.loading').remove();
+				//bookTable();
             }
 			else
 			{
 				sessionStorage.SBookingDetails = "";
-				$('.loading').remove();
-				bookTable();
+				//$('.loading').remove();
+				//bookTable();
 			}
-
         },
 
         error: function () {
 		     sessionStorage.SBookingDetails = "";
-			 $('.loading').remove();
+			// $('.loading').remove();
 			// bookTable();
-             $().toastmessage('showErrorToast', "Connectivity Issue.  <br> Try Again.");
+            // $().toastmessage('showErrorToast', "Connectivity Issue.  <br> Try Again.");
         }
     });	
 	//**********************************************************************************
