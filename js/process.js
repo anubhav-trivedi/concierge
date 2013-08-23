@@ -1576,7 +1576,8 @@ function ValidateFields() {
     if (chr < 10) { chr = '0' + chr } if (cmin < 10) { cmin = '0' + cmin } if (csec < 10) { csec = '0' + csec }
     var vtime = chr + ':' + cmin + ':' + csec;
    // alert(parseInt(d1.getMinutes(),10) - parseInt(cmin,10));
-   
+	
+	GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
 
     if (Name == "") {
         $('#txtName').attr('placeholder', 'Please enter name');
@@ -1667,6 +1668,7 @@ function ValidateFields() {
 		for(var i=0;i<temp[0].BDtls.length;i++) {
 		
 		// CODE ADDED BY ANUBHAV FOR REPEAT ENTRY VALIDATION
+		
 		var TName = temp[0].BDtls[i].CustomerName.split('. ');
 			var SName = "";	
 			var SCell = "";
@@ -1699,6 +1701,7 @@ function ValidateFields() {
 					{
 					   SEmail = temp[0].BDtls[i].EmailId;
 					}
+			
 		    if (Name.toLowerCase() == SName.toLowerCase() && (Cell_Number == SCell || Email.toLowerCase() == SEmail.toLowerCase())) {
 			  $().toastmessage('showWarningToast', "Oops! We're sorry but you cannot make a second booking!");
 			  return false;
@@ -2528,7 +2531,7 @@ function SetTime(val) {
     $('#hdnTno').val('');
     sessionStorage.tid = "";
     sessionStorage.tnm = "";
-	GetSBookings();      // This function Gets Specific Booking for lunch,dinner,brunch
+	//GetSBookings();      // This function Gets Specific Booking for lunch,dinner,brunch
 }
 
 
