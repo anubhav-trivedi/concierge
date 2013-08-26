@@ -118,9 +118,12 @@ $(document).ready(function () {
     $('#txtTime').click(function () {
         SetTimings();
         $('#basic-modal-content11').modal();
+		
     });
+
 	
 	$('#txtDate').change(function() {
+		    GetSBookings();      // This function Gets Specific Booking for lunch,dinner,brunch
 			$('#txtTable').val('');
 	});
 
@@ -144,7 +147,7 @@ $(document).ready(function () {
         var de = sessionStorage.DinnerEnd;
 	 //  var de = '00:00:00';
         var timings = "";
-
+ 
         var clickFunction = ((document.ontouchstart !== null) ? 'onclick' : 'ontouchstart');
         var count = 0;
         var tim = "";
@@ -152,7 +155,7 @@ $(document).ready(function () {
         if (bs != null && bs != "00:00:00" && be != "00:00:00") {
             timings += "<div style='width:100%;color:#1C94C4;font-size:1.8em' align='center'>Please Select Booking Time</div>";
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%; margin-top:3%'>";
-            timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Breakfast</td></tr>";
+            timings += "<tr><td align='center'  colspan='10' style='background-color:#F7B54A;color:#000000'>Breakfast</td></tr>";
 
             var bst = new Date('1900/1/1 ' + bs);
 
@@ -177,7 +180,7 @@ $(document).ready(function () {
 
                 count++;
 
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html()); GetSBookings();'>" + tim + "</a></td>";
             }
             timings += "</tr></table>";
 
@@ -212,7 +215,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html()); GetSBookings();'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -253,7 +256,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html()); GetSBookings();'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -740,7 +743,7 @@ $(document).ready(function () {
 
     $('#txtTable').click(function (e) {
         if ($('#txtTime').val() != "" && $('#txtPax').val() != "") {
-			GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
+			//GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
             GetAvailableTables();
             return false;
         }
@@ -751,7 +754,7 @@ $(document).ready(function () {
 
     $('#imgtab').click(function (e) {
         if ($('#txtTime').val() != "" && $('#txtPax').val() != "") {
-			GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
+			//GetSBookings(); // This function Gets Specific Booking for lunch,dinner,brunch
             GetAvailableTables();
             return false;
         }
@@ -1550,11 +1553,11 @@ function ValidatePaxNumber(elementValue) {
 
 
 function ValidateFields() {
+
     var Name = $.trim($('#txtName').val());    
     var Cell_Number = $.trim($('#txtMobile').val());
     var Email = $.trim($('#txtEmail').val());
     var Pax = $.trim($('#txtPax').val());
-    var Name = $.trim($('#txtName').val());
     var Table = $.trim($('#txtTable').val());
     var Time = $.trim($('#txtTime').val());
     var d2 = new Date('1900/01/01 ' + Time);
@@ -1668,10 +1671,11 @@ function ValidateFields() {
         $('#txtTable').css('border', '1px solid #F51500');
         return false;
     }
-    else if (BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "") {
+
+    else if (BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "" && sessionStorage.SBookingDetails != "null") {
 	
         var temp = $.parseJSON(sessionStorage.SBookingDetails);
-		
+
 		for(var i=0;i<temp[0].BDtls.length;i++) {
 		
 		// CODE ADDED BY ANUBHAV FOR REPEAT ENTRY VALIDATION
@@ -1715,11 +1719,77 @@ function ValidateFields() {
 			}
 		}
     }
+	    else if (BookingDate == day && BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.BookingDetails != null && sessionStorage.BookingDetails != "" && sessionStorage.BookingDetails != "null") {
+				if (BookingTime >= sessionStorage.BrkFastStart && BookingTime <= sessionStorage.BrkFastEnd) {
+					return CheckRepeatBooking("Brunch");
+				}
+				else if (BookingTime >= sessionStorage.LunchStart && BookingTime <= sessionStorage.LunchEnd) {
+					return CheckRepeatBooking("Lunch");
+				}
+				else if (BookingTime >= sessionStorage.DinnerStart && BookingTime <= sessionStorage.DinnerEnd) {
+
+					return CheckRepeatBooking("Dinner");
+				}
+		
+		}
 
     return true;
 
 }
 
+
+function CheckRepeatBooking(type){
+
+ var Name = $.trim($('#txtName').val());    
+    var Cell_Number = $.trim($('#txtMobile').val());
+    var Email = $.trim($('#txtEmail').val());
+var temp = $.parseJSON(sessionStorage.BookingDetails);
+for(var i=0;i<temp[0].BDtls.length;i++) {
+		
+		// CODE ADDED BY ANUBHAV FOR REPEAT ENTRY VALIDATION
+	if(temp[0].BDtls[i].Category == type){
+		var TName = temp[0].BDtls[i].CustomerName.split('. ');
+			var SName = "";	
+			var SCell = "";
+			var SEmail = "";
+					if(TName[0] == "Mr" || TName[0] == "Ms")
+					{
+			
+                       SName = TName[1];
+					}
+					else
+					{
+			
+						 SName = temp[0].BDtls[i].CustomerName;
+					}
+					
+					if(temp[0].BDtls[i].Cell_Number == "")
+					{
+					    SCell = "null";
+					}
+					else
+					{
+					   SCell = temp[0].BDtls[i].Cell_Number;
+					}
+					
+					if(temp[0].BDtls[i].EmailId == "")
+					{
+					    SEmail = "null";
+					}
+					else
+					{
+					   SEmail = temp[0].BDtls[i].EmailId;
+					}
+		//	alert(Name +' ** '+SName);
+		    if (Name.toLowerCase() == SName.toLowerCase() && (Cell_Number == SCell || Email.toLowerCase() == SEmail.toLowerCase())) {
+			  $().toastmessage('showWarningToast', "Oops! We're sorry but you cannot make a second booking!");
+			  return false;
+			}
+		}
+		
+	 }
+return true;	 
+}
 function DynamicOffers(data) {
     $('#ofrtab').html('');
     var strtext = '';
@@ -2538,7 +2608,7 @@ function SetTime(val) {
     $('#hdnTno').val('');
     sessionStorage.tid = "";
     sessionStorage.tnm = "";
-	//GetSBookings();      // This function Gets Specific Booking for lunch,dinner,brunch
+
 }
 
 
@@ -2644,7 +2714,6 @@ function PrintWindow() {
 function GetSBookings()
 {
 //$('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>'); 
-	
     var Time = $.trim($('#txtTime').val());
     var d2 = new Date('1900/01/01 ' + Time);
     var BookingTime = dateFormat(d2, "isoTime", false);
@@ -2656,13 +2725,13 @@ function GetSBookings()
     day = dateFormat(day, "shortDate", false);
     //********** Below call is to fetch profiles according to time***********
 
-    if (BookingDate == day && BookingTime >= sessionStorage.BrkFastStart && BookingTime <= sessionStorage.BrkFastEnd) {
+    if (BookingDate >= day && BookingTime >= sessionStorage.BrkFastStart && BookingTime <= sessionStorage.BrkFastEnd) {
         var a = '{"csid": ' + csid + ',"dt":"' + BookingDate + '","st":"","dit":"b"}';
     }
-    else if (BookingDate == day && BookingTime >= sessionStorage.LunchStart && BookingTime <= sessionStorage.LunchEnd) {
+    else if (BookingDate >= day && BookingTime >= sessionStorage.LunchStart && BookingTime <= sessionStorage.LunchEnd) {
         var a = '{"csid": ' + csid + ',"dt":"' + BookingDate + '","st":"","dit":"l"}';
     }
-    else if (BookingDate == day && BookingTime >= sessionStorage.DinnerStart && BookingTime <= sessionStorage.DinnerEnd) {
+    else if (BookingDate >= day && BookingTime >= sessionStorage.DinnerStart && BookingTime <= sessionStorage.DinnerEnd) {
 
         var a = '{"csid": ' + csid + ',"dt":"' + BookingDate + '","st":"","dit":"d"}';
     }
