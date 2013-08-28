@@ -1464,13 +1464,34 @@ clearInterval(timerinterval);
 			else if (data[0].Success == -3) {
                 $('.loading').remove();
                 $('.simplemodal-close').click();
-				resetFields();
+				 $('#txtName').val('');
+                $('#txtName').removeAttr('disabled');
+                $('#drpCCC option[value="' + sessionStorage.CountryCode + '"]').prop('selected', 'selected');
+                $('#drpCCC').removeAttr('disabled');
+                $('#txtMobile').val('');
+                $('#txtMobile').removeAttr('disabled');
+                $('#txtEmail').val('');
+                $('#txtEmail').removeAttr('disabled');
+                $('#txtPax').val('');
+                $('#txtDate').val(dispdate);
+                $('#txtDate').removeAttr('disabled');
+                timercontrol();
+                $('#txtTime').removeAttr('disabled');
+                $('#txtTable').val('');
+                $('#txtNote').val('');
+                $('#drpPreference').multiselect('uncheckAll');
+                $('#hdnStatus').val('');
+                $('#hdnChecked').val('');
+                $('#hdnBid').val('');
+                $('#hdnTno').val('');
+                $('#gtofr').removeAttr('disabled');
+                $('#skofr').removeAttr('disabled');
+                $('#drpSex').val('Male');
                // $().toastmessage('showSuccessToast', "Table already booked");
             }
 			else if (data[0].Success == -4) {
                 $('.loading').remove();
                 $('.simplemodal-close').click();
-				resetFields();
                 $().toastmessage('showWarningToast', "Oops! We're sorry but you cannot make a second booking!");
             }
             else {
