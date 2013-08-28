@@ -123,7 +123,7 @@ $(document).ready(function () {
 
 	
 	$('#txtDate').change(function() {
-		    GetSBookings();      // This function Gets Specific Booking for lunch,dinner,brunch
+		 //   GetSBookings();      // This function Gets Specific Booking for lunch,dinner,brunch
 			$('#txtTable').val('');
 	});
 
@@ -180,7 +180,7 @@ $(document).ready(function () {
 
                 count++;
 
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html()); GetSBookings();'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
             }
             timings += "</tr></table>";
 
@@ -215,7 +215,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html()); GetSBookings();'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -256,7 +256,7 @@ $(document).ready(function () {
                     timings += "</tr><tr>";
 
                 count++;
-                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html()); GetSBookings();'>" + tim + "</a></td>";
+                timings += "<td style='background-color:#FDF6D4'><a href='javascript:void(0);' style='color:black' onclick='clearInterval("+ timerinterval +"); SetTime($(this).html());'>" + tim + "</a></td>";
 
             }
             timings += "</tr></table>";
@@ -337,7 +337,6 @@ $(document).ready(function () {
     // $("#customerfilter").tokenInput("http://getkonekt.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
     $("#customerfilter").tokenInput("http://beta.mobikontech.com:8181/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
     // $("#customerfilter").tokenInput("http://192.168.1.52:8090/ConciergeAPI.php?input=" + $('#customerfilter').val() + "&accountid=" + acid + "&tp=GCI");
-
 
     /**************** JSON PARSING*********************
     
@@ -1462,6 +1461,18 @@ clearInterval(timerinterval);
                 $('.simplemodal-close').click();
                 $().toastmessage('showSuccessToast', "Table already booked");
             }
+			else if (data[0].Success == -3) {
+                $('.loading').remove();
+                $('.simplemodal-close').click();
+				resetFields();
+               // $().toastmessage('showSuccessToast', "Table already booked");
+            }
+			else if (data[0].Success == -4) {
+                $('.loading').remove();
+                $('.simplemodal-close').click();
+				resetFields();
+                $().toastmessage('showWarningToast', "Oops! We're sorry but you cannot make a second booking!");
+            }
             else {
                 $('.loading').remove();
                 $('#gtofr').removeAttr('disabled');
@@ -1671,7 +1682,7 @@ function ValidateFields() {
         $('#txtTable').css('border', '1px solid #F51500');
         return false;
     }
-
+/*
     else if (BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "" && sessionStorage.SBookingDetails != "null") {
 	
         var temp = $.parseJSON(sessionStorage.SBookingDetails);
@@ -1732,7 +1743,7 @@ function ValidateFields() {
 				}
 		
 		}
-
+*/
     return true;
 
 }
