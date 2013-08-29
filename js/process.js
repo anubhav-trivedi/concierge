@@ -1352,7 +1352,7 @@ function Booking(obj) {
 clearInterval(timerinterval);
     $('#gtofr').attr('disabled', 'true');
     $('#skofr').attr('disabled', 'true');
-
+var dispdate = dateFormat(new Date(), "dispDate", false)
     today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -1426,7 +1426,7 @@ clearInterval(timerinterval);
         success: function (data) {
 
             if (data[0].Success == 1) {
-                var dispdate = dateFormat(new Date(), "dispDate", false)
+                
                 $('.loading').remove();
                 $('.simplemodal-close').click();
                 $().toastmessage('showSuccessToast', "Table Booked Successfully");
