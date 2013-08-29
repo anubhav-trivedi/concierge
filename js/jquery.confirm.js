@@ -51,9 +51,9 @@
     }
 
     $.confirm.hide = function () {
-        $('#confirmOverlay').fadeOut(function () {
-            $(this).remove();
-        });
+        //$('#confirmOverlay').fadeOut(function () {
+            $('#confirmOverlay').remove();
+      //  });
     }
 
 })(jQuery);

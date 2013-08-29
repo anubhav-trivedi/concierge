@@ -26,6 +26,7 @@ var dtime = "";
 
 function timercontrol()
 {
+  clearInterval(timerinterval);
    dtime = dateFormat(new Date(), "shortTime", false);
     $('#txtTime').val(dtime);
     //********** below code updates the time every 1 second
@@ -1697,13 +1698,13 @@ function ValidateFields() {
         $('#txtTime').css('border', '1px solid #F51500');
         return false;
     }
-
+/*
     else if (Table == "") {
         $('#txtTable').attr('placeholder', 'Please enter Table Number');
         $('#txtTable').css('border', '1px solid #F51500');
         return false;
     }
-/*
+
     else if (BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "" && sessionStorage.SBookingDetails != "null") {
 	
         var temp = $.parseJSON(sessionStorage.SBookingDetails);
