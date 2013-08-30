@@ -2141,7 +2141,7 @@ function ReleaseTable(bid) {
 							else if (data[0].Success == -3) {
 								$('.simplemodal-close').click();
                                 $('.loading').remove();
-							 }							
+							 }	 						
                             else {
                                 $('.simplemodal-close').click();
                                 $('.loading').remove();
