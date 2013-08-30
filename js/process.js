@@ -1024,6 +1024,10 @@ function TableCheckIn(bid,btime) {
                                    // $().toastmessage('showWarningToast', "Table can only be checked in <br \> + - 15 minutes from booking time.<br \> Please edit this booking to check-in");
                                    $().toastmessage('showWarningToast', "Sorry, Outlet timing is over.");
 							   }
+                                else if (data[0].Success == -3) {
+                                    $('.loading').remove();
+                                   //$().toastmessage('showWarningToast', "This customer is already checked in");
+							   }							   
                                 else {
                                     $('.loading').remove();
                                     $().toastmessage('showErrorToast', "Table Checked In Failed");
@@ -1211,6 +1215,9 @@ function CancelBooking(bid) {
                                 RefreshDynamicDivs();
 								 RefreshCounter();
                             }
+							else if (data[0].Success == -3) {
+								$('.loading').remove();
+							 }
                             else {
                                 $().toastmessage('showErrorToast', "Table Cancellation Failed");
                                 $('.loading').remove();
@@ -2131,6 +2138,10 @@ function ReleaseTable(bid) {
                                 RefreshDynamicDivs();
                                 RefreshCounter();
                             }
+							else if (data[0].Success == -3) {
+								$('.simplemodal-close').click();
+                                $('.loading').remove();
+							 }							
                             else {
                                 $('.simplemodal-close').click();
                                 $('.loading').remove();
