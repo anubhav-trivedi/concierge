@@ -2696,7 +2696,7 @@ $('#content').append('<div class="loading"><img src="img/loading.gif" alt="Loadi
         type: "POST",
         url: 'http://beta.mobikontech.com/konekt/Service/Query.asmx/GetCustomerProfile',	
 	    //  url:'http://localhost/KonektWeb/Service/Query.asmx/GetCustomerProfile',
-		//  url:'http://getkonekt.com//KonektWeb/Service/Query.asmx/GetCustomerProfile',
+		//  url:'http://getkonekt.com//konekt/Service/Query.asmx/GetCustomerProfile',
 		data: "{'ActID':'" + ActId + "','Email':'" + Email + "','Mobile':'" + Mobile + "'}",
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
