@@ -1704,14 +1704,13 @@ function ValidateFields() {
         $().toastmessage('showWarningToast', "Invalid Time <br \> Your time must fall in Outlet's Timings.");
         $('#txtTime').css('border', '1px solid #F51500');
         return false;
-    }
-/*
-    else if (Table == "") {
+    }  
+    else if (Table == "" && $('input[name=custype]:radio:checked').val() == "Walking") {
         $('#txtTable').attr('placeholder', 'Please enter Table Number');
         $('#txtTable').css('border', '1px solid #F51500');
         return false;
     }
-
+/*
     else if (BookingStatus != "Booked" && BookingStatus != "Amended" && sessionStorage.SBookingDetails != null && sessionStorage.SBookingDetails != "" && sessionStorage.SBookingDetails != "null") {
 	
         var temp = $.parseJSON(sessionStorage.SBookingDetails);
