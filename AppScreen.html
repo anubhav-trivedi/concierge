@@ -70,12 +70,12 @@
                         Name</label>
                 </div>
                 <div class='textfields'>
-                    <select id="drpTitle" style="width: 12%; margin-right: 0%; margin-left: 10%">
+                    <select id="drpTitle" style="width: 15%; margin-right: 0%; margin-left: 10%">
                         <option value="Mr">Mr.</option>
                         <option value="Ms">Ms.</option>
                         <option value=""></option>
                     </select>
-                    <input type="text" id="txtName" style="width: 57%; margin-right: 1%;" />
+                    <input type="text" id="txtName" style="width: 54%; margin-right: 1%;" />
                 </div>
             </div>
             <div class="controlbox">
@@ -407,7 +407,7 @@
                 <label class="Filter1">
                     BOOKING DETAILS</label>
                 <input type="text" id="tablefilter" /><input type="text" readonly="readonly" id="txtfilterdate"
-                    placeholder="Select Date" /><input type="button" value="GO" class="ckmsgbtn" onclick="SearchBookings();"
+                    placeholder="Select Date" /><input type="button" value="SEARCH" class="ckmsgbtn" onclick="SearchBookings();"
                         id="btnFilter" />
             </div>
             <!--Below Code Is For Rendering Multiple Tabed Div-->
@@ -660,18 +660,18 @@
     <!--Below Code Contains PopUp Div for CheckIn Out Msgs-->
     <div id="basic-modal-content4" style="height: 95%; overflow-y: scroll !important">
         <h3>
-            Set Check In and Check Out Messages</h3>
+            Set Check-In and Check-Out Messages</h3>
         <h4>
-            Check In SMS</h4>
+            Check-In SMS</h4>
         <textarea id="txtCIsms" rows="5" cols="100" style="font-size: 0.9em"></textarea>
         <h4>
-            Check In Email</h4>
+            Check-In Email</h4>
         <textarea id="txtCIeml" rows="5" cols="100" style="font-size: 0.9em"></textarea>
         <h4>
-            Check Out SMS</h4>
+            Check-Out SMS</h4>
         <textarea id="txtCOsms" rows="5" cols="100" style="font-size: 0.9em"></textarea>
         <h4>
-            Check Out Email</h4>
+            Check-Out Email</h4>
         <textarea id="txtCOeml" rows="5" cols="100" style="font-size: 0.9em"></textarea><br />
         <input class="ckmsgbtn" style="margin-top: 1%" type="button" id="btn_CheckInOutMsg"
             value="Submit" onclick='postCheckInOutMsgs();' />
