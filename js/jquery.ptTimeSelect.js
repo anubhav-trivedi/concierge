@@ -716,7 +716,7 @@
                     var m = minutes[minuteCounter];
                     var displayText = '';
                     if (m !== undefined ) {
-                        displayText = (m < 10) && showMinutesLeadingZero ? "0" + m.toString() : m.toString();
+                        displayText = (m < 10) && showMinutesLeadingZero ? "" + m.toString() : m.toString();
                     }
                     html += this._generateHTMLMinuteCell(inst, m, displayText);
                     minuteCounter++;
@@ -740,7 +740,7 @@
                 displayHour = 12;
             }
             if ((displayHour < 10) && showLeadingZero) {
-                displayHour = '0' + displayHour;
+                displayHour = '' + displayHour;
             }
 
             var html = "";
@@ -1318,7 +1318,7 @@
             }
 
             var h = displayHours.toString();
-            if (showLeadingZero && (displayHours < 10)) { h = '0' + h; }
+            if (showLeadingZero && (displayHours < 10)) { h = '' + h; }
 
             var m = selectedMinutes.toString();
             if (selectedMinutes < 10) { m = '0' + m; }
