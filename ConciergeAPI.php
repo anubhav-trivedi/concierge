@@ -1,7 +1,7 @@
-
-
 <?php 
 
+	include("conciergemessagehelper.php");
+	
 $FromDate = '';
 $ConnLink = '';
 
@@ -18,20 +18,19 @@ if(ISSET($_REQUEST['u']))
 if(ISSET($_REQUEST['p']))
 	$password = $_REQUEST['p'];	
 	
-//$gSendMessageURL = "http://beta.mobikontech.com/konekt/service/konektapi.asmx/";
-//$gSendMessageURL = "http://beta.mobikontech.com/konekt/service/konektapi.asmx/";
-$gSendMessageURL = "http://getkonekt.com/konekt/service/konektapi.asmx/";
+$gSendMessageURL = "http://beta.mobikontech.com/konekt/service/konektapi.asmx/";
+//$gSendMessageURL = "http://getkonekt.com/konekt/service/konektapi.asmx/";
 
 if(ISSET($_REQUEST['tp']))
 		$type = $_REQUEST['tp'];
-		
+
 if(ISSET($_REQUEST['d']))
 		$data = $_REQUEST['d'];
 			
 		
 	switch (strtoupper($type)) {
 		case 'GAD':
-			GetAccountDetails($xml);
+			GetAccountDetails($xml); /* Not in use */
 			break;
 		case 'GBT':	
 			//Get booked tables						
@@ -97,11 +96,7 @@ if(ISSET($_REQUEST['d']))
 		case 'GPREFTBL':	
 			//get tables based on preference
 			GetPreferencebasedTables($data);
-			break;
-		//case 'SOFFBT':	
-			//send selected offer and book table
-		//	SendOfferWithBooking($data);
-		//	break;			
+			break;		
 		case 'AUTH':	
 			//authenticate login
 			Authenticate($loginName,$password);
@@ -110,12 +105,13 @@ if(ISSET($_REQUEST['d']))
 			//get cancelled booking details
 			GetCancelledBookings($data);
 			break;
+		
+		/* 		---------------------------------------------------------------------------------------		*/
 			
-			
-		case 'AMOLSBT':	
+		/*case 'AMOLSBT':	
 			//book table
 			AmolSetBookTable($data);
-			break;
+			break; */
 		case 'PR': 
 		   //Set Preferenses
 		   SetPreferenses($data);
@@ -129,18 +125,26 @@ if(ISSET($_REQUEST['d']))
 		   SetConciergeUsers($data);
 		   break;
 		  case 'CTS': 
-		   //Set Concierge Users
+		   //Set Table Settings
 		   SetTableSettings($data);
 		   break;
 		  case 'TAT': 
-		   //Set Concierge Users
+		   //Set Table turnaround time
 		   SetTableTATSettings($data);
 		   break;
 		  case 'SCS': 
-		   //Set Concierge Users
+		   //Set Concierge Settings
 		   SetConciergeSettings($data);
 		   break;			
-			
+		  case 'SCSD': 
+		   //Set Concierge Server Details
+		   SetConciergeServerDetails($data);
+		   break;
+		case 'GCSD':	
+			//Get Server Details
+			GetServerDetails($data);
+			break;		   
+		   
 	}
 		
 /*if($data != '' )
@@ -183,9 +187,9 @@ else
 
 
 function ConnectToMySQL() {
-    //$con = mysql_connect("192.168.1.52","conci","Mobikontech");
-	//$con = mysql_connect("localhost:3307","root","Marijuana@77");	
-	$con = mysql_connect("localhost:3306","root","");		
+    $con = mysql_connect("192.168.1.52","conci","Mobikontech");			//Local
+	//$con = mysql_connect("localhost:3307","root","Marijuana@77");		//Beta
+	//$con = mysql_connect("localhost:3306","root","");					//Prod
     if (!$con)
     {
       die('Could not connect: ' . mysql_error());
@@ -196,9 +200,9 @@ function ConnectToMySQL() {
 
 function ConnectToMySQLi() {
     
-	//$mysqli = new mysqli("192.168.1.52","conci","Mobikontech");
-//$mysqli =new mysqli("localhost:3307","root","Marijuana@77");	
-$mysqli =new mysqli("localhost:3306","root","");
+	$mysqli = new mysqli("192.168.1.52","conci","Mobikontech");			//Local
+	//$mysqli =new mysqli("localhost:3307","root","Marijuana@77");		//Beta
+	//$mysqli = new mysqli("localhost:3306","root","");					//Prod	
     if (mysqli_connect_errno())
     {
       die('Could not connect: ' . mysqli_connect_error());
@@ -206,6 +210,41 @@ $mysqli =new mysqli("localhost:3306","root","");
 
     return $mysqli;
 }
+
+  function ConnectToMssql()
+  {
+     $dsn="Driver={SQL Server Native Client 10.0};Server=64.15.155.142;Database=KonektApp;";		//Beta
+     $username="demodb";
+     $password="Marijuana@77";
+	 try
+	 {
+		$SqlLink=odbc_connect($dsn,$username,$password);  //or die ("could not connect");
+			
+		if(!$SqlLink) 			 //$SqlLink === false
+		{			
+			//throw new Exception(odbc_error());				
+			die('Could not connect');
+		}
+	 }
+	catch (Exception $e) {											
+			LogErr($e->getMessage());	
+
+			$file = 'data.txt';				
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'con  '." ".$e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);
+			
+	}     
+	
+	  return $SqlLink;
+   }
+   
+
 
 function LoadXml($xml_str)
 {	
@@ -215,42 +254,42 @@ function LoadXml($xml_str)
 }
 
 
-
 function Authenticate($loginName,$password)
 {
-		$aResults ='';
-		$ConnLink ='';
-		
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
-			
-	$sql = "CALL AuthUser('".$loginName."','".$password."')";
-		
-	$result = mysql_query($sql);
+	$ConnLink=ConnectToMssql();
 	
-	if (mysql_affected_rows()<=0) 
-	{
-		$aResults[] = array("Success"=>0);	
-	}
-	else
-	{
-		while($row = mysql_fetch_array($result))
-		{
-			  $aResults[] = array( "oid"=>$row['OID'],"csid"=>$row['ConciergeSettingId'],"acid"=>$row['AccountId'] ,"eid"=>$row['EntityId'],
-"bkfs"=>$row['BreakfastStart'],"bkfe"=>$row['BreakfastEnd'],"ls"=>$row['LunchStart'],"le"=>$row['LunchEnd'],"ds"=>$row['DinnerStart'],"de"=>$row['DinnerEnd']
-,"cc"=>$row['CountryCallingCode'],"Success"=>1);
-
-			   
+	try
+	{	
+		$sql = "EXEC dbo.spConciergeAppAuthUser '".str_replace("'","''",$loginName)."','".str_replace("'","''",$password)."'";  
+		$hasRS = "0";
+		$result=odbc_exec($ConnLink,$sql) or die(odbc_error());
+		
+		while ($row = odbc_fetch_array($result)) 
+		{	
+			$hasRS = "1";
+			 $aResults[] = array( "oid"=>"","csid"=>$row['ConciergeSettingId'],"acid"=>$row['AccountId'] ,"eid"=>$row['EntityId'],"bkfs"=>$row['BreakfastStart'],"bkfe"=>$row['BreakfastEnd'],"ls"=>$row['LunchStart'],"le"=>$row['LunchEnd'],"ds"=>$row['DinnerStart'],"de"=>$row['DinnerEnd'],"cc"=>$row['CountryCallingCode'],"Success"=>1);			
 		}
+		
+		if($hasRS === "0")
+			$aResults[] = array("Success"=>0);
+			
+    	odbc_close($ConnLink);
 	}
-	mysql_close($ConnLink);			
-		$json_response = json_encode($aResults);
-		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
-		if(ISSET($_REQUEST["callback"])) {
-			$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
-			}
-		# Return the response
-		echo $json_response;
+	catch(Exception $e)
+	{
+		$aResults[] = array("Success"=>0);
+		odbc_close($ConnLink);
+	}
+
+	$json_response = json_encode($aResults);
+    
+	# Optionally: Wrap the response in a callback function for JSONP cross-domain support
+	if(ISSET($_REQUEST["callback"])) {
+	$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
+	}
+	# Return the response
+	echo $json_response;
+	
 }
 
 function GetAccountDetails($xml)
@@ -317,74 +356,85 @@ function GetCancelledBookings($input)
 		$aResults ='';
 		$ConnLink ='';
 
-try
+		try
 		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
+			$hasRS = "0";
+			$ConnLink = ConnectToMssql();
 		
 			$BookingDate = new DateTime($BookingDate);
 			$cresult = $BookingDate->format('Y-m-d');	
 			
-			$SQL = "CALL GetCancelledBookingDetails(".$ConciergeSettingId.",'".$cresult."');"; 			
-									
-			$result = mysql_query($SQL) or die(mysql_error());  
+
+			$SQL = "EXEC spConciergeAppGetCancelledBookingDetails ".$ConciergeSettingId.",'".$cresult."'";
+			$result = odbc_exec($ConnLink,$SQL);
 		
-			if (mysql_affected_rows()<=0) {					
-				$aResults[] = array("Success"=>0);
-			}
-			else{		
+			//$SQL = "EXEC spConciergeAppGetCancelledBookingDetails @pConciergeSettingId = ? ,@pBookingDate = ? ";
+			
+			//$params = array($ConciergeSettingId, $cresult);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+			
+				if(!$result)
+					throw new Exception(odbc_error($ConnLink));
+								
 					$cbdtls = '';
-					#echo mysql_num_rows($result);
-					if(mysql_num_rows($result) >0)
-					{
-						while($row = mysql_fetch_array($result)){
-							//echo $row['CID']. " - ". $row['ConciergeTableBookingRequestId'];
-							//echo "<br />";
-							$cbdtls[] = array("CBId"=>$row['CBId']
-											, "CSId"=>$row['CSId']
-											#, "CustomerId"=>$row['CustomerId']
-											#, "AccountId"=>$row['AccountId']
-											#, "EntityId"=>$row['EntityId']
-											, "CustomerName"=>$row['Name']
-											, "Gender"=>$row['Gender']
-											, "EmailId"=>$row['EmailId']
-											, "CountryCallingCode" => $row['CountryCallingCode']
-											, "Cell_Number"=>$row['Cell_Number']
-											, "BookingDate"=>$row['BookingDate']
-											, "BookingTime"=>$row['BookingTime']
-											, "BookingUTCDateTime"=>$row['BookingUTCDateTime']
-											, "DisplayDate"=>$row['DisplayDate']
-											, "DisplayTime"=>$row['DisplayTime']												
-											, "Pax"=>$row['Pax']
-											, "SeatingPreferenceIDs"=>$row['SeatingPreferenceIDs']
-											, "SeatingPrefNames"=>$row['SeatingPrefNames']											
-											, "TableIDs"=>$row['TableIDs']
-											, "TableNos" =>$row['TableNos']
-											, "BookingType"=>$row['BookingType']											
-											, "RequestNote"=>$row['RequestNote']
-											, "CheckedIn"=>$row['CheckedIn']
-											, "BookingStatus"=>$row['BookingStatus']
-											, "BookingSource"=>$row['BookingSource']											
-											, "Category"=>$row['Category']
-											, "CheckOutStatus"=>$row['CheckOutStatus']
-											);	
-												
-						}						
+					
+					while($row = odbc_fetch_array($result)){
+						//echo $row['CID']. " - ". $row['ConciergeTableBookingRequestId'];
+						$hasRS = "1";
+						$cbdtls[] = array("CBId"=>$row['CBId']
+										, "CSId"=>$row['CSId']
+										#, "CustomerId"=>$row['CustomerId']
+										#, "AccountId"=>$row['AccountId']
+										#, "EntityId"=>$row['EntityId']
+										, "CustomerName"=>$row['Name']
+										, "Gender"=>$row['Gender']
+										, "EmailId"=>$row['EmailId']
+										, "CountryCallingCode" => $row['CountryCallingCode']
+										, "Cell_Number"=>$row['Cell_Number']
+										, "BookingDate"=>$row['BookingDate']
+										, "BookingTime"=>$row['BookingTime']
+										, "BookingUTCDateTime"=>$row['BookingUTCDateTime']
+										, "DisplayDate"=>$row['DisplayDate']
+										, "DisplayTime"=>$row['DisplayTime']												
+										, "Pax"=>$row['Pax']
+										, "SeatingPreferenceIDs"=>$row['SeatingPreferenceIDs']
+										, "SeatingPrefNames"=>$row['SeatingPrefNames']											
+										, "TableIDs"=>$row['TableIDs']
+										, "TableNos" =>$row['TableNos']
+										, "BookingType"=>$row['BookingType']											
+										, "RequestNote"=>$row['RequestNote']
+										, "CheckedIn"=>$row['CheckedIn']
+										, "BookingStatus"=>$row['BookingStatus']
+										, "BookingSource"=>$row['BookingSource']											
+										, "Category"=>$row['Category']
+										, "CheckOutStatus"=>$row['CheckOutStatus']
+										);	
+											
+					}	
+					
+					if($hasRS === "0")
+						$aResults[] = array("Success"=>0);						
+					else					
 						$aResults[] = array("Success"=>1, "CBDtls" =>$cbdtls);
-					}
-					else
-					{
-						$aResults[] = array("Success"=>0);
-					}										
-			}					
+															
+					odbc_close($ConnLink);		
 		}
 		catch(Exception $e){
+	
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Error message is : ' . $e->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);
+				
 			$aResults[] = array("Success"=>-1);
-						
+				odbc_close($ConnLink);		
 		}
-		
-		mysql_close($ConnLink);			
-		
+				
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -420,84 +470,93 @@ function GetBookings($input)
 		
 		$aResults ='';
 		$ConnLink ='';
-						
+		$hasRS = "0";			
 		try
 		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
+
+			$ConnLink = ConnectToMssql();			
 		
 			$BookingDate = new DateTime($BookingDate);
 			$cresult = $BookingDate->format('Y-m-d');	
 			
-			$SQL = "CALL GetBookingDetails(".$ConciergeSettingId.",'".$cresult."','".$SearchText."','".$DineType."');"; 			
-			#$SQL = "CALL GetBookingDetails('651908e1-72d0-4260-81a2-1e498dd3cc96','c473bc69-229d-4832-a599-60c7eedf50e5','2013-01-31','');";
-			
-			
-			$result = mysql_query($SQL) or die(mysql_error());  
+			$SQL = "EXEC spConciergeAppGetBookingDetails ".$ConciergeSettingId.",'".$cresult."','".$SearchText."','".$DineType."'";
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));
 		
-			if (mysql_affected_rows()<=0) {					
-				$aResults[] = array("Success"=>0);
-			}
-			else{		
+			//$SQL = "EXEC spConciergeAppGetBookingDetails @pConciergeSettingId = ? ,@pBookingDate = ?, @pSearchText = ?,@pDineCategory =?";
+			
+			//$params = array($ConciergeSettingId, $cresult,$SearchText,$DineType);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+			
+			if(!$result)
+					throw new Exception(odbc_error($ConnLink));
+						
 					$bdtls = '';
-					#echo mysql_num_rows($result);
-					if(mysql_num_rows($result) >0)
-					{
-						while($row = mysql_fetch_array($result)){
-							//echo $row['CID']. " - ". $row['ConciergeTableBookingRequestId'];
-							//echo "<br />";
-							$bdtls[] = array("CBId"=>$row['CBId']
-											, "CSId"=>$row['CSId']
-											#, "CustomerId"=>$row['CustomerId']
-											#, "AccountId"=>$row['AccountId']
-											#, "EntityId"=>$row['EntityId']
-											, "CustomerName"=>$row['Name']
-											, "Gender"=>$row['Gender']
-											, "EmailId"=>$row['EmailId']
-											, "CountryCallingCode" => $row['CountryCallingCode']
-											, "Cell_Number"=>$row['Cell_Number']
-											, "BookingDate"=>$row['BookingDate']
-											, "BookingTime"=>$row['BookingTime']
-											, "BookingUTCDateTime"=>$row['BookingUTCDateTime']
-											, "DisplayDate"=>$row['DisplayDate']
-											, "DisplayTime"=>$row['DisplayTime']												
-											, "Pax"=>$row['Pax']
-											, "SeatingPreferenceIDs"=>$row['SeatingPreferenceIDs']
-											, "SeatingPrefNames"=>$row['SeatingPrefNames']											
-											, "TableIDs"=>$row['TableIDs']
-											, "TableNos" =>$row['TableNos']
-											, "BookingType"=>$row['BookingType']											
-											, "RequestNote"=>$row['RequestNote']
-											, "CheckedIn"=>$row['CheckedIn']
-											, "BookingStatus"=>$row['BookingStatus']
-											, "BookingSource"=>$row['BookingSource']											
-											, "Category"=>$row['Category']
-											, "CheckOutStatus"=>$row['CheckOutStatus']
-											);	
-												
-						}						
-						$aResults[] = array("Success"=>1, "BDtls" =>$bdtls);
-					}
-					else
-					{
+					
+					while($row = odbc_fetch_array($result)){
+						//echo $row['CID']. " - ". $row['ConciergeTableBookingRequestId'];
+						//echo "<br />";
+						$hasRS = "1";
+						$bdtls[] = array("CBId"=>$row['CBId']
+										, "CSId"=>$row['CSId']
+										//, "CustomerId"=>$row['CustomerId']
+										//, "AccountId"=>$row['AccountId']
+										//, "EntityId"=>$row['EntityId']
+										, "CustomerName"=>$row['Name']
+										, "Gender"=>$row['Gender']
+										, "EmailId"=>$row['EmailId']
+										, "CountryCallingCode" => $row['CountryCallingCode']
+										, "Cell_Number"=>$row['Cell_Number']
+										, "BookingDate"=>$row['BookingDate']
+										, "BookingTime"=>$row['BookingTime']
+										, "BookingUTCDateTime"=>$row['BookingUTCDateTime']
+										, "DisplayDate"=>$row['DisplayDate']
+										, "DisplayTime"=>$row['DisplayTime']												
+										, "Pax"=>$row['Pax']
+										, "SeatingPreferenceIDs"=>$row['SeatingPreferenceIDs']
+										, "SeatingPrefNames"=>$row['SeatingPrefNames']											
+										, "TableIDs"=>$row['TableIDs']
+										, "TableNos" =>$row['TableNos']
+										, "BookingType"=>$row['BookingType']											
+										, "RequestNote"=>$row['RequestNote']
+										, "CheckedIn"=>$row['CheckedIn']
+										, "BookingStatus"=>$row['BookingStatus']
+										, "BookingSource"=>$row['BookingSource']											
+										, "Category"=>$row['Category']
+										, "CheckOutStatus"=>$row['CheckOutStatus']
+										, "CheckInTime"=>$row['CheckInTime']											
+										);	
+											
+					}		
+					
+					if($hasRS === "0")
 						$aResults[] = array("Success"=>0);
-					}										
-			}					
+					else	
+						$aResults[] = array("Success"=>1, "BDtls" =>$bdtls);
+
+				odbc_close($ConnLink);
 		}
 		catch(Exception $e){
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Error message is : ' . $e->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);
+				
 			$aResults[] = array("Success"=>-1);
-			
+			odbc_close($ConnLink);
 			//$GLOBALS['glog']->error($e);
 		}
-		
-		mysql_close($ConnLink);			
-		
+						
 		$json_response = json_encode($aResults);
-		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
+		//# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
 			$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
 			}
-		# Return the response
+		//# Return the response
 		echo $json_response;
 }
 
@@ -510,47 +569,52 @@ function GetCheckins($input)
 		
 		$aResults ='';
 		$ConnLink ='';
-						
+		
+		$hasRS = "0";			
 		try
 		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
+
+			$ConnLink = ConnectToMssql();			
 		
 			$BookingDate = new DateTime($BookingDate);
 			$cresult = $BookingDate->format('Y-m-d');	
-			
-			$SQL = "CALL GetCheckinCount(".$ConciergeSettingId.",'".$cresult."');"; 			
-			#$SQL = "CALL GetBookingDetails(1,'2013-02-07');";
-																		
-			$result = mysql_query($SQL) or die(mysql_error());  
-		
-			if (mysql_affected_rows()<=0) {					
-				$aResults[] = array("TotChk"=>0,"TotPax"=>0);
-			}
-			else{		
+					
+			$SQL = "EXEC spConciergeAppGetCheckinCount ".$ConciergeSettingId.",'".$cresult."'"; 		
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));			
+						
+			if(!$result)
+					throw new Exception(odbc_error($ConnLink));
+					
 					$bdtls = '';
-					#echo mysql_num_rows($result);
-					if(mysql_num_rows($result) >0)
+					
+					while($row = odbc_fetch_array($result)){
+						
+						$hasRS = "1";
+						$aResults[] = array("TotChk"=>$row['TotChk'], "TotPax"=>$row['TotPax']);	
+											
+					}						
+					//$aResults[] = array("Success"=>1, "BDtls" =>$bdtls);
+					
+					if($hasRS === "0")
 					{
-						while($row = mysql_fetch_array($result)){
-							//echo $row['CID']. " - ". $row['ConciergeTableBookingRequestId'];
-							//echo "<br />";
-							$aResults[] = array("TotChk"=>$row['TotChk'], "TotPax"=>$row['TotPax']);	
-												
-						}						
-						//$aResults[] = array("Success"=>1, "BDtls" =>$bdtls);
-					}
-					else
-					{
-						$aResults[] = array("TotChk"=>0,"TotPax"=>0);
-					}										
-			}					
+						$aResults[] = array("TotChk"=>"0","TotPax"=>"0");
+					}						
 		}
 		catch(Exception $e){
-			$aResults[] = array("TotChk"=>0,"TotPax"=>0);
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);
+			
+			odbc_close($ConnLink);	
+			$aResults[] = array("TotChk"=>"0","TotPax"=>"0");
 		}
-
-		mysql_close($ConnLink);			
+				
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -572,93 +636,111 @@ function SetCheckinoutMessages($input)
 		$CheckInSms = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkisms'})),null,'UTF-8') ));  
 		$CheckInEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkiemail'})),null,'UTF-8') ));  
 		$CheckOutSms = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkosms'})),null,'UTF-8') ));  
-		$CheckOutEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkoemail'})),null,'UTF-8') ));  
+		$CheckOutEmail = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'chkoemail'})),null,'UTF-8') )); 
 		#$BookingDate = $inputDecode->{'dt'};
 		
 		$aResults ='';
 		$ConnLink ='';
-						
+		
+		
 		try
 		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
-				
-			$SQL = "CALL SetCheckinoutMessages(".$ConciergeSettingId.",'".$CheckInSms."','".$CheckInEmail."','".$CheckOutSms."','".$CheckOutEmail."');"; 			
-																				
-			$result = mysql_query($SQL) or die(mysql_error());  
-		
-		
-			/*if (mysql_affected_rows()<=0) {					
-				$aResults[] = array("Success"=>0);
+
+			$ConnLink = ConnectToMssql();			
+							
+			$SQL = "EXEC spConciergeAppSetCheckinoutMessages ".$ConciergeSettingId.",'".$CheckInSms."','".$CheckInEmail."','".$CheckOutSms."','".$CheckOutEmail."'"; 			
+			$result = odbc_exec($ConnLink,$SQL);	// or die(odbc_error($ConnLink));
+					
+			//$SQL = "EXEC spConciergeAppSetCheckinoutMessages @pConciergeSettingId = ? ,@pCheckinSms = ?,@pCheckinEmail = ?,@pCheckoutSms = ?,@pCheckoutEmail = ?";
+			
+			//$params = array($ConciergeSettingId, $CheckInSms,$CheckInEmail,$CheckOutSms,$CheckOutEmail);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;
+
+			if(!$result)
+			{
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Error message is : ' . print_r(odbc_error($ConnLink), true). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);			
 			}
-			else{	*/
-					if(mysql_num_rows($result) >0)
-					{
-						$UpdateStatus ='';
-						while($row = mysql_fetch_array($result)){
-							$UpdateStatus = $row['UStatus'];													
-						}
+									
+				$UpdateStatus ='';
+				while($row = odbc_fetch_array($result)){							
+					$UpdateStatus = $row['UStatus'];													
+				}
+				
+				if($UpdateStatus =='1')
+				{
+						#Call asmx method
+
+						#send same data to sql server
+					#	set_time_limit(0);
+					#	$konektUrl = "http://192.168.1.168/KonektSolution/Service/KonektConci.asmx/";
+
+					#	$konektUrl .= "UpdateCheckInOutMessage";
+
+						/* Calling  web service using SOAP 	
+						$client = new SoapClient($konektUrl);
+						$params = array('Data'=>$input) ;
+						$result = $client->UpdateCheckInOutMessage($params);
+						print_r( $result);*/
+														
+					#	$data = "Data=".$input;
+
+					#	$ch = curl_init();
+
+						//Set the URL
+					#	curl_setopt($ch, CURLOPT_URL, $konektUrl);
+					#	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+						//Enable POST data
+					#	curl_setopt($ch, CURLOPT_POST, true);
+						//Use the $pData array as the POST data
+					#	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+						//curl_exec automatically writes the data returned
+					#	$retVal=curl_exec($ch);
 						
-						if($UpdateStatus =='1')
-						{
-								#Call asmx method
+						// close cURL resource, and free up system resources
+					#	curl_close($ch); 
+																					
+					#	if($retVal)
+					#	{
+							$aResults[] = array("Success"=>1); //messages changed successfully.
+					#	}	
+					#	else
+					#	{
+					#		$aResults[] = array("Success"=>0); //passed setting id does not exist on sql server.
+					#	}														
+				}
+				else
+				{
+					$aResults[] = array("Success"=>0);	//no updation happened on my sql or record does not exist. or no record exist.
+				}												
 
-								#send same data to sql server
-							#	set_time_limit(0);
-							#	$konektUrl = "http://192.168.1.168/KonektSolution/Service/KonektConci.asmx/";
-
-							#	$konektUrl .= "UpdateCheckInOutMessage";
-
-								/* Calling  web service using SOAP 	
-								$client = new SoapClient($konektUrl);
-								$params = array('Data'=>$input) ;
-								$result = $client->UpdateCheckInOutMessage($params);
-								print_r( $result);*/
-																
-							#	$data = "Data=".$input;
-
-							#	$ch = curl_init();
-
-								//Set the URL
-							#	curl_setopt($ch, CURLOPT_URL, $konektUrl);
-							#	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-								//Enable POST data
-							#	curl_setopt($ch, CURLOPT_POST, true);
-								//Use the $pData array as the POST data
-							#	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-								//curl_exec automatically writes the data returned
-							#	$retVal=curl_exec($ch);
-								
-								// close cURL resource, and free up system resources
-							#	curl_close($ch); 
-																							
-							#	if($retVal)
-							#	{
-									$aResults[] = array("Success"=>1); //messages changed successfully.
-							#	}	
-							#	else
-							#	{
-							#		$aResults[] = array("Success"=>0); //passed setting id does not exist on sql server.
-							#	}														
-						}
-						else
-						{
-							$aResults[] = array("Success"=>0);	//no updation happened on my sql or record does not exist.
-						}												
-					}
-					else
-					{
-						$aResults[] = array("Success"=>0); //no record exist.
-					}										
-			//}					
+			odbc_close($ConnLink);	
 		}
 		catch(Exception $e){
+
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);
+				odbc_close($ConnLink);	
 			$aResults[] = array("Success"=>-1); // some error occoured
 		}
 
-		mysql_close($ConnLink);			
+		
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -681,33 +763,58 @@ function GetCustomerInfo()
 		
 		$aResults = array();
 		$ConnLink ='';
-							
-		$ConnLink = ConnectToMySQL();
-		mysql_select_db("konektconci", $ConnLink);
-				
-		$sql = "CALL GetCustomerInfo('".$accountid."','".$action."');";			
 		
-		$result = mysql_query($sql) or die(mysql_error());  
-						
-		while ($row = mysql_fetch_array($result)) 
-		{	
-			$name="";
-			$cell="";
-			$email="";
+		try
+		{		
+			$ConnLink = ConnectToMssql();
+							
+			$SQL = "EXEC spConciergeAppGetCustomerInfo '".$accountid."','".$action."'";			
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));		
 			
-			$name=htmlspecialchars($row['CustomerName']);
-			$cell=$row['Cell_Number'];
-			$email=$row['EmailId'];
+			//$SQL = "EXEC spConciergeAppGetCustomerInfo @pAccountId = ?, @pSearchText = ? ";
 			
-			if($name=="")
-				$name="N/A";
+			//$params = array($accountid,$action);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
 			
-				$name .= " - [".$cell.", ".$email."]";
+			if(!$result)
+					throw new Exception(odbc_error($ConnLink));		
+							
+			while ($row = odbc_fetch_array($result)) 
+			{	
+				$name="";
+				$cell="";
+				$email="";
+				
+				$name=htmlspecialchars($row['CustomerName']);
+				$cell=$row['Cell_Number'];
+				$email=$row['EmailId'];
+				
+				if($name=="")
+					$name="N/A";
+				
+					$name .= " - [".$cell.", ".$email."]";
+				
+					$aResults[] = array( "id"=>$row['CustomerId'] ,"name"=>$name);						
+			}
 			
-				$aResults[] = array( "id"=>$row['CustomerId'] ,"name"=>$name);						
-		}
+			odbc_close($ConnLink);
 														
-		mysql_close($ConnLink);			
+		}
+		catch(Exception $e){
+		
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, $action. 'Error message is : ' . $e ->__toString() . " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);
+			odbc_close($ConnLink);	
+			$aResults[] = array("Success"=>-1);
+		}
+						
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -727,59 +834,75 @@ function GetAllOffers($input)
 		
 		$aResults ='';
 		$ConnLink ='';
-						
+
+		$hasRS = "0";	
+		
 		try
-		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
+		{			
+			$ConnLink = ConnectToMssql();			
 		
 			//$BookingDate = new DateTime($BookingDate);
 			//$cresult = $BookingDate->format('Y-m-d');	
 			
-			$SQL = "CALL GetAllOffersDetails(".$ConciergeSettingId.");"; 			
-																					
-			$result = mysql_query($SQL) or die(mysql_error());  
-		
-			if (mysql_affected_rows()<=0) {					
-				$aResults[] = array("Success"=>0);
-			}
-			else{		
-					$offdtls = '';
-					#echo mysql_num_rows($result);
-					if(mysql_num_rows($result) >0)
-					{
-						while($row = mysql_fetch_array($result)){
+			$SQL = "EXEC spConciergeAppGetAllOffersDetails '".$ConciergeSettingId."'";			
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));
 			
-							$offdtls[] = array("COffId"=>$row['ConciergeOfferId']
-											, "CSId"=>$row['ConciergeSettingId']											
-											, "Title"=>$row['OfferTitle']
-											, "IsActive"=>$row['IsActive']
-											, "ValidFromDate"=>$row['ValidFrom']
-											, "ValidToDate"=>$row['ValidTo']
-											, "ValidFromTime"=>$row['ValidFromTime']
-											, "ValidToTime"=>$row['ValidToTime']
-											, "ValidOnWeekDays"=>$row['ValidOnWeekDays']
-											, "ValidOnWeekDayNames"=>$row['ValidOnWeekDayNames']
-											, "NoOfOffers"=>$row['NoOfOffers']
-											, "Criteria"=>$row['Criteria']												
-											, "OfferValidFor"=>$row['VoucherValidForSources']
-											, "OfferDescription"=>$row['AboutThisOffer']											
-											
-											);													
-						}						
+			//$SQL = "EXEC spConciergeAppGetAllOffersDetails @pConciergeSettingId = ? ";
+			
+			//$params = array($ConciergeSettingId);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+			
+			if(!$result)
+				throw new Exception(odbc_error($ConnLink));			
+		
+					$offdtls = '';
+
+					while($row = odbc_fetch_array($result)){
+						$hasRS = "1";
+						$offdtls[] = array("COffId"=>$row['ConciergeOfferId']
+										, "CSId"=>$row['ConciergeSettingId']											
+										, "Title"=>$row['OfferTitle']
+										, "IsActive"=>$row['IsActive']
+										, "ValidFromDate"=>$row['ValidFrom']
+										, "ValidToDate"=>$row['ValidTo']
+										, "ValidFromTime"=>$row['ValidFromTime']
+										, "ValidToTime"=>$row['ValidToTime']
+										, "ValidOnWeekDays"=>$row['ValidOnWeekDays']
+										, "ValidOnWeekDayNames"=>$row['ValidOnWeekDayNames']
+										, "NoOfOffers"=>$row['NoOfOffers']
+										, "Criteria"=>$row['Criteria']												
+										, "OfferValidFor"=>$row['VoucherValidForSources']
+										, "OfferDescription"=>$row['AboutThisOffer']											
+										
+										);													
+					}	
+					if($hasRS === "0")
+					{
+						$aResults[] = array("Success"=>0);				
+					}
+					else						
+					{
 						$aResults[] = array("Success"=>1, "OffDtls" =>$offdtls);
 					}
-					else
-					{
-						$aResults[] = array("Success"=>0);
-					}										
-			}					
+					
+					odbc_close($ConnLink);
 		}
 		catch(Exception $e){
+		
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Query is : '. $SQL ."\r\n" . 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);
+				
+			odbc_close($ConnLink);
 			$aResults[] = array("Success"=>-1);
 		}
-
-		mysql_close($ConnLink);			
+			
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -792,6 +915,7 @@ function GetAllOffers($input)
 
 function GetCheckinoutMessages($input)
 {
+		
 		$inputDecode =json_decode($input);
 		
 		$ConciergeSettingId = $inputDecode->{'csid'};
@@ -799,48 +923,101 @@ function GetCheckinoutMessages($input)
 		
 		$aResults ='';
 		$ConnLink ='';
-						
-		try
-		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
 		
+		$CheckInSMSMessage = "";
+		$CheckOutSMSMessage ="";
+		$CheckInEmailMessage ="";
+		$CheckOutEmailMessage ="";
+		
+		$hasRS = "0";	
+		
+		$ConnLink = ConnectToMssql();	
+		
+		try
+		{			
+			$chkmsg = '';
+			$row = '';			
+
 			//$BookingDate = new DateTime($BookingDate);
 			//$cresult = $BookingDate->format('Y-m-d');	
+
+			//$SQL = "EXEC spConciergeAppGetCheckinoutMessages @pConciergeSettingId = ? ";		
+			//$params = array($ConciergeSettingId);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;
+
+
+			/*if(!$result)
+			{
+				throw new Exception(odbc_error($ConnLink));
+			}	*/	
 			
-			$SQL = "CALL GetCheckinoutMessages(".$ConciergeSettingId.");"; 			
-																					
-			$result = mysql_query($SQL) or die(mysql_error());  
-		
-			if (mysql_affected_rows()<=0) {					
-				$aResults[] = array("Success"=>0);
-			}
-			else{		
-					$chkmsg = '';
-					#echo mysql_num_rows($result);
-					if(mysql_num_rows($result) >0)
-					{
-						while($row = mysql_fetch_array($result)){
+			$SQL = "EXEC spConciergeAppGetCheckinoutMessages '".$ConciergeSettingId . "','cios' ";
+			$result = odbc_exec($ConnLink,$SQL); 
+									
+			while($row = odbc_fetch_array($result)){
+				$CheckInSMSMessage  = $row['CheckInSMSMessage'];
+				$CheckOutSMSMessage = $row['CheckOutSMSMessage'];
+			}	
+			//echo $CheckInSMSMessage;
+			//echo $CheckOutSMSMessage;
 			
-							$chkmsg[] = array("ChkISms"=>$row['CheckInSMSMessage']
-											, "ChkIEmail"=>$row['CheckInEmailMessage']											
-											, "ChkOSms"=>$row['CheckOutSMSMessage']
-											, "ChkOEmail"=>$row['CheckOutEmailMessage']
-										);													
-						}						
-						$aResults[] = array("Success"=>1, "ChkMsg" =>$chkmsg);
-					}
-					else
-					{
-						$aResults[] = array("Success"=>0);
-					}										
-			}					
+			odbc_free_result($result);		
+
+			$SQL = "EXEC spConciergeAppGetCheckinoutMessages '".$ConciergeSettingId . "','ciem' ";
+			$result = odbc_exec($ConnLink,$SQL); 
+									
+			while($row = odbc_fetch_array($result)){
+				$CheckInEmailMessage  = $row['CheckInEmailMessage'];				
+			}	
+			//echo $CheckInEmailMessage;
+			odbc_free_result($result);
+
+			$SQL = "EXEC spConciergeAppGetCheckinoutMessages '".$ConciergeSettingId . "','coem' ";
+			$result = odbc_exec($ConnLink,$SQL); 
+									
+			while($row = odbc_fetch_array($result)){
+				$CheckOutEmailMessage  = $row['CheckOutEmailMessage'];				
+			}	
+			//echo $CheckOutEmailMessage;
+			odbc_free_result($result);
+			
+				//while($row = odbc_fetch_array($result)){
+															
+					//$hasRS = "1";
+					$chkmsg[] = array("ChkISms"=>$CheckInSMSMessage
+									, "ChkIEmail"=>$CheckInEmailMessage
+									, "ChkOSms"=>$CheckOutSMSMessage
+									, "ChkOEmail"=>$CheckOutEmailMessage
+								);					
+				//}	
+
+				/*if($hasRS === "0")		
+				{
+					$aResults[] = array("Success"=>0);
+				}
+				else
+				{*/
+					$aResults[] = array("Success"=>1, "ChkMsg" =>$chkmsg);
+				//}
+			
+			odbc_close($ConnLink);			
 		}
 		catch(Exception $e){
+
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Query is : '. $SQL ."\r\n" . 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);
+			
+			odbc_close($ConnLink);			
 			$aResults[] = array("Success"=>-1);
 		}
 
-		mysql_close($ConnLink);			
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -866,28 +1043,24 @@ function SetCheckinTable($input)
 					
 		$aResults ='';
 		$ConnLink ='';
-			
+		
+		$hasRS = "0";	
 		try
 		{
-			#$ConnLink = ConnectToMySQL();
-			#mysql_select_db("konektconci", $ConnLink);
 
-			$ConnLink = ConnectToMySQLi();
-			mysqli_select_db($ConnLink,"konektconci");				
+			$ConnLink = ConnectToMssql();
 				
-			$SQL = "CALL SetCheckinTable(".$ConciergeSettingId.",'".$ConciergeBookingId."','".$cresult."');"; 			
-																				
-			#$result = mysql_query($SQL) or die(mysql_error());  
-			$result = mysqli_query($ConnLink,$SQL) or die(mysqli_error($ConnLink)); 			
-		
-		
-			/*if (mysql_affected_rows()<=0) {	*/
-			if (mysqli_affected_rows($ConnLink)<=0) {				
-				$aResults[] = array("Success"=>0);
-			}
-			else{	
-					//if(mysql_num_rows($result) >0)
-					if(mysqli_num_rows($result) >0)
+			$SQL = "EXEC spConciergeAppSetCheckinTable ".$ConciergeSettingId.",'".$ConciergeBookingId."','".$cresult."'";
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));
+						
+			//$SQL = "EXEC spConciergeAppSetCheckinTable @pConciergeSettingId = ? ,@pConciergeBookingId =?, @pCheckinDate =?";			
+			//$params = array($ConciergeSettingId,$ConciergeBookingId,$cresult);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;
+			
+			if(!$result)
+				throw new Exception(odbc_error($ConnLink));			
+
+					if(odbc_num_rows($result))
 					{
 						$UpdateStatus ='';
 						#$CheckInDeviceTime='';
@@ -895,7 +1068,7 @@ function SetCheckinTable($input)
 						$ActiveCheckins=''; $ActivePax='';
 												
 						//while($row = mysql_fetch_array($result)){
-						$row = mysqli_fetch_assoc($result);
+						$row = odbc_fetch_array($result);
 						
 							$UpdateStatus = $row['ChkStatus'];
 							#$CheckInDeviceTime=$row['DeviceTime'];
@@ -904,29 +1077,48 @@ function SetCheckinTable($input)
 							$ActiveCheckins=$row['ActiveCheckins'];		
 							$ActivePax=$row['ActivePax'];							
 						//}
-						
-						mysqli_free_result($result);
-						mysqli_next_result($ConnLink); 
-						
+												
+						odbc_free_result($result); 
+					
 						if($UpdateStatus =='1')
-						{
-						
-							$sql = "CALL GetManagerDetails(".$ConciergeSettingId.");";
+						{						
+							$sql = "EXEC spConciergeAppGetManagerDetails ".$ConciergeSettingId;							
 
-							#$OuletDetails = mysql_query($sql) or die(mysql_error());  
-							#$outrow =  mysql_fetch_array($OuletDetails);
+							$OuletDetails = odbc_exec($ConnLink,$sql); //or die(odbc_error($ConnLink));  
+							$outrow =  odbc_fetch_array($OuletDetails);							
+
+							//$sql = "EXEC spConciergeAppGetManagerDetails @pConciergeSettingId = ? ";
 							
-							$OuletDetails = mysqli_query($ConnLink,$sql) or die(mysqli_error($ConnLink));  
-							$outrow =  mysqli_fetch_assoc($OuletDetails);
+							//$params = array($ConciergeSettingId);		
+							//$OuletDetails = sqlsrv_query($ConnLink,$sql,$params) ;
+							//$outrow = sqlsrv_fetch_array($OuletDetails);
+							
+							//if(!$OuletDetails)
+							//		throw new Exception(print_r( sqlsrv_errors(), true));
 							
 							
-							mysqli_free_result($OuletDetails);
-							mysqli_next_result($ConnLink);	
+							odbc_free_result($OuletDetails);
+							//sqlsrv_next_result($ConnLink);
+							
+							/* Code Added by Rahul 23-04-2013 */							
+							//$ReturnResult = GenerateResponse($row,$outrow,'Checkin');	
 
-							$ReturnResult = GenerateResponse($row,$outrow,'Checkin');	
+							/*$file = 'data.txt';				
+						$handle = fopen($file, 'a');
+						$logTime = new DateTime();
+						$logTime= $logTime->format('Y-m-d H:i:s');
+						fwrite($handle, "--------------------------------------------------------------------------------------------------");
+						fwrite($handle,"\r\n");
+						fwrite($handle, $cresult ."\r\n". 'mailing rows are : ' . print_r($row)."\r\n" .print_r($outrow). " "   ."\r\n" . $logTime);
+						fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+						fclose($handle);*/
+				
+							//SEND MESSAGE ONE BY ONE		
+							$ObjConciergeMessage = new ConciergeMessageSender();								
+							$ObjConciergeMessage->PostMessage($row,$outrow,'Checkin');							
 
 
-							# Based on type send message.
+							/*# Based on type send message.
 							
 							$Response = "<?xml version=\"1.0\"?><Request type=\"simple\">"; 
 								
@@ -955,6 +1147,9 @@ function SetCheckinTable($input)
 							curl_close($ch); 
 
 							//*********************************************************
+							*/
+							
+							/* Code Added by Rahul 23-04-2013 Complete */							
 							
 								#Call asmx method
 
@@ -1005,21 +1200,32 @@ function SetCheckinTable($input)
 						}						
 						else
 						{
-							$aResults[] = array("Success"=>$UpdateStatus);	//-1 and -2
+							$aResults[] = array("Success"=>$UpdateStatus);	//-1 and -2 and -3 
 						}
 					}
 					else
 					{
 						$aResults[] = array("Success"=>0); //no record exist.
 					}										
-			}					
+					
+					odbc_close($ConnLink);
 		}
 		catch(Exception $e){
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, $cresult ."\r\n". 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);		
+				
+			odbc_close($ConnLink);	
 			$aResults[] = array("Success"=>-1); // some error occoured
 		}
-
-		//mysql_close($ConnLink);		
-		mysqli_close($ConnLink);		
+			
+			
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -1028,7 +1234,6 @@ function SetCheckinTable($input)
 		# Return the response
 		echo $json_response;
 }
-
 
 
 
@@ -1060,7 +1265,7 @@ function SetBookTable($input)
 		$BookingDate = $inputDecode->{'bdt'};
 		$BookingTime = $inputDecode->{'bt'};
 		$BookingType = $inputDecode->{'dinetp'};
-		$RequestNote = str_replace("'","''",trim($inputDecode->{'reqnt'}));
+		$RequestNote = str_replace("'","''",trim(html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($inputDecode->{'reqnt'})),null,'UTF-8') ));
 		$Source = $inputDecode->{'source'};
 		$Gender = $inputDecode->{'gen'};
 		$SeatingPreferenceIDs = str_replace("'","''",trim($inputDecode->{'spref'}));	//may be empty in new case
@@ -1076,10 +1281,8 @@ function SetBookTable($input)
 		
 		try
 		{
-					
-		$ConnLink = ConnectToMySQLi();
-		mysqli_select_db($ConnLink,"konektconci");
-		
+			$ConnLink = ConnectToMssql();
+	
 			//booking date and time
 			$cdate = new DateTime($BookingDate);
 			$cresult = $cdate->format('Y-m-d');			
@@ -1092,26 +1295,31 @@ function SetBookTable($input)
 			$SysDatetime = $DeviceDateTime->format('Y-m-d H:i:s');		
 		
 			//$SysDatetime = date("Y-m-d H:i:s", time()); 	// local device time
-
 			
-$sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateTime."','".$ConciergeBookingId."'
+$sql = "EXEC dbo.spConciergeAppSetBookTable '".$BookingMode."','".$SysDatetime."','".$BookingDateTime."','".$ConciergeBookingId."'
 ,'".$ConciergeSettingId."','".$CustomerId."','".$NoOfPeople."','".$CallingCode."','".$CustomerNumber."','".$CustomerEmail."','".$CustomerName."'
 ,'".$RequestNote."','".$cresult."','".$BookingTime."','".$BookingType."','".$Source."','".$Gender."','".$SeatingPreferenceIDs."'
-,'".$TableIDs."','".$TableNos."','".$OfferId."');";
+,'".$TableIDs."','".$TableNos."','".$OfferId."'";
 										
+			$result = odbc_exec($ConnLink,$sql); //or die(odbc_error($ConnLink));
+				
+		//$sql = "EXEC dbo.spConciergeAppSetBookTable @pMode = ?,@pSysDatetime = ?, @pBookingDateTime = ?, @pConciergeBookingId = ?
+		//, @pConciergeSettingId = ?, @pCustomerId = ?, @pNoOfPeople = ?,@pCountryCallingCode = ?
+		//, @pCustomerNumber = ?, @pCustomerEmail = ?, @pCustomerName = ?
+		//, @pRequestNote = ?, @pBookingDate = ?, @pBookingTime = ?, @pBookingType = ?,@pSource = ?,@pGender = ?
+		//, @pSeatingPreferenceIDs = ?,@pTableIDs = ?,@pTableNos = ?, @pOfferId = ? ";
+
+			//$params = array($BookingMode,$SysDatetime,$BookingDateTime,$ConciergeBookingId
+			//	,$ConciergeSettingId,$CustomerId,$NoOfPeople,$CallingCode,$CustomerNumber,$CustomerEmail,$CustomerName
+			//	,$RequestNote,$cresult,$BookingTime,$BookingType,$Source,$Gender,$SeatingPreferenceIDs,$TableIDs,$TableNos,$OfferId);		
+
+			//$result = sqlsrv_query($ConnLink,$sql,$params) ;
 			
-			//$result = mysql_query($sql) or die(mysql_error());  
-			$result = mysqli_query($ConnLink,$sql) or die(mysqli_error($ConnLink));  
-		
-			//if (mysql_affected_rows()<=0) {
-			if (mysqli_affected_rows($ConnLink)<=0) {	
-			
-				$aResults[] = array("Success"=>0);
-			
-			}
-			else{
-					//if(mysql_num_rows($result) >0)
-					if(mysqli_num_rows($result) >0)
+			if(!$result)
+				throw new Exception(odbc_error($ConnLink));	
+					
+
+					if(odbc_num_rows($result))
 					{
 						$ReturnResult = '';
 						$Response = '';
@@ -1119,53 +1327,97 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 						$ActiveCheckins = ''; 
 						$ActivePax= '';		
 						$AlreadyBooked ='';								
-						//$row = mysql_fetch_array($result);
-						$row = mysqli_fetch_assoc($result);
-			
+						
+						$row = odbc_fetch_array($result);
+						
 						if(ISSET($row['BkStatus']))
 							$AlreadyBooked = $row['BkStatus'];
+																				
 						if($AlreadyBooked == '-1')
 						{
 							//means someone already booked that table,so please select differenct table and then book again.
 							$aResults[] = array("Success"=>-1);	
 						}
+						else if($AlreadyBooked == '-3')
+						{
+							//consecutive entry
+							$aResults[] = array("Success"=>-3);	
+						}
+						else if($AlreadyBooked == '-4')
+						{
+							//same section entry
+							$aResults[] = array("Success"=>-4);	
+						}						
 						else
 						{ 
 						
 							$ActiveCheckins=$row['ActiveCheckins'];		
 							$ActivePax=$row['ActivePax'];	
-															
-							mysqli_free_result($result);
-							mysqli_next_result($ConnLink); 
+							
+							odbc_free_result($result); 
+							//sqlsrv_next_result($ConnLink); 							
 				
-							$sql = "CALL GetManagerDetails(".$ConciergeSettingId.");";
+							$sql = "EXEC spConciergeAppGetManagerDetails ".$ConciergeSettingId;
 						
-							$OuletDetails = mysqli_query($ConnLink,$sql) or die(mysqli_error($ConnLink));  
-							$outrow =  mysqli_fetch_assoc($OuletDetails);
+							$OuletDetails = odbc_exec($ConnLink,$sql); //or die(odbc_error($ConnLink));  
+							$outrow =  odbc_fetch_array($OuletDetails);							
 							
+							//$sql = "EXEC spConciergeAppGetManagerDetails @pConciergeSettingId = ? ";
 							
-							mysqli_free_result($OuletDetails);
-							mysqli_next_result($ConnLink);						
-							//mysql_free_result($OuletDetails);
-															
+							//$params = array($ConciergeSettingId);		
+							
+							//$OuletDetails = sqlsrv_query($ConnLink,$sql,$params) ;
+							//$outrow = sqlsrv_fetch_array($OuletDetails);
+							
+							if(!$OuletDetails)
+							{	$file = 'data.txt';				
+								$handle = fopen($file, 'a');
+								$logTime = new DateTime();
+								$logTime= $logTime->format('Y-m-d H:i:s');
+								fwrite($handle, "--------------------------------------------------------------------------------------------------");
+								fwrite($handle,"\r\n");
+								fwrite($handle, 'Error message is : ' . print_r( odbc_error($ConnLink), true). " "   ."\r\n" . $logTime);
+								fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+								fclose($handle);
+							}
+							//		throw new Exception(print_r( sqlsrv_errors(), true));
+							
+						
+							
+				
+							odbc_free_result($OuletDetails);
+							//sqlsrv_next_result($ConnLink);						
+
+							/* Code Added by Rahul 23-04-2013 */	
+							
+							//SEND MESSAGE ONE BY ONE		
+							$ObjConciergeMessage = new ConciergeMessageSender();								
+
+							
 							if($row['pmode'] == "n")
 							{
-								$ReturnResult = GenerateResponse($row,$outrow,'Book');	
+								//$ReturnResult = GenerateResponse($row,$outrow,'Book');	
+								$ObjConciergeMessage->PostMessage($row,$outrow,'Book');
 							}
 							else if($row['pmode'] == "e" || $row['pmode'] == "ep" )	
 							{
-								$ReturnResult = GenerateResponse($row,$outrow,'Amend');	
+								//$ReturnResult = GenerateResponse($row,$outrow,'Amend');	
+								$ObjConciergeMessage->PostMessage($row,$outrow,'Amend');
 							}
 
+							/* This code is commented as it is sending checkin mail twice 07-06-2013
 							if($row['pmode'] == "n" || $row['pmode'] == "e" )	
 							{
 								if(strtolower($row['CheckedIn']) == strtolower("yes"))
 								{
-									$ReturnResult .= GenerateResponse($row,$outrow,'Checkin');
+									//$ReturnResult = GenerateResponse($row,$outrow,'Checkin');
+									$ObjConciergeMessage->PostMessage($row,$outrow,'Checkin');
 								}									
-							}							
+							}
+							This code is commented as it is sending checkin mail twice 07-06-2013 complete
+							*/			
 
-							# Based on type send message.
+						/*	# Based on type send message.
 							
 							$Response = "<?xml version=\"1.0\"?><Request type=\"simple\">"; 
 								
@@ -1173,7 +1425,6 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 							$Response .= "</Request>";						
 							$Response = "data=" . $Response;
 																							
-								//$file = 'data.txt';
 								$file = 'concibkdata.txt';
 								$handle = fopen($file, 'a');
 								$logTime = new DateTime();
@@ -1205,62 +1456,12 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 							
 							//async_call($url, $Response);
 							//http://codeissue.com/issues/i64e175d21ea182/how-to-make-asynchronous-http-calls-using-php						
-
+							*/							
 							
-							#Call asmx method
-
-							#send same data to sql server
-						#	set_time_limit(0);
-						#	$konektUrl = "http://192.168.1.168/KonektSolution/Service/KonektConci.asmx/";
-
-						#	$konektUrl .= "ConciergeTableBookingHandler";
-
-							/* Calling  web service using SOAP 	
-							$client = new SoapClient($konektUrl);
-							$params = array('Data'=>$input) ;
-							$result = $client->UpdateCheckInOutMessage($params);
-							print_r( $result);*/
-	/*
-	$data = "Data={'mode':'".$mode."','CId':".$CId.",'Cust_CreatedOn':'".$Cust_CreatedOn."','Cust_ModifiedOn':'".$Cust_ModifiedOn."'
-	,'acid':'".$AccountId."'
-	,'csid':".$ConciergeSettingId.",'cbid':".$ConciergeBookingId.",'custid':'".$CustomerId."','nm':'".$Name."','gen':'".$Gender."'
-	,'cocode':'".$CountryCallingCode."','cellno':'".$Cell_Number."','eid':'".$EmailId."','px':".$PAX.",'bdt':'".$BookingDate."'
-	,'bt':'".$BookingTime."','btutc':'".$BookingUTCDateTime."','spref':'".$SeatingPreferenceIDs."','tabid':'".$TableIDs."'
-	,'tabno':'".$TableNos."','btp':'".$BookingType."','reqnt':'".$Note."','chkStat':'".$CheckedIn."','bstat':'".$BookingStatus."'
-	,'bs':'".$BookingSource."','credt':'".$CreatedOn."','moddt':'".$ModifiedOn."','mxtrnmin':'".$MaxTurnAround."'
-	,'apptrntim':'".$ApproxTurnAroundTime."','apptrntimutc':'".$ApproxTurnAroundUTCTime."'}";
-	*/
-
-
-						#	$ch = curl_init();
-
-							//Set the URL
-						#	curl_setopt($ch, CURLOPT_URL, $konektUrl);
-						#	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-							//Enable POST data
-						#	curl_setopt($ch, CURLOPT_POST, true);
-							//Use the $pData array as the POST data
-						#	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-							//curl_exec automatically writes the data returned
-						#	$retVal=curl_exec($ch);
+							/* Code Added by Rahul 23-04-2013 Complete */
 							
-							// close cURL resource, and free up system resources
-						#	curl_close($ch); 
-																						
-						#	if($retVal)
-						#	{
-								//echo 'Return Value is: '. $retVal .'<br/>';
+							$aResults[] = array("Success"=>1, "ActChkins" =>$ActiveCheckins,"Actpx" =>$ActivePax); // Table release done on both servers
 								
-								
-								$aResults[] = array("Success"=>1, "ActChkins" =>$ActiveCheckins,"Actpx" =>$ActivePax); // Table release done on both servers
-								
-						#	}	
-						#	else
-						#	{
-						#		$aResults[] = array("Success"=>0); //release failed on sql server.									
-						#	}														
 						}										
 					}
 					else
@@ -1268,17 +1469,26 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 						$aResults[] = array("Success"=>0); //no record exist.
 					}
 				
-
-			}	
+			odbc_close($ConnLink);
 				
 		}
 		catch(Exception $e){
-			$aResults[] = array("Success"=>-1);
-			echo 'some error' . $aResults ;
+		
+				$file = 'data.txt';				
+				$handle = fopen($file, 'a');
+				$logTime = new DateTime();
+				$logTime= $logTime->format('Y-m-d H:i:s');
+				fwrite($handle, "--------------------------------------------------------------------------------------------------");
+				fwrite($handle,"\r\n");
+				fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+				fclose($handle);	
+			
+			odbc_close($ConnLink);			
+			$aResults[] = array("Success"=>-1);			
 		}
 
-		//mysql_close($ConnLink);			
-		mysqli_close($ConnLink);
+	
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -1288,534 +1498,11 @@ $sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateT
 		echo $json_response;
 }
 
-function GenerateOccasionString($Msg,$custrow)
-{
-	$CustomString = "";
-	$ModifiedString= "";
-	
-	$ModifiedString= $Msg;
-	
-	$pos = strpos($ModifiedString, "[[OccasionString]]");
-	if($pos !== false)
-	{
-		//OccasionString exists
-		if($custrow["BDayDM"] !="")
-		{
-			if($custrow["BookDM"] == $custrow["BDayDM"])
-			{
-				$CustomString = "This customer having birthday on ". $custrow["DisplayBirthday"] . " ";
-			}
-		}						
-		if($custrow["AnnvDM"] !="")
-		{
-			if($custrow["BookDM"] == $custrow["AnnvDM"])
-			{
-				if($CustomString != "")
-				{
-					$CustomString .= " and  anniversary on ". $custrow["DisplayAnniversary"] . " ";
-				}
-				else
-				{
-					$CustomString = "This customer having anniversary on ". $custrow["DisplayAnniversary"] . " ";
-				}
-			}
-		}
-		
-		$ModifiedString = str_replace("[[OccasionString]]",$CustomString,$ModifiedString);			
-	}
-	
-	return $ModifiedString;
-					
-}
-
-function GenerateResponse($custrow,$outrow,$type)
-{	
-	$OutputMsgString = "";
-	$RetVal = "";
-	
-	$CustSMSTxt ='';
-	$CustEmailTxt ='';
-	$ManagerSMSTxt ='';
-	$ManagerEmailTxt ='';
-	$OfferSubject ='';
-	$OfferSMSTxt ='';
-	$OfferEmailTxt ='';
-	$ManagerSubject ='';
-	$CustSubject ='';
-	
-	$AccId = $outrow['AccountId'];
-	$EntityId = $outrow['EntityId'];
-	
-	/* Get messages from xml */
-	$objDOM = new DOMDocument();
-	$objDOM->load("concimessages.xml");
-
-	$accnodes = '';
-	$Exact_Account = '';	
-	
-	$myxpath    = new DOMXPath($objDOM);
-	$accnodes = $myxpath->query('//Account[@AccountId="'. $AccId .'" and @EntityId="'. $EntityId .'"]');
-
-	if ($accnodes ->length > 0) {	
-		$Exact_Account = $accnodes->item(0); 
-	}
-	else{
-		$accnodes = '';			
-		$accnodes = $myxpath->query('//DefaultMsg');		
-		$Exact_Account = $accnodes->item(0); 		
-	}
-		
-	/*	$xml_account = $objDOM->getElementsByTagName("Account");
-
-		$i = 0;
-		while ($xml_account->item($i) && $xml_account->item($i)->getAttribute('EntityId') != $EntityId)
-		{
-			$i += 1;
-		}
-		//echo $xml_account->item($i)->nodeValue;	
-		//get the value of the first node:
-		//$sniper->item(0)->nodeValue
-		//For attributes of the first node you have to do it analogous:
-
-		//$sniper->item(0)->getAttribute('level')
-		
-		$Exact_Account = $xml_account->item($i); 		*/
-					
-		switch ($type) 
-		{
-			case 'Book':
-				
-				$CustSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("SMS")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
-												
-				$CustEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 				
-								
-				$ManagerSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("SMS")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
-				
-				/*	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/	
-				/*  GenerateOccasionString converts [[OccasionString]] to birthday, anniversary message. */ 	
-				$ManagerSMSTxt = GenerateOccasionString($ManagerSMSTxt,$custrow);
-				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/
-				
-				$ManagerEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 	
-				
-				/*	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/
-				$ManagerEmailTxt = GenerateOccasionString($ManagerEmailTxt,$custrow);							
-				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/				
-				
-				
-				$CustSubject = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow); 
-				
-				$ManagerSubject =  ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow);
-				
-				$OfferSubject = ResolveTags($Exact_Account->getElementsByTagName("Booking")->item(0)->
-				getElementsByTagName("Offer")->item(0)->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow);
-				
-				if($custrow['pmode'] == "n" && $custrow['OfferId'] != "")
-				{
-					$OfferSMSTxt = ResolveTags($custrow['OfferSMSText'],$custrow);
-					$OfferEmailTxt = ResolveTags($custrow['OfferEmailText'],$custrow);								
-				}
-				#$CustSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("BookingCustSMS")->item(0)->nodeValue,$custrow); 
-				#$CustEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("BookingCustEmail")->item(0)->nodeValue,$custrow);
-				#$ManagerSMSTxt =ResolveTags($Exact_Account->getElementsByTagName("BookingMSMS")->item(0)->nodeValue,$custrow);
-				#$ManagerEmailTxt =	ResolveTags($Exact_Account->getElementsByTagName("BookingMEmail")->item(0)->nodeValue,$custrow);  
-				
-				/*	Offer send mail 	*/
-				/*	Offer send mail 	*/	
-			
-				break;
-			case 'Amend':	
-
-				$CustSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("SMS")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
-												
-				$CustEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 				
-				
-				$ManagerSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("SMS")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
-				
-				/*	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/
-				$ManagerSMSTxt = GenerateOccasionString($ManagerSMSTxt,$custrow);
-				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/		
-				
-				$ManagerEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 	
-				
-				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/		
-				$ManagerEmailTxt = GenerateOccasionString($ManagerEmailTxt,$custrow);
-				/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	*/						
-								
-				$CustSubject = ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow); 
-				
-				$ManagerSubject =  ResolveTags($Exact_Account->getElementsByTagName("Amend")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow);
-				
-				break;
-			case 'Cancel':	
-
-				$CustSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("Cancel")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("SMS")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
-												
-				$CustEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Cancel")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 				
-				
-				$ManagerSMSTxt = ResolveTags($Exact_Account->getElementsByTagName("Cancel")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("SMS")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 
-				
-				$ManagerEmailTxt = ResolveTags($Exact_Account->getElementsByTagName("Cancel")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Body")->item(0)->nodeValue,$custrow); 	
-				
-				$CustSubject = ResolveTags($Exact_Account->getElementsByTagName("Cancel")->item(0)->
-				getElementsByTagName("Customer")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow); 
-				
-				$ManagerSubject =  ResolveTags($Exact_Account->getElementsByTagName("Cancel")->item(0)->
-				getElementsByTagName("Manager")->item(0)->getElementsByTagName("Email")->item(0)
-				->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow);
-			
-				break; 
-			case 'Checkin':	
-
-				$CustSubject = ResolveTags($Exact_Account->getElementsByTagName("CheckIn")->item(0)->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow); 
-				
-				$CustSMSTxt = ResolveTags($custrow['CheckInSMSMessage'],$custrow); 
-												
-				$CustEmailTxt = ResolveTags($custrow['CheckInEmailMessage'],$custrow); 				
-							
-				break;
-			case 'Checkout':	
-
-				$CustSubject = ResolveTags($Exact_Account->getElementsByTagName("CheckOut")->item(0)->getElementsByTagName("Subject")->item(0)->nodeValue,$custrow); 
-				
-				$CustSMSTxt = ResolveTags($custrow['CheckOutSMSMessage'],$custrow); 
-												
-				$CustEmailTxt = ResolveTags($custrow['CheckOutEmailMessage'],$custrow); 				
-							
-				break;				
-		}
-	
-	
-			
-	/* Get messages from, xml code complete*/
-		
-		if($type == "Checkin")
-		{
-			$RetVal .= "<Message>";
-			$RetVal .= "<EntityId>" . $EntityId . "</EntityId>";
-			$RetVal .= "<CampaignId></CampaignId>";
-			$RetVal .= "<MsgType>General</MsgType>";
-			$RetVal .= "<AcquireCust>No</AcquireCust>";
-			$RetVal .= "<AuthKey>743A8F1B-C33F-48DC-9B3E-93BA4DD2E280</AuthKey>";
-			$RetVal .= "<Text><![CDATA[".$CustSMSTxt."]]></Text>";
-			$RetVal .= "<FollowTemplate>True</FollowTemplate>";
-			$RetVal .= "<EmailText><![CDATA[".$CustEmailTxt."]]></EmailText>";
-			$RetVal .= "<EmailSubject><![CDATA[".$CustSubject."]]></EmailSubject>";
-			
-			//$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$custrow['Cell_Number']."\" CallingCode=\"".$custrow['CountryCallingCode']."\" EmailId=\"".$custrow['CustomerEmail']."\" />";
-			
-			if($custrow['Cell_Number'] =="")
-			{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"\" CallingCode=\"\" EmailId=\"".$custrow['CustomerEmail']."\" />";			
-			}
-			else
-			{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$custrow['Cell_Number']."\" CallingCode=\"".$custrow['CountryCallingCode']."\" EmailId=\"".$custrow['CustomerEmail']."\" />";			
-			}
-			
-			$RetVal .= "</Message>";
-		}
-		else
-		{
-				$RetVal .= "<Message>";
-				$RetVal .= "<EntityId>" . $EntityId . "</EntityId>";
-				$RetVal .= "<CampaignId></CampaignId>";
-				$RetVal .= "<MsgType>General</MsgType>";
-				$RetVal .= "<AcquireCust>No</AcquireCust>";
-				$RetVal .= "<AuthKey>743A8F1B-C33F-48DC-9B3E-93BA4DD2E280</AuthKey>";
-				$RetVal .= "<Text><![CDATA[".$CustSMSTxt."]]></Text>";
-				$RetVal .= "<FollowTemplate>True</FollowTemplate>";
-				$RetVal .= "<EmailText><![CDATA[".$CustEmailTxt."]]></EmailText>";
-				$RetVal .= "<EmailSubject><![CDATA[".$CustSubject."]]></EmailSubject>";
-				
-				//$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$custrow['Cell_Number']."\" CallingCode=\"".$custrow['CountryCallingCode']."\" EmailId=\"".$custrow['CustomerEmail']."\" />";
-			if($custrow['Cell_Number'] =="")
-			{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"\" CallingCode=\"\" EmailId=\"".$custrow['CustomerEmail']."\" />";			
-			}
-			else
-			{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$custrow['Cell_Number']."\" CallingCode=\"".$custrow['CountryCallingCode']."\" EmailId=\"".$custrow['CustomerEmail']."\" />";
-			}
-				$RetVal .= "</Message>";
-		
-				if($custrow['pmode'] != "chkin" || $custrow['pmode'] != "chkout")
-				{
-					$RetVal .= "<Message>";
-					$RetVal .=  "<EntityId>" . $EntityId . "</EntityId>";
-					$RetVal .= "<CampaignId></CampaignId>";
-					$RetVal .= "<MsgType>General</MsgType>";
-					$RetVal .= "<AcquireCust>No</AcquireCust>";
-					$RetVal .= "<AuthKey>743A8F1B-C33F-48DC-9B3E-93BA4DD2E280</AuthKey>";
-					$RetVal .= "<Text><![CDATA[".$ManagerSMSTxt."]]></Text>";
-					$RetVal .="<FollowTemplate>True</FollowTemplate>";
-					$RetVal .= "<EmailText><![CDATA[".$ManagerEmailTxt."]]></EmailText>";
-					$RetVal .= "<EmailSubject><![CDATA[".$ManagerSubject."]]></EmailSubject>";
-					//$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$outrow['MCell_Number']."\" CallingCode=\"".$outrow['MCallingCode']."\" EmailId=\"".$outrow['MEmailId']."\" />";
-					
-					if($outrow['MCell_Number'] =="")
-					{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"\" CallingCode=\"\" EmailId=\"".$outrow['MEmailId']."\" />";
-					}
-					else
-					{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$outrow['MCell_Number']."\" CallingCode=\"".$outrow['MCallingCode']."\" EmailId=\"".$outrow['MEmailId']."\" />";
-					}					
-					
-					$RetVal .= "</Message>";
-				}
-				if($custrow['pmode'] == "n" && $custrow['OfferId'] != "")
-				{
-					$RetVal .= "<Message>";
-					$RetVal .= "<EntityId>" . $EntityId . "</EntityId>";
-					$RetVal .= "<CampaignId></CampaignId>";
-					$RetVal .= "<MsgType>General</MsgType>";
-					$RetVal .= "<AcquireCust>No</AcquireCust>";
-					$RetVal .= "<AuthKey>743A8F1B-C33F-48DC-9B3E-93BA4DD2E280</AuthKey>";
-					$RetVal .= "<Text><![CDATA[".$OfferSMSTxt."]]></Text>";
-					$RetVal .= "<FollowTemplate>True</FollowTemplate>";
-					$RetVal .= "<EmailText><![CDATA[".$OfferEmailTxt."]]></EmailText>";
-					$RetVal .= "<EmailSubject><![CDATA[".$OfferSubject."]]></EmailSubject>";
-					//$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$custrow['Cell_Number']."\" CallingCode=\"".$custrow['CountryCallingCode']."\" EmailId=\"".$custrow['CustomerEmail']."\" />";
-					
-					if($custrow['Cell_Number'] == "")
-					{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"\" CallingCode=\"\" EmailId=\"".$custrow['CustomerEmail']."\" />";					
-					}
-					else
-					{
-$RetVal .= "<MessageTo FromEmail=\"".$outrow['EmailSenderEmailId']."\" FromName=\"".$outrow['EmailSenderName']."\" Seq=\"1\" CellNo=\"".$custrow['Cell_Number']."\" CallingCode=\"".$custrow['CountryCallingCode']."\" EmailId=\"".$custrow['CustomerEmail']."\" />";					
-					}
-					
-					$RetVal .= "</Message>";			
-				}
-		}		
-		$objDOM = null;
-					
-		return $RetVal;						
-}
 
 
 
-function ResolveTags($Message, $Row)
-{
-	$Message = str_replace("[[CustomerName]]",$Row["CustomerName"],$Message);
-	$Message = str_replace("[[CustomerEmail]]",$Row["CustomerEmail"],$Message);	
-	$Message = str_replace("[[RequestDate]]",$Row["RequestDate"],$Message);
-	$Message = str_replace("[[RequestTime]]",$Row["RequestTime"],$Message);
-	$Message = str_replace("[[NoOfPeople]]",$Row["NoOfPeople"],$Message);
-	$Message = str_replace("[[OutletName]]",$Row["OutletName"],$Message);
-	$Message = str_replace("[[CountryCallingCode]]",$Row["CountryCallingCode"],$Message);			
-	$Message = str_replace("[[Cell_Number]]",$Row["Cell_Number"],$Message);		
-	
-	return $Message;
-}
-
-function AmolSetBookTable($input)
-{
-		/* Parse xml */
-		//$Otid = $xml->Otid;
-		//$EntityId = $xml->EntityId;
-		//$AccountId = $xml->AccountId;
-		//$CustomerId = $xml->CustomerId;
-		//$CustomerName = str_replace("'","''",trim($xml->CustomerName));
-		
-		/* Parse xml */
-		
-		//echo $input;
-		$inputDecode =json_decode($input);
-		
-		//echo $input;
-		
-		$BookingMode = $inputDecode->{'bmod'};		
-		$ConciergeSettingId = $inputDecode->{'csid'};
-		$ConciergeBookingId = $inputDecode->{'cbid'}; //may be empty in new case
-		
-		$CustomerId = $inputDecode->{'custid'};	//may be empty in new case
-		$CustomerName = str_replace("'","''",trim($inputDecode->{'custnm'}));
-		$CallingCode = str_replace("'","''",trim($inputDecode->{'callco'}));
-		$CustomerNumber = str_replace("'","''",trim($inputDecode->{'custno'}));
-		$CustomerEmail = str_replace("'","''",trim($inputDecode->{'custem'}));
-		$NoOfPeople = $inputDecode->{'px'};
-		$BookingDate = $inputDecode->{'bdt'};
-		$BookingTime = $inputDecode->{'bt'};
-		$BookingType = $inputDecode->{'dinetp'};
-		$RequestNote = str_replace("'","''",trim($inputDecode->{'reqnt'}));
-		$Source = $inputDecode->{'source'};
-		$Gender = $inputDecode->{'gen'};
-		$SeatingPreferenceIDs = $inputDecode->{'spref'};	//may be empty in new case
-		$TableIDs = $inputDecode->{'tabid'};
-		$TableNos = $inputDecode->{'tabno'};
-		
-		$DeviceDateTime = $inputDecode->{'sysdt'};
-	
-			
-		
-		$aResults ='';
-		$ConnLink ='';
-		
-		try
-		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
-		
-			//booking date and time
-			$cdate = new DateTime($BookingDate);
-			$cresult = $cdate->format('Y-m-d');			
-			$BookingDateTime = $cresult . ' ' . $BookingTime ; 
-						
-			//$SysDatetime = String.Format("{0:g}", DateTime.Now);
-			//$SysDatetime = date("m/d/y H:i:s");
-						
-			$DeviceDateTime = new DateTime($DeviceDateTime);
-			$SysDatetime = $DeviceDateTime->format('Y-m-d H:i:s');		
-		
-			//$SysDatetime = date("Y-m-d H:i:s", time()); 	// local device time
 
 
-			
-$sql = "CALL SetBookTable('".$BookingMode."','".$SysDatetime."','".$BookingDateTime."','".$ConciergeBookingId."'
-,'".$ConciergeSettingId."','".$CustomerId."','".$NoOfPeople."','".$CallingCode."','".$CustomerNumber."','".$CustomerEmail."','".$CustomerName."'
-,'".$RequestNote."','".$cresult."','".$BookingTime."','".$BookingType."','".$Source."','".$Gender."','".$SeatingPreferenceIDs."'
-,'".$TableIDs."','".$TableNos."');";
-										
-			//echo $sql;
-			$result = mysql_query($sql) or die(mysql_error());  
-			
-		
-			if (mysql_affected_rows()<=0) {
-				
-			
-				$aResults[] = array("Success"=>0);
-			
-			}
-			else{
-					if(mysql_num_rows($result) >0)
-					{
-
-						$mode=''; $CId = '';$Cust_CreatedOn='';$Cust_ModifiedOn=''; $AccountId='';$ConciergeSettingId ='';	$ConciergeBookingId =''; $CustomerId='';	$Name='';
-						$Gender=''; $CountryCallingCode=''; $Cell_Number=''; $EmailId=''; $PAX=''; $BookingDate=''; $BookingTime='';  $BookingUTCDateTime='';
-						$SeatingPreferenceIDs=''; $TableIDs=''; $TableNos=''; $BookingType=''; $Note=''; $CheckedIn=''; $BookingStatus=''; $BookingSource='';
-						$CreatedOn=''; $ModifiedOn=''; $ActiveCheckins=''; $ActivePax=''; $MaxTurnAround=''; $ApproxTurnAroundTime='';
-						$ApproxTurnAroundUTCTime='';	
-												
-						while($row = mysql_fetch_array($result)){
-							
-							$mode = $row['pmode'];						
-							$CId = $row['CId'];
-							$Cust_CreatedOn=$row['Cust_CreatedOn'];
-							$Cust_ModifiedOn=$row['Cust_ModifiedOn'];
-							$AccountId = $row['AccountId'];
-							$ConciergeSettingId =$row['ConciergeSettingId'];
-							$ConciergeBookingId =$row['ConciergeBookingId'];
-							$CustomerId=$row['CustomerId'];
-							$Name=$row['Name'];
-							$Gender=$row['Gender'];
-							$CountryCallingCode=$row['CountryCallingCode'];
-							$Cell_Number=$row['Cell_Number'];
-							$EmailId=$row['EmailId'];
-							$PAX=$row['PAX'];
-							$BookingDate=$row['BookingDate'];
-							$BookingTime=$row['BookingTime'];
-							$BookingUTCDateTime=$row['BookingUTCDateTime'];
-							$SeatingPreferenceIDs=$row['SeatingPreferenceIDs'];
-							$TableIDs=$row['TableIDs'];
-							$TableNos=$row['TableNos'];
-							$BookingType=$row['BookingType'];
-							$Note=$row['Note'];
-							$CheckedIn=$row['CheckedIn'];
-							$BookingStatus=$row['BookingStatus'];
-							$BookingSource=$row['BookingSource'];
-							$CreatedOn=$row['CreatedOn'];
-							$ModifiedOn=$row['ModifiedOn'];		
-							$ActiveCheckins=$row['ActiveCheckins'];		
-							$ActivePax=$row['ActivePax'];	
-							$MaxTurnAround=$row['MaxTurnAround'];	
-							$ApproxTurnAroundTime=$row['ApproxTurnAroundTime'];	
-							$ApproxTurnAroundUTCTime=$row['ApproxTurnAroundUTCTime'];					
-						}
-						
-				
-						#Call asmx method
-
-						#send same data to sql server
-						//set_time_limit(0);
-						//$konektUrl = "http://192.168.1.168/KonektSolution/Service/KonektConci.asmx/";
-
-						//$konektUrl .= "ConciergeTableBookingHandler";
-
-$data = "Data={'mode':'".$mode."','CId':".$CId.",'Cust_CreatedOn':'".$Cust_CreatedOn."','Cust_ModifiedOn':'".$Cust_ModifiedOn."'
-,'acid':'".$AccountId."'
-,'csid':".$ConciergeSettingId.",'cbid':".$ConciergeBookingId.",'custid':'".$CustomerId."','nm':'".$Name."','gen':'".$Gender."'
-,'cocode':'".$CountryCallingCode."','cellno':'".$Cell_Number."','eid':'".$EmailId."','px':".$PAX.",'bdt':'".$BookingDate."'
-,'bt':'".$BookingTime."','btutc':'".$BookingUTCDateTime."','spref':'".$SeatingPreferenceIDs."','tabid':'".$TableIDs."'
-,'tabno':'".$TableNos."','btp':'".$BookingType."','reqnt':'".$Note."','chkStat':'".$CheckedIn."','bstat':'".$BookingStatus."'
-,'bs':'".$BookingSource."','credt':'".$CreatedOn."','moddt':'".$ModifiedOn."','mxtrnmin':'".$MaxTurnAround."'
-,'apptrntim':'".$ApproxTurnAroundTime."','apptrntimutc':'".$ApproxTurnAroundUTCTime."'}";
-
-						$retVal = '';
-																					
-						//echo $data . '<br/>';
-							$aResults[] = array("Success"=>1); // Table release done on both servers
-																				
-																	
-					}
-					else
-					{
-						$aResults[] = array("Success"=>0); //no record exist.
-					}
-				
-
-			}	
-				
-		}
-		catch(Exception $e){
-			$aResults[] = array("Success"=>-1);
-			echo 'some error' . $aResults ;
-		}
-
-		mysql_close($ConnLink);			
-		$json_response = json_encode($aResults);
-		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
-		if(ISSET($_REQUEST["callback"])) {
-			$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
-			}
-		# Return the response
-		echo $json_response;
-}
 
 function GetTablesToRelease($input)
 {
@@ -1827,50 +1514,58 @@ function GetTablesToRelease($input)
 		
 		$aResults ='';
 		$ConnLink ='';
-				
-				
+		$SQL ='';		
+
+		$hasRS = "0";
+		
 		try
 		{
 			if($ConciergeSettingId !='')
 			{
-					$ConnLink = ConnectToMySQL();
-					mysql_select_db("konektconci", $ConnLink);
+					$ConnLink = ConnectToMssql();
 				
 					$BookingDate = new DateTime($BookingDate);
 					$cresult = $BookingDate->format('Y-m-d');	
-					
-					$SQL = "CALL GetReleaseTable(".$ConciergeSettingId.",'".$cresult."');"; 			
-						//echo $SQL;																	
-					$result = mysql_query($SQL) or die(mysql_error());  
+
+
+				$SQL = "EXEC spConciergeAppGetReleaseTable ".$ConciergeSettingId . ",'". $cresult . "'";
+			
+				$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));  
+						
+				//$SQL = "EXEC spConciergeAppGetReleaseTable @pConciergeSettingId = ?,  @pBookingDate = ?";
 				
-					if (mysql_affected_rows()<=0) {					
+				//$params = array($ConciergeSettingId,$cresult);		
+				//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+				
+				if(!$result)
+					throw new Exception(odbc_error($ConnLink));
+										
+					$reltbls = '';
+					
+					//while($row = sqlsrv_fetch_array($result,SQLSRV_FETCH_ASSOC)){
+					while($row = odbc_fetch_array($result)){
+						$hasRS = "1";
+						$reltbls[] = array(
+										"cbid"=>$row['ConciergeBookingId']
+										, "tid"=>$row['TableIDs'] 
+										, "tnm"=>$row['TableNames'] 
+										, "tcap"=>$row['TableCapacity'] 													
+										, "cnm"=>$row['CustomerName'] 	
+										,"chin"=>$row['CheckInTime']
+										,"mtat"=>$row['MaxTurnAround']
+										,"amtat"=>$row['ApproxTurnAroundTime']
+									);													
+					}	
+
+					if($hasRS === "0")		
+					{
 						$aResults[] = array("Success"=>0);
 					}
-					else{		
-							$reltbls = '';
-							#echo mysql_num_rows($result);
-							if(mysql_num_rows($result) >0)
-							{
-								while($row = mysql_fetch_array($result)){
-					
-									$reltbls[] = array(
-													"cbid"=>$row['ConciergeBookingId']
-													, "tid"=>$row['TableIDs'] 
-													, "tnm"=>$row['TableNames'] 
-													, "tcap"=>$row['TableCapacity'] 													
-													, "cnm"=>$row['CustomerName'] 	
-													,"chin"=>$row['CheckInTime']
-													,"mtat"=>$row['MaxTurnAround']
-													,"amtat"=>$row['ApproxTurnAroundTime']
-												);													
-								}						
-								$aResults[] = array("Success"=>1, "RelTbls" =>$reltbls);
-							}
-							else
-							{
-								$aResults[] = array("Success"=>0);
-							}										
+					else
+					{
+						$aResults[] = array("Success"=>1, "RelTbls" =>$reltbls);
 					}
+				odbc_close($ConnLink);		
 			}
 			else
 			{
@@ -1878,10 +1573,20 @@ function GetTablesToRelease($input)
 			}
 		}
 		catch(Exception $e){
+			$file = 'data.txt';				
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Passed Date: ' . $cresult."\r\n" . ' Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);
+			
+			odbc_close($ConnLink);	
 			$aResults[] = array("Success"=>-1);
 		}
-
-		mysql_close($ConnLink);			
+	
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -1911,31 +1616,28 @@ function SetReleaseTable($input)
 			
 		try
 		{
-			#$ConnLink = ConnectToMySQL();
-			#mysql_select_db("konektconci", $ConnLink);
-
-			$ConnLink = ConnectToMySQLi();
-			mysqli_select_db($ConnLink,"konektconci");	
 			
-			$SQL = "CALL SetReleaseTable(".$ConciergeSettingId.",'".$ConciergeBookingId."','".$cresult."');"; 			
-																				
-			#$result = mysql_query($SQL) or die(mysql_error());  
-			$result = mysqli_query($ConnLink,$SQL) or die(mysqli_error($ConnLink)); 		
-		
-			//if (mysql_affected_rows()<=0) {					
-			if (mysqli_affected_rows($ConnLink)<=0) {				
-				$aResults[] = array("Success"=>0);
-			}
-			else{	
-					//if(mysql_num_rows($result) >0)
-					if(mysqli_num_rows($result) >0)					
+			$ConnLink = ConnectToMssql();
+			
+			$SQL = "EXEC spConciergeAppSetReleaseTable ".$ConciergeSettingId.",'".$ConciergeBookingId."','".$cresult."'"; 
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));
+
+			//$SQL = "EXEC spConciergeAppSetReleaseTable @pConciergeSettingId = ?,  @pConciergeBookingId = ?, @pCheckoutDate = ?";
+			
+			//$params = array($ConciergeSettingId,$ConciergeBookingId,$cresult);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+			
+			if(!$result)
+				throw new Exception(print_r( sqlsrv_errors(), true));			
+
+					if(odbc_num_rows($result))					
 					{
 						$UpdateStatus ='';
 						#$CheckOutDeviceTime='';
 						#$CheckOutUTCDateTime='';
 						#while($row = mysql_fetch_array($result)){
 						
-						$row = mysqli_fetch_assoc($result);
+						$row = odbc_fetch_array($result);
 						
 							$UpdateStatus = $row['ChkOtStatus'];
 							#$CheckOutDeviceTime=$row['DeviceTime'];
@@ -1943,28 +1645,32 @@ function SetReleaseTable($input)
 							#$ModifiedTime=$row['ModifiedOn'];									
 						#}
 
-						mysqli_free_result($result);
-						mysqli_next_result($ConnLink); 
-						
+						odbc_free_result($result);
+					
 						if($UpdateStatus =='1')
-						{
+						{							
+							$sql = "EXEC spConciergeAppGetManagerDetails ".$ConciergeSettingId;
+												
+							$OuletDetails = odbc_exec($ConnLink,$sql); //or die(odbc_error($ConnLink));  
+							$outrow =  odbc_fetch_array($OuletDetails);							
+									
+							//$sql = "EXEC spConciergeAppGetManagerDetails @pConciergeSettingId = ? ";
+								
+							//$params = array($ConciergeSettingId);		
+							//$OuletDetails = sqlsrv_query($ConnLink,$sql,$params) ;
+							//$outrow = sqlsrv_fetch_array($OuletDetails);
+						
+							odbc_free_result($OuletDetails);
+							//odbc_next_result($ConnLink);							
 
-							$sql = "CALL GetManagerDetails(".$ConciergeSettingId.");";
+							/* Code Added by Rahul 23-04-2013 */							
+							//$ReturnResult = GenerateResponse($row,$outrow,'Checkout');	
 
-							#$OuletDetails = mysql_query($sql) or die(mysql_error());  
-							#$outrow =  mysql_fetch_array($OuletDetails);
-							
-							$OuletDetails = mysqli_query($ConnLink,$sql) or die(mysqli_error($ConnLink));  
-							$outrow =  mysqli_fetch_assoc($OuletDetails);
-							
-							
-							mysqli_free_result($OuletDetails);
-							mysqli_next_result($ConnLink);	
-
-							$ReturnResult = GenerateResponse($row,$outrow,'Checkout');	
-
-
-							# Based on type send message.
+							//SEND MESSAGE ONE BY ONE		
+							$ObjConciergeMessage = new ConciergeMessageSender();								
+							$ObjConciergeMessage->PostMessage($row,$outrow,'Checkout');
+								
+						/*	# Based on type send message.
 							
 							$Response = "<?xml version=\"1.0\"?><Request type=\"simple\">"; 
 								
@@ -1993,7 +1699,9 @@ function SetReleaseTable($input)
 							curl_close($ch); 
 
 							//*********************************************************
-
+							
+							*/
+							/* Code Added by Rahul 23-04-2013 Complete */
 							
 								#Call asmx method
 
@@ -2038,6 +1746,10 @@ function SetReleaseTable($input)
 							#		$aResults[] = array("Success"=>0); //release failed on sql server.									
 							#	}														
 						}
+						else if($UpdateStatus =='-3')
+						{
+							$aResults[] = array("Success"=>$UpdateStatus);	// -3 multiple time click
+						}						
 						else
 						{
 							$aResults[] = array("Success"=>0);	//release failed on mysql.
@@ -2046,15 +1758,26 @@ function SetReleaseTable($input)
 					else
 					{
 						$aResults[] = array("Success"=>0); //no record exist.
-					}										
-			}					
+					}	
+					odbc_close($ConnLink);						
+						
 		}
 		catch(Exception $e){
+
+			$file = 'data.txt';				
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);
+
+			odbc_close($ConnLink);				
 			$aResults[] = array("Success"=>-1); // some error occoured
 		}
-
-		//mysql_close($ConnLink);
-		mysqli_close($ConnLink);		
+		
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -2068,8 +1791,7 @@ function SetReleaseTable($input)
 
 
 function SetCancelTablebooking($input)
-{	
-	
+{		
 		$inputDecode =json_decode($input);
 		
 		$ConciergeSettingId = $inputDecode->{'csid'};
@@ -2081,26 +1803,20 @@ function SetCancelTablebooking($input)
 			
 		try
 		{
-			//$ConnLink = ConnectToMySQL();
-			//mysql_select_db("konektconci", $ConnLink);
+			$ConnLink = ConnectToMssql();			
+
+			$SQL = "EXEC spConciergeAppSetCancelTable ".$ConciergeSettingId.",'".$ConciergeBookingId."'";
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));
 			
-			$ConnLink = ConnectToMySQLi();
-			mysqli_select_db($ConnLink,"konektconci");			
-				
-			$SQL = "CALL SetCancelTable(".$ConciergeSettingId.",'".$ConciergeBookingId."');"; 			
-																				
-			//$result = mysql_query($SQL) or die(mysql_error());  
+			//$SQL = "EXEC spConciergeAppSetCancelTable @pConciergeSettingId = ?,  @pConciergeBookingId = ?";
 			
-			$result = mysqli_query($ConnLink,$SQL) or die(mysqli_error($ConnLink));  		
-		
-			//if (mysql_affected_rows()<=0) {	
-			if (mysqli_affected_rows($ConnLink)<=0) {	
+			//$params = array($ConciergeSettingId,$ConciergeBookingId);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
 			
-				$aResults[] = array("Success"=>0);
-			}
-			else{	
-					//if(mysql_num_rows($result) >0)
-					if(mysqli_num_rows($result) >0)
+			if(!$result)
+				throw new Exception(odbc_error($ConnLink));					
+
+					if(odbc_num_rows($result))
 					{
 						$UpdateStatus ='';
 						#$CheckOutDeviceTime='';
@@ -2108,7 +1824,9 @@ function SetCancelTablebooking($input)
 						
 						//while($row = mysql_fetch_array($result)){
 							
-							$row = mysqli_fetch_assoc($result);
+
+							$row = odbc_fetch_array($result);							
+							
 						
 							$UpdateStatus = $row['ChkCanStatus'];
 							#$CheckOutDeviceTime=$row['DeviceTime'];
@@ -2117,27 +1835,36 @@ function SetCancelTablebooking($input)
 						//}
 						
 						
-						mysqli_free_result($result);
-						mysqli_next_result($ConnLink); 
+						odbc_free_result($result);
+						//odbc_next_result($ConnLink); 
 						
 						if($UpdateStatus =='1')
 						{
-						$sql = "CALL GetManagerDetails(".$ConciergeSettingId.");";
 
-						#$OuletDetails = mysql_query($sql) or die(mysql_error());  
-						#$outrow =  mysql_fetch_array($OuletDetails);
-						
-						$OuletDetails = mysqli_query($ConnLink,$sql) or die(mysqli_error($ConnLink));  
-						$outrow =  mysqli_fetch_assoc($OuletDetails);
-						
-						
-						mysqli_free_result($OuletDetails);
-						mysqli_next_result($ConnLink);	
+							$sql = "EXEC spConciergeAppGetManagerDetails ".$ConciergeSettingId;
+												
+							$OuletDetails = odbc_exec($ConnLink,$sql); //or die(odbc_error($ConnLink));  
+							$outrow =  odbc_fetch_array($OuletDetails);	
 
-						$ReturnResult = GenerateResponse($row,$outrow,'Cancel');	
+							//$sql = "EXEC spConciergeAppGetManagerDetails @pConciergeSettingId = ? ";
+								
+							//$params = array($ConciergeSettingId);		
+							//$OuletDetails = sqlsrv_query($ConnLink,$sql,$params) ;
+							//$outrow = sqlsrv_fetch_array($OuletDetails);
+							
+													
+							odbc_free_result($OuletDetails);
+							//odbc_next_result($ConnLink);						
+
+							//$ReturnResult = GenerateResponse($row,$outrow,'Cancel');	
+
+								/* Code Added by Rahul 23-04-2013 */						
+							//SEND MESSAGE ONE BY ONE		
+							$ObjConciergeMessage = new ConciergeMessageSender();								
+							$ObjConciergeMessage->PostMessage($row,$outrow,'Cancel');
 
 
-						# Based on type send message.
+						/*# Based on type send message.
 						
 						$Response = "<?xml version=\"1.0\"?><Request type=\"simple\">"; 
 							
@@ -2163,70 +1890,48 @@ function SetCancelTablebooking($input)
 						$retVal=curl_exec($ch);
 						
 						// close cURL resource, and free up system resources
-						curl_close($ch); 
+						curl_close($ch);  */
 
 						//********************************************************* 
-
-								#Call asmx method
-
-								#send same data to sql server
-						#		set_time_limit(0);
-						#		$konektUrl = "http://192.168.1.168/KonektSolution/Service/KonektConci.asmx/";
-
-						#		$konektUrl .= "CancelBooking";
-
-								/* Calling  web service using SOAP 	
-								$client = new SoapClient($konektUrl);
-								$params = array('Data'=>$input) ;
-								$result = $client->UpdateCheckInOutMessage($params);
-								print_r( $result);*/
-
-						#		$data = "Data={'chksts':'".$UpdateStatus."','csid':".$ConciergeSettingId.",'cbid':".$ConciergeBookingId.",'chkcanmodtime':'".$ModifiedTime."'}";
-
-						#		$ch = curl_init();
-
-								//Set the URL
-						#		curl_setopt($ch, CURLOPT_URL, $konektUrl);
-						#		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-								//Enable POST data
-						#		curl_setopt($ch, CURLOPT_POST, true);
-								//Use the $pData array as the POST data
-						#		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-								//curl_exec automatically writes the data returned
-						#		$retVal=curl_exec($ch);
-								
-								// close cURL resource, and free up system resources
-						#		curl_close($ch); 
-																							
-						#		if($retVal)
-						#		{									
-									$aResults[] = array("Success"=>1); // Table release done on both servers
-									//echo 'release done on both servers<br/>'; 
-						#		}	
-						#		else
-						#		{
-						#			$aResults[] = array("Success"=>0); //release failed on sql server.									
-						#		}														
+							/* Code Added by Rahul 23-04-2013 Complete */						
+							
+							$aResults[] = array("Success"=>1); // Table release done on both servers
+							//echo 'release done on both servers<br/>'; 
+						
 						}
-						else
+						else if($UpdateStatus =='-3')
 						{
-							$aResults[] = array("Success"=>0);	//release failed on mysql.
-						}												
+							$aResults[] = array("Success"=>$UpdateStatus);	// -3 multiple time click
+						}	
+						else 
+						{
+							$aResults[] = array("Success"=>0);	//cancel failed on mysql.
+						}	
+
+	
 					}
 					else
 					{
 						$aResults[] = array("Success"=>0); //no record exist.
 					}										
-				}					
+			odbc_close($ConnLink);							
 		}
 		catch(Exception $e){
+		
+			$file = 'data.txt';				
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);
+
+			odbc_close($ConnLink);					
 			$aResults[] = array("Success"=>-1); // some error occoured
 		}
-
-		//mysql_close($ConnLink);			
-		mysqli_close($ConnLink);
+		
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -2248,52 +1953,68 @@ function GetSeatingPreferences($input)
 		$aResults ='';
 		$ConnLink ='';
 						
+		$hasRS = "0";
+		
 		try
 		{
+			$ConnLink = ConnectToMssql();	
 			if($ConciergeSettingId !='')
-			{
-					$ConnLink = ConnectToMySQL();
-					mysql_select_db("konektconci", $ConnLink);
-				
+			{													
 					//$BookingDate = new DateTime($BookingDate);
 					//$cresult = $BookingDate->format('Y-m-d');	
 					
-					$SQL = "CALL GetSeatingPreferences(".$ConciergeSettingId.");"; 			
-																							
-					$result = mysql_query($SQL) or die(mysql_error());  
+				$SQL = "EXEC spConciergeAppGetSeatingPreferences ".$ConciergeSettingId ; 
+				$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));
+					
+				//$SQL = "EXEC spConciergeAppGetSeatingPreferences @pConciergeSettingId = ? ";
 				
-					if (mysql_affected_rows()<=0) {					
+				//$params = array($ConciergeSettingId);		
+				//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+				
+				if(!$result)
+					throw new Exception(odbc_error($ConnLink));
+					
+					$prefdtls = '';
+
+					while($row = odbc_fetch_array($result)){
+						$hasRS = "1";		
+						$prefdtls[] = array("StPrefId"=>$row['ConciergeSeatingPreferenceId']
+										, "Pref"=>$row['Preference'] 											
+									);													
+					}	
+					
+					if($hasRS === "0")
+					{
 						$aResults[] = array("Success"=>0);
 					}
-					else{		
-							$prefdtls = '';
-							#echo mysql_num_rows($result);
-							if(mysql_num_rows($result) >0)
-							{
-								while($row = mysql_fetch_array($result)){
-					
-									$prefdtls[] = array("StPrefId"=>$row['ConciergeSeatingPreferenceId']
-													, "Pref"=>$row['Preference'] 											
-												);													
-								}						
-								$aResults[] = array("Success"=>1, "PrefDtls" =>$prefdtls);
-							}
-							else
-							{
-								$aResults[] = array("Success"=>0);
-							}										
+					else
+					{
+						$aResults[] = array("Success"=>1, "PrefDtls" =>$prefdtls);
 					}
+
 			}
 			else
 			{
 				$aResults[] = array("Success"=>0);
 			}
+			odbc_close($ConnLink);
 		}
 		catch(Exception $e){
+				
+			$file = 'data.txt';				
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Query is : '. $SQL ."\r\n" . 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);		
+
+			odbc_close($ConnLink);	
 			$aResults[] = array("Success"=>-1);
 		}
-
-		mysql_close($ConnLink);			
+		
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -2316,61 +2037,71 @@ function GetPreferencebasedTables($input)
 		$aResults ='';
 		$ConnLink ='';$cresult='';
 		
+		$hasRS = "0";
 		
-		#$CheckinDeviceDateTime = new DateTime($CheckinDeviceDateTime);
-		
+		#$CheckinDeviceDateTime = new DateTime($CheckinDeviceDateTime);		
 		#$cresult = $CheckinDeviceDateTime->format('Y-m-d H:i:s');	
 		
 		try
 		{
+			$ConnLink = ConnectToMssql();
+			
 			if($ConciergeSettingId !='')
-			{
-					$ConnLink = ConnectToMySQL();
-					mysql_select_db("konektconci", $ConnLink);
-				
+			{				
 					$BookingDate = new DateTime($BookingDate);
 					$cresult = $BookingDate->format('Y-m-d');	
+
+	$SQL = "EXEC spConciergeAppGetPreferencewiseTables '".$ConciergeSettingId . "','" . $cresult . "','". $BookingTime . "','" . $Preferences. "'"; 	
+	$result = odbc_exec($ConnLink,$SQL);
+							
+				if(!$result)
+					throw new Exception(odbc_error($ConnLink));
+
+					 											
+				$preftbldtls = '';
+
+				while($row = odbc_fetch_array($result)){
+					$hasRS = "1";				
+					$preftbldtls[] = array(
+									"tblno"=>$row['TableNo']
+									,"ias"=>$row['IsAvailableStatus'] 
+									,"tnm"=>$row['TableName']
+									,"scap"=>$row['SeatingCapacity'] 
+									,"mcap"=>$row['MaxCapacity'] 											
+								);													
+				}
 					
-					$SQL = "CALL GetPreferencewiseTables(".$ConciergeSettingId.",'".$cresult."','".$BookingTime."','".$Preferences."');"; 			
-						//echo $SQL;																
-					$result = mysql_query($SQL) or die(mysql_error());  
-				
-					if (mysql_affected_rows()<=0) {					
-						$aResults[] = array("Success"=>0);
-					}
-					else{		
-							$preftbldtls = '';
-							#echo mysql_num_rows($result);
-							if(mysql_num_rows($result) >0)
-							{
-								while($row = mysql_fetch_array($result)){
-											
-									$preftbldtls[] = array(
-													"tblno"=>$row['TableNo']
-													,"ias"=>$row['IsAvailableStatus'] 
-													,"tnm"=>$row['TableName']
-													,"scap"=>$row['SeatingCapacity'] 
-													,"mcap"=>$row['MaxCapacity'] 											
-												);													
-								}						
-								$aResults[] = array("Success"=>1, "PrefTblDtls" =>$preftbldtls);
-							}
-							else
-							{
-								$aResults[] = array("Success"=>0);
-							}										
-					}
+				if($hasRS === "0")
+				{
+					$aResults[] = array("Success"=>0);
+				}
+				else
+				{
+					$aResults[] = array("Success"=>1, "PrefTblDtls" =>$preftbldtls);
+				}
 			}
 			else
 			{
 				$aResults[] = array("Success"=>0);
 			}
+			odbc_close($ConnLink);
 		}
 		catch(Exception $e){
+		
+			$file = 'data.txt';				
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);		
+		
+			odbc_close($ConnLink);	
 			$aResults[] = array("Success"=>-1);
 		}
 
-		mysql_close($ConnLink);			
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -2386,85 +2117,100 @@ function GetBookingNotification($input)
 		
 		$ConciergeSettingId = $inputDecode->{'csid'};		
 		$SysDateTime = $inputDecode->{'sysdt'};
-		
-		
+				
 		$SysDateTime = new DateTime($SysDateTime);
 		$cresult = $SysDateTime->format('Y-m-d H:i:s');	
 					
 		$aResults ='';
 		$ConnLink ='';
+		$SQL = '';
+		$lastTime= '';
 		
 		try
 		{
-			$ConnLink = ConnectToMySQL();
-			mysql_select_db("konektconci", $ConnLink);
-		
+			$ConnLink = ConnectToMssql();
 						
-			$SQL = "CALL GetBookingNotification(".$ConciergeSettingId.",'".$cresult."');"; 			
+			$SQL = "EXEC spConciergeAppGetBookingNotification ".$ConciergeSettingId.",'".$cresult."'";			
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink)); 			
+
+			//$SQL = "EXEC spConciergeAppGetBookingNotification @pConciergeSettingId = ?,@pSysDate = ? ";
+			
+			//$params = array($ConciergeSettingId,$cresult);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+			
+			if(!$result)
+				throw new Exception(odbc_error($ConnLink));
 									
-			$result = mysql_query($SQL) or die(mysql_error());  
-			$lastTime=$SysDateTime;
-			if (mysql_affected_rows()<=0) {					
-				$aResults[] = array("Success"=>0,"LastTimeExecutedOn"=>$lastTime);
+			$lastTime=$cresult;	//$SysDateTime;
+			
+			$bdtls = '';
+
+			if(odbc_num_rows($result))
+			{	
+				$i=0;						
+				while($row = odbc_fetch_array($result)){
+					//echo $row['CID']. " - ". $row['ConciergeTableBookingRequestId'];
+					//echo "<br />";
+					
+					if($i==0)
+						$lastTime=$row['CreatedOn'];
+					$i++;
+					
+					$bdtls[] = array("CBId"=>$row['CBId']
+									, "CSId"=>$row['CSId']
+									#, "CustomerId"=>$row['CustomerId']
+									#, "AccountId"=>$row['AccountId']
+									#, "EntityId"=>$row['EntityId']
+									, "CustomerName"=>$row['Name']
+									, "Gender"=>$row['Gender']
+									, "EmailId"=>$row['EmailId']
+									, "CountryCallingCode" => $row['CountryCallingCode']
+									, "Cell_Number"=>$row['Cell_Number']
+									, "BookingDate"=>$row['BookingDate']
+									, "BookingTime"=>$row['BookingTime']
+									, "BookingUTCDateTime"=>$row['BookingUTCDateTime']
+									, "DisplayDate"=>$row['DisplayDate']
+									, "DisplayTime"=>$row['DisplayTime']												
+									, "Pax"=>$row['Pax']
+									, "SeatingPreferenceIDs"=>$row['SeatingPreferenceIDs']
+									, "SeatingPrefNames"=>$row['SeatingPrefNames']											
+									, "TableIDs"=>$row['TableIDs']
+									, "TableNos" =>$row['TableNos']
+									, "BookingType"=>$row['BookingType']											
+									, "RequestNote"=>$row['RequestNote']
+									, "CheckedIn"=>$row['CheckedIn']
+									, "BookingStatus"=>$row['BookingStatus']
+									, "BookingSource"=>$row['BookingSource']											
+									, "Category"=>$row['Category']
+									, "CreatedOn"=>$row['CreatedOn']	
+									);											
+				}	
+		
+				$aResults[] = array("Success"=>1,"LastTimeExecutedOn"=>$lastTime,"NCnt"=>(string)$i, "BDtls" =>$bdtls);
 			}
-			else{		
-					$bdtls = '';
-					#echo mysql_num_rows($result);
-					if(mysql_num_rows($result) >0)
-					{	
-						$i=0;
-						
-						while($row = mysql_fetch_array($result)){
-							//echo $row['CID']. " - ". $row['ConciergeTableBookingRequestId'];
-							//echo "<br />";
-							
-							if($i==0)
-								$lastTime=$row['CreatedOn'];
-							$i++;
-							
-							$bdtls[] = array("CBId"=>$row['CBId']
-											, "CSId"=>$row['CSId']
-											#, "CustomerId"=>$row['CustomerId']
-											#, "AccountId"=>$row['AccountId']
-											#, "EntityId"=>$row['EntityId']
-											, "CustomerName"=>$row['Name']
-											, "Gender"=>$row['Gender']
-											, "EmailId"=>$row['EmailId']
-											, "CountryCallingCode" => $row['CountryCallingCode']
-											, "Cell_Number"=>$row['Cell_Number']
-											, "BookingDate"=>$row['BookingDate']
-											, "BookingTime"=>$row['BookingTime']
-											, "BookingUTCDateTime"=>$row['BookingUTCDateTime']
-											, "DisplayDate"=>$row['DisplayDate']
-											, "DisplayTime"=>$row['DisplayTime']												
-											, "Pax"=>$row['Pax']
-											, "SeatingPreferenceIDs"=>$row['SeatingPreferenceIDs']
-											, "SeatingPrefNames"=>$row['SeatingPrefNames']											
-											, "TableIDs"=>$row['TableIDs']
-											, "TableNos" =>$row['TableNos']
-											, "BookingType"=>$row['BookingType']											
-											, "RequestNote"=>$row['RequestNote']
-											, "CheckedIn"=>$row['CheckedIn']
-											, "BookingStatus"=>$row['BookingStatus']
-											, "BookingSource"=>$row['BookingSource']											
-											, "Category"=>$row['Category']
-											, "CreatedOn"=>$row['CreatedOn']	
-											);	
-												
-						}						
-						$aResults[] = array("Success"=>1,"LastTimeExecutedOn"=>$lastTime,"NCnt"=>(string)mysql_num_rows($result), "BDtls" =>$bdtls);
-					}
-					else
-					{
-						$aResults[] = array("Success"=>0,"LastTimeExecutedOn"=>$lastTime);
-					}										
-			}					
+			else
+			{
+				$aResults[] = array("Success"=>0,"LastTimeExecutedOn"=>$lastTime);
+			}										
+				
+			odbc_close($ConnLink);			
 		}
 		catch(Exception $e){
+		
+			$file = 'data.txt';	
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);
+			
+			odbc_close($ConnLink);
 			$aResults[] = array("Success"=>-1,"LastTimeExecutedOn"=>$lastTime);
 		}
-
-		mysql_close($ConnLink);			
+		
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -2485,69 +2231,82 @@ function GetCoverStats($input)
 		
 		$aResults ='';
 		$ConnLink ='';
-						
+		$hasRS = "0";				
 		try
 		{
+			$ConnLink = ConnectToMssql();
 			if($EntityId !='')
-			{
-					$ConnLink = ConnectToMySQL();
-					mysql_select_db("konektconci", $ConnLink);
-				
+			{										
 					//$BookingDate = new DateTime($BookingDate);
 					//$cresult = $BookingDate->format('Y-m-d');	
+
+			$SQL = "EXEC spConciergeAppGetCoverStats '". $EntityId ."'";			
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink)); 	
+			
+			//$SQL = "EXEC spConciergeAppGetCoverStats @pEntityId = ? ";							
+			//$params = array($EntityId);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+			
+			if(!$result)
+				throw new Exception(odbc_error($ConnLink));
 					
-					$SQL = "CALL GetCoverStats('".$EntityId."');"; 			
-																							
-					$result = mysql_query($SQL) or die(mysql_error());  
-				
-					if (mysql_affected_rows()<=0) {					
-						$aResults[] = array("Success"=>0);
-					}
-					else{		
-							$coverstats = '';
-							#echo mysql_num_rows($result);
-							if(mysql_num_rows($result) >0)
-							{
-								while($row = mysql_fetch_array($result)){
-					
-									$coverstats[] = array("BrkAdvPAX"=>$row['BrkAdvPAX']
-													, "BrkAdvBooking"=>$row['BrkAdvBooking']
-													, "LunchAdvPAX"=>$row['LunchAdvPAX']
-													, "LunchAdvBooking"=>$row['LunchAdvBooking']
-													, "DnnrAdvPAX"=>$row['DnnrAdvPAX']
-													, "DnnrAdvBooking"=>$row['DnnrAdvBooking']
-													, "BrkPAXToDine"=>$row['BrkPAXToDine']
-													, "BrkBookings"=>$row['BrkBookings']
-													, "LunchPAXToDine"=>$row['LunchPAXToDine']
-													, "LunchBookings"=>$row['LunchBookings']
-													, "DinnerPAXToDine"=>$row['DinnerPAXToDine']
-													, "DinnerBookings"=>$row['DinnerBookings']
-													, "BrkPAXDined"=>$row['BrkPAXDined']
-													, "BrkCheckedIn"=>$row['BrkCheckedIn']
-													, "LunchPAXDined"=>$row['LunchPAXDined']
-													, "LunchCheckedIn"=>$row['LunchCheckedIn']
-													, "DinnerPAXDined"=>$row['DinnerPAXDined']
-													, "DinnerCheckedIn"=>$row['DinnerCheckedIn']
-												);													
-								}						
-								$aResults[] = array("Success"=>1, "CoverStats" =>$coverstats);
-							}
-							else
-							{
-								$aResults[] = array("Success"=>0);
-							}										
-					}
+			$coverstats = '';
+
+			while($row = odbc_fetch_array($result)){
+				$hasRS = "1";
+			
+				$coverstats[] = array("BrkAdvPAX"=>$row['BrkAdvPAX']
+								, "BrkAdvBooking"=>$row['BrkAdvBooking']
+								, "LunchAdvPAX"=>$row['LunchAdvPAX']
+								, "LunchAdvBooking"=>$row['LunchAdvBooking']
+								, "DnnrAdvPAX"=>$row['DnnrAdvPAX']
+								, "DnnrAdvBooking"=>$row['DnnrAdvBooking']
+								, "BrkPAXToDine"=>$row['BrkPAXToDine']
+								, "BrkBookings"=>$row['BrkBookings']
+								, "LunchPAXToDine"=>$row['LunchPAXToDine']
+								, "LunchBookings"=>$row['LunchBookings']
+								, "DinnerPAXToDine"=>$row['DinnerPAXToDine']
+								, "DinnerBookings"=>$row['DinnerBookings']
+								, "BrkPAXDined"=>$row['BrkPAXDined']
+								, "BrkCheckedIn"=>$row['BrkCheckedIn']
+								, "LunchPAXDined"=>$row['LunchPAXDined']
+								, "LunchCheckedIn"=>$row['LunchCheckedIn']
+								, "DinnerPAXDined"=>$row['DinnerPAXDined']
+								, "DinnerCheckedIn"=>$row['DinnerCheckedIn']
+							);													
+			}	
+			
+			if($hasRS === "0")
+			{
+				$aResults[] = array("Success"=>0);
+			}	
+			else
+			{
+				$aResults[] = array("Success"=>1, "CoverStats" =>$coverstats);
+			}					
 			}
 			else
 			{
 				$aResults[] = array("Success"=>0);
 			}
+			odbc_close($ConnLink);
 		}
 		catch(Exception $e){
+		
+			$file = 'data.txt';	
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);
+			
+			odbc_close($ConnLink);
 			$aResults[] = array("Success"=>-1);
 		}
-
-		mysql_close($ConnLink);			
+		
 		$json_response = json_encode($aResults);
 		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
 		if(ISSET($_REQUEST["callback"])) {
@@ -2570,79 +2329,86 @@ function GetBookingBasedOffers($input)
 		$aResults ='';
 		$ConnLink ='';$cresult='';
 				
-		#$CheckinDeviceDateTime = new DateTime($CheckinDeviceDateTime);
-		
+		#$CheckinDeviceDateTime = new DateTime($CheckinDeviceDateTime);		
 		#$cresult = $CheckinDeviceDateTime->format('Y-m-d H:i:s');	
-
+		$hasRS = "0";	
+		
+		$ConnLink = ConnectToMssql();
+		
 		try
-		{
-		
-					$ConnLink = ConnectToMySQL();
-					mysql_select_db("konektconci", $ConnLink);
+		{								
+			$BookingDate = new DateTime($BookingDate);
+			$cresult = $BookingDate->format('Y-m-d H:i:s');	
+
+			$SQL = "EXEC spConciergeAppGetBookingbasedOffers ".$ConciergeSettingId.",'".$cresult."',".$Paxs.",'".$Source."'"; 	
+			$result = odbc_exec($ConnLink,$SQL); //or die(odbc_error($ConnLink));			
+
+			//$SQL = "EXEC spConciergeAppGetBookingbasedOffers @pConciergeSettingId = ?, @pBookingDateTime =?,@pPax =?,@pSource=? ";
+							
+			//$params = array($ConciergeSettingId,$cresult,$Paxs,$Source);		
+			//$result = sqlsrv_query($ConnLink,$SQL,$params) ;			
+			
+			if(!$result)
+				throw new Exception(odbc_error($ConnLink));
+					
+				$offdtls = '';
+
+				while($row = odbc_fetch_array($result)){
+					$hasRS = "1";
+					$offdtls[] = array("COffId"=>$row['ConciergeOfferId']
+									, "CSId"=>$row['ConciergeSettingId']											
+									, "Title"=>$row['OfferTitle']
+									, "IsActive"=>$row['IsActive']
+									, "ValidFromDate"=>$row['ValidFrom']
+									, "ValidToDate"=>$row['ValidTo']
+									, "ValidFromTime"=>$row['ValidFromTime']
+									, "ValidToTime"=>$row['ValidToTime']
+									, "ValidOnWeekDays"=>$row['ValidOnWeekDays']
+									, "ValidOnWeekDayNames"=>$row['ValidOnWeekDayNames']
+									, "NoOfOffers"=>$row['NoOfOffers']
+									, "Criteria"=>$row['Criteria']												
+									, "OfferValidFor"=>$row['VoucherValidForSources']
+									, "OfferDescription"=>$row['AboutThisOffer']											
+									
+									);													
+				}	
 				
-					$BookingDate = new DateTime($BookingDate);
-					$cresult = $BookingDate->format('Y-m-d H:i:s');	
-					
-					$SQL = "CALL GetBookingbasedOffers(".$ConciergeSettingId.",'".$cresult."',".$Paxs.",'".$Source."');"; 			
-																							
-					$result = mysql_query($SQL) or die(mysql_error());  
-		
-					if (mysql_affected_rows()<=0) {					
-						$aResults[] = array("Success"=>0);
-					}
-					else{		
-							$offdtls = '';
-							#echo mysql_num_rows($result);
-							if(mysql_num_rows($result) >0)
-							{
-								while($row = mysql_fetch_array($result)){
-					
-									$offdtls[] = array("COffId"=>$row['ConciergeOfferId']
-													, "CSId"=>$row['ConciergeSettingId']											
-													, "Title"=>$row['OfferTitle']
-													, "IsActive"=>$row['IsActive']
-													, "ValidFromDate"=>$row['ValidFrom']
-													, "ValidToDate"=>$row['ValidTo']
-													, "ValidFromTime"=>$row['ValidFromTime']
-													, "ValidToTime"=>$row['ValidToTime']
-													, "ValidOnWeekDays"=>$row['ValidOnWeekDays']
-													, "ValidOnWeekDayNames"=>$row['ValidOnWeekDayNames']
-													, "NoOfOffers"=>$row['NoOfOffers']
-													, "Criteria"=>$row['Criteria']												
-													, "OfferValidFor"=>$row['VoucherValidForSources']
-													, "OfferDescription"=>$row['AboutThisOffer']											
-													
-													);													
-								}						
-								$aResults[] = array("Success"=>1, "OffDtls" =>$offdtls);
-							}
-							else
-							{
-								$aResults[] = array("Success"=>0);
-							}										
-					}					
+				if($hasRS === "0")
+				{
+					$aResults[] = array("Success"=>0);	
+				}	
+				else
+				{
+					$aResults[] = array("Success"=>1, "OffDtls" =>$offdtls);
+				}	
+				
+				odbc_close($ConnLink);
+				
 		}
 		catch(Exception $e){
+			
+			$file = 'data.txt';	
+			$handle = fopen($file, 'a');
+			$logTime = new DateTime();
+			$logTime= $logTime->format('Y-m-d H:i:s');
+			fwrite($handle, "--------------------------------------------------------------------------------------------------");
+			fwrite($handle,"\r\n");
+			fwrite($handle, 'Error message is : ' . $e ->__toString(). " "   ."\r\n" . $logTime);
+			fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
+			fclose($handle);
+			
+			odbc_close($ConnLink);
 			$aResults[] = array("Success"=>-1);
 		}
-
-				mysql_close($ConnLink);			
-				$json_response = json_encode($aResults);
-				# Optionally: Wrap the response in a callback function for JSONP cross-domain support
-				if(ISSET($_REQUEST["callback"])) {
-					$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
-					}
-				# Return the response
-				echo $json_response;
+				
+		$json_response = json_encode($aResults);
+		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
+		if(ISSET($_REQUEST["callback"])) {
+			$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
+			}
+		# Return the response
+		echo $json_response;
 }
-
-function SendOfferWithBooking($input)
-{
-	
-	
-}
-
-
 
 
 function GetCustomerProfile($xml)
@@ -2785,8 +2551,7 @@ function SetPreferenses($input)
 function SetConciergeOffers($input)
 {		
 		
-		
-		  //echo $input;
+		 //echo $input;
 		  $inputDecode =json_decode($input);
 		  
 		  
@@ -2818,7 +2583,6 @@ function SetConciergeOffers($input)
 		  $aResults ='';
 		  $ConnLink ='';
 		
-		
 		try
 		{
 			$ConnLink = ConnectToMySQL();
@@ -2849,7 +2613,7 @@ function SetConciergeOffers($input)
 			'".$NoOfOffers."','".$Criteria."','".$VoucherValidForSources."','".$SMSText."','".$EmailText."','".$SysDatetime."',
 			'".$AboutThisOffer."','".$NoOfPAX."','".$PAXCriteria."','".$IsSynced."');";
 										
-			//echo $sql;
+			echo $sql;
 			$result = mysql_query($sql) or die(mysql_error());  
 			
 		
@@ -3110,8 +2874,19 @@ function SetConciergeSettings($input)
 	$EmailSenderEmailId = str_replace("'","''",trim($inputDecode->{'esem'}));
 	$City = str_replace("'","''",trim($inputDecode->{'city'}));
 	$Area = str_replace("'","''",trim($inputDecode->{'area'}));
+		
+	$CstSendBookMsg = str_replace("'","''",trim($inputDecode->{'csbm'}));
+	$CstSendAmendMsg = str_replace("'","''",trim($inputDecode->{'csam'}));
+	$CstSendCancelMsg = str_replace("'","''",trim($inputDecode->{'cscm'}));
+	$CstSendCheckinMsg = str_replace("'","''",trim($inputDecode->{'cscim'}));
+	$CstSendCheckoutMsg = str_replace("'","''",trim($inputDecode->{'cscom'}));
+	$CstSendOfferMsg = str_replace("'","''",trim($inputDecode->{'csom'}));
+	$MngSendBookMsg = str_replace("'","''",trim($inputDecode->{'msbm'}));
+	$MngSendAmendMsg = str_replace("'","''",trim($inputDecode->{'msam'}));
+	$MngSendCancelMsg = str_replace("'","''",trim($inputDecode->{'mscm'})); 
 
-  
+	$EntGroupName = str_replace("'","''",trim($inputDecode->{'gnm'})); 
+  	$EntGroupId = str_replace("'","''",trim($inputDecode->{'gi'})); 
   
   $aResults ='';
   $ConnLink ='';  
@@ -3119,6 +2894,7 @@ function SetConciergeSettings($input)
   {
    $ConnLink = ConnectToMySQL();
    mysql_select_db("konektconci", $ConnLink);
+   //mysql_select_db("dummy_konektconci", $ConnLink);
       
    $CreatedOn = new DateTime($CreatedOn);
    $SysDatetime = $CreatedOn->format('Y-m-d H:i:s'); 
@@ -3139,7 +2915,8 @@ function SetConciergeSettings($input)
    '".$SysDatetime."','".$EntityName."','".$TimeZone."','".$ManagerName."',
    '".$Emailid."','".$Cell_Number."','".$CountryCallingCode."','".$IsSynced."',
    '".$BreakfastStart."','".$BreakfastEnd."','".$LunchStart."','".$LunchEnd."','".$DinnerStart."',
-   '".$DinnerEnd."','".$SmsSenderName."','".$EmailSenderName."','".$EmailSenderEmailId."','".$City."','".$Area."');";
+   '".$DinnerEnd."','".$SmsSenderName."','".$EmailSenderName."','".$EmailSenderEmailId."','".$City."','".$Area."',
+   '".$CstSendBookMsg."','".$CstSendAmendMsg."','".$CstSendCancelMsg."','".$CstSendCheckinMsg."','".$CstSendCheckoutMsg."','".$CstSendOfferMsg."','".$MngSendBookMsg."','".$MngSendAmendMsg."','".$MngSendCancelMsg."','".$EntGroupName."','".$EntGroupId."');";
           
    //echo $sql;
    $result = mysql_query($sql) or die(mysql_error());    
@@ -3171,6 +2948,124 @@ function SetConciergeSettings($input)
   echo $json_response;
 }
 
+
+
+function SetConciergeServerDetails($input)
+{  
+ 
+  $inputDecode =json_decode($input);
+  //echo $input; 
+  $ConciergeSettingId = $inputDecode->{'csid'};  
+  $EntityId = $inputDecode->{'eid'};
+  $ServerId = $inputDecode->{'sid'};
+  $ServerName = str_replace("'","''",trim($inputDecode->{'snm'}));
+  $IsDeleted = $inputDecode->{'isd'};
+      
+  //$CreatedOn =  $inputDecode->{'crdt'}; 
+  //$IsSynced = $inputDecode->{'issyn'};  
+    
+  $aResults ='';
+  $ConnLink ='';  
+  try
+  {
+	   $ConnLink = ConnectToMySQL();
+	   mysql_select_db("konektconci", $ConnLink);
+		  
+	   //$CreatedOn = new DateTime($CreatedOn);
+	  // $SysDatetime = $CreatedOn->format('Y-m-d H:i:s'); 
+
+	   
+		$ServerName=escapeJsonString($ServerName);
+		  
+	   $sql = "CALL SetConciergeServerDetails('".$ConciergeSettingId."','".$EntityId."',
+	   '".$ServerId."','".$ServerName."','".$IsDeleted."');";
+			  
+	   //echo $sql;
+	   $result = mysql_query($sql) or die(mysql_error());    
+	  
+	   if (mysql_affected_rows()<=0) 
+	   {
+		$aResults[] = array("Success"=>0);   
+	   }
+	   else
+	   {
+		  if(mysql_num_rows($result) >0)
+		  {           
+		   $aResults[] = array("Success"=>1);
+		  }
+	   }
+  }
+  catch(Exception $e){
+   $aResults[] = array("Success"=>-1);
+   echo 'some error' . $aResults ;
+  }
+
+  mysql_close($ConnLink);   
+  $json_response = json_encode($aResults);
+  # Optionally: Wrap the response in a callback function for JSONP cross-domain support
+  if(ISSET($_REQUEST["callback"])) {
+   $json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
+   }
+  # Return the response
+  echo $json_response;
+}
+
+
+function GetServerDetails($input)
+{
+		$inputDecode =json_decode($input);
+		
+		$conciergeSettingId = $inputDecode->{'csid'};  
+		$entityId = $inputDecode->{'eid'};
+		
+		$aResults ='';
+		$ConnLink ='';
+						
+		try
+		{
+			$ConnLink = ConnectToMySQL();
+			mysql_select_db("konektconci", $ConnLink);
+					
+			$SQL = "CALL GetServerDetails('".$conciergeSettingId."','".$entityId."');"; 			
+																				
+			$result = mysql_query($SQL) or die(mysql_error());  
+		
+			if (mysql_affected_rows()<=0) {					
+				$aResults[] = array("Success"=>0);
+			}
+			else{		
+					$offdtls = '';
+					#echo mysql_num_rows($result);
+					if(mysql_num_rows($result) >0)
+					{
+						while($row = mysql_fetch_array($result)){
+			
+							$serdtls[] = array("CSerId"=>$row['ConciergeServerId']
+											, "SerNm"=>$row['ServerName']											
+									);													
+						}						
+						$aResults[] = array("Success"=>1, "SerDtls" =>$serdtls);
+					}
+					else
+					{
+						$aResults[] = array("Success"=>0);
+					}										
+			}	
+			
+		}
+		catch(Exception $e){
+			$aResults[] = array("Success"=>0);
+		}
+
+		mysql_close($ConnLink);			
+		$json_response = json_encode($aResults);
+		# Optionally: Wrap the response in a callback function for JSONP cross-domain support
+		if(ISSET($_REQUEST["callback"])) {
+			$json_response = $_REQUEST["callback"] . "(" . $json_response . ")";
+			}
+		# Return the response
+		echo $json_response;
+}
 
 
 
