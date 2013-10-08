@@ -37,7 +37,7 @@
         });
 
         function AuthenticateUser() {
-            $('#wrapper').append('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
+            $('#processor').html('<div class="loading"><img src="img/loading.gif" alt="Loading..." /></div>');
             var name = $.trim($("#txtUserName").val());
             var pass = $.trim($("#txtPassword").val());
 
@@ -127,6 +127,7 @@
         <!--END FOOTER-->
         </form>
         <!--END LOGIN FORM-->
+		<div id="processor"></div>
     </div>
     <!--END WRAPPER-->
     <!--GRADIENT-->
