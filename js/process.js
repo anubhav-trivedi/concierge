@@ -153,7 +153,7 @@ $(document).ready(function () {
         var count = 0;
         var tim = "";
         //BREAKFAST TIME DISPLAY
-        if (bs != null && bs != "00:00:00" && be != "00:00:00") {
+        if (bs != null && bs != "" && be != "" && bs != "00:00:00" && be != "00:00:00") {
             timings += "<div style='width:100%;color:#1C94C4;font-size:1.8em' align='center'>Please Select Booking Time</div>";
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%; margin-top:3%'>";
             timings += "<tr><td align='center'  colspan='10' style='background-color:#F7B54A;color:#000000'>Breakfast</td></tr>";
@@ -190,7 +190,7 @@ $(document).ready(function () {
             timings += "<br/>";
 
         //LUNCH TIME DISPLAY
-        if (ls != null && ls != "00:00:00") {
+        if (ls != "" && le != "" && ls != null && ls != "00:00:00") {
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%' >";
             timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Lunch</td></tr>";
 
@@ -226,7 +226,7 @@ $(document).ready(function () {
         if (timings != "")
             timings += "<br/>";
         //DINNER TIME DISPLAY
-        if (ds != null && ds != "00:00:00") {
+        if (ds != "" && de != "" && ds != null && ds != "00:00:00") {
             timings += "<table cellspacing='4' cellpadding='4' border='1' style='width:100%' >";
             timings += "<tr><td align='center' colspan='10' style='background-color:#F7B54A;color:#000000'>Dinner</td></tr>";
 
