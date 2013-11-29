@@ -13,11 +13,11 @@
 		</Manager>
 		<Customer>
 			<SMS>
-				<Body><![CDATA[Dear [[CustomerName]],Thank you for being patient.We have reserved a table for you. [[OutletName]] looks forward to serve you.]]></Body>
+				<Body><![CDATA[Dear [[CustomerName]], Your reservation at [[OutletName]] for [[NoOfPeople]] people has been confirmed at [[RequestTime]], [[RequestDate]]. We look forward to serving you. Best regards, [[ManagerName]] [[ManagerNumber]] [[OutletName]]]]></Body>
 			</SMS>		
 			<Email>
-				<Subject><![CDATA[Thank you for Table Booking]]></Subject>
-				<Body><![CDATA[Dear [[CustomerName]],Thank you for being patient.We have reserved a table for you. [[OutletName]] looks forward to serve you.]]></Body>
+				<Subject><![CDATA[[[OutletName]] at [[RequestTime]], [[RequestDate]]: reservation confirmed]]></Subject>
+				<Body><![CDATA[Dear [[CustomerName]],<br/>Your reservation at [[OutletName]] for [[NoOfPeople]] people has been confirmed at [[RequestTime]], [[RequestDate]]. We look forward to serving you.<br/><br/>Best regards,<br/>[[ManagerName]]<br/>[[ManagerNumber]]<br/>[[OutletName]]]]></Body>
 			</Email>		
 		</Customer>
 		<Offer>
@@ -73,7 +73,7 @@
 		<Subject><![CDATA[Hope you are satisfied !!!]]></Subject>
 	</CheckOut>
  </DefaultMsg>
- <Account AccountId ="c473bc69-229d-4832-a599-60c7eedf50e5" EntityId="651908e1-72d0-4260-81a2-1e498dd3cc96">
+ <Account AccountId ="c473bc69-229d-4832-a599-60c7eedf50e5" EntityId="651908e1-72d0-4260-81a2-1e498dd3cc96" Client="CoroCafe">
 	<Booking>
 		<Manager>
 			<SMS>
@@ -86,11 +86,11 @@
 		</Manager>
 		<Customer>
 			<SMS>
-				<Body><![CDATA[Dear [[CustomerName]],Thank you for being patient.We have reserved a table for you. [[OutletName]] looks forward to serve you.]]></Body>
+				<Body><![CDATA[Dear [[CustomerName]], Your reservation at [[OutletName]] for [[NoOfPeople]] people has been confirmed at [[RequestTime]], [[RequestDate]]. We look forward to serving you. Best regards, [[ManagerName]] [[ManagerNumber]] [[OutletName]]]]></Body>
 			</SMS>		
 			<Email>
-				<Subject><![CDATA[Thank you for Table Booking]]></Subject>
-				<Body><![CDATA[Dear [[CustomerName]],Thank you for being patient.We have reserved a table for you. [[OutletName]] looks forward to serve you.]]></Body>
+				<Subject><![CDATA[[[OutletName]] at [[RequestTime]], [[RequestDate]]: reservation confirmed]]></Subject>
+				<Body><![CDATA[Dear [[CustomerName]],<br/>Your reservation at [[OutletName]] for [[NoOfPeople]] people has been confirmed at [[RequestTime]], [[RequestDate]]. We look forward to serving you.<br/><br/>Best regards,<br/>[[ManagerName]]<br/>[[ManagerNumber]]<br/>[[OutletName]]]]></Body>
 			</Email>		
 		</Customer>
 		<Offer>
