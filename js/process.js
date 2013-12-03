@@ -462,7 +462,7 @@ $(document).ready(function () {
 
         error: function () {
 
-            $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Total Checkins and Pax.");
+            $().toastmessage('showErrorToast', "Sorry! Due To Technical Reasons. We are not able to get the Total Check-ins and Pax.");
         }
     });
     // alert(sessionStorage.TotalCheckins);
@@ -878,7 +878,7 @@ function dynamicDivs(data) {
         strText = strText + " <tr>";
         strText = strText + " <td class='wrapword' style='font-size:1.1em; font-family:Calibri; width:50%; text-align:left;'><span style='color:#104E7F'>Preferences : </span>" + data[0].BDtls[i].SeatingPrefNames + "</td>";
         strText = strText + " <td style='width:50%;'>";
-        strText = strText + " <div style='float:left;text-align:right;width:40%;'>Check-In Time :</div>";
+        strText = strText + " <div style='float:left;text-align:right;width:40%;'>Check-in Time :</div>";
         strText = strText + " <div style='text-align:left;float:left;width:60%; color:#104E7F; font-family:Cambria;font-size:1.1em;'>" + data[0].BDtls[i].CheckInTime + "</div>";
         strText = strText + " </td>";
         strText = strText + " </tr>";
@@ -1892,7 +1892,7 @@ function postCheckInOutMsgs() {
                 // alert('Data Posted');
                 $('.loading').remove();
                 $('.simplemodal-close').click();
-                $().toastmessage('showSuccessToast', "CheckIn/Out Messages Updated");
+                $().toastmessage('showSuccessToast', "Check-in/Out Messages Updated");
             }
             else {
                 $('.loading').remove();

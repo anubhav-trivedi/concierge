@@ -67,7 +67,7 @@
 		</Customer>
 	</Cancel>
 	<CheckIn>
-		<Subject><![CDATA[Thank you for checkin]]></Subject>
+		<Subject><![CDATA[Thank you for check-in]]></Subject>
 	</CheckIn>
 	<CheckOut>
 		<Subject><![CDATA[Hope you are satisfied !!!]]></Subject>
@@ -140,7 +140,7 @@
 		</Customer>
 	</Cancel>
 	<CheckIn>
-		<Subject><![CDATA[Thank you for checkin]]></Subject>
+		<Subject><![CDATA[Thank you for check-in]]></Subject>
 	</CheckIn>
 	<CheckOut>
 		<Subject><![CDATA[Hope you are satisfied !!!]]></Subject>
@@ -214,7 +214,7 @@
 		</Customer>
 	</Cancel>
 	<CheckIn>
-		<Subject><![CDATA[Thank you for checkin]]></Subject>
+		<Subject><![CDATA[Thank you for check-in]]></Subject>
 	</CheckIn>
 	<CheckOut>
 		<Subject><![CDATA[Hope you are satisfied !!!]]></Subject>
@@ -288,7 +288,7 @@
 		</Customer>
 	</Cancel>
 	<CheckIn>
-		<Subject><![CDATA[Thank you for checkin]]></Subject>
+		<Subject><![CDATA[Thank you for check-in]]></Subject>
 	</CheckIn>
 	<CheckOut>
 		<Subject><![CDATA[Hope you are satisfied !!!]]></Subject>
