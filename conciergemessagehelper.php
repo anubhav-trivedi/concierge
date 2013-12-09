@@ -205,7 +205,8 @@ class ConciergeMessageSender
 		else
 		{
 			$PartialCommonStr .= "<EntityId>" . $EntityId . "</EntityId>";
-		}
+		} 
+		
 		
 		$PartialCommonStr .= "<CampaignId></CampaignId>";
 		$PartialCommonStr .= "<MsgType>General</MsgType>";
