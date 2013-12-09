@@ -150,9 +150,9 @@ class ConciergeMessageSender
   function ConnectToMssql()
   {
 	 /* BETA
-     $dsn="Driver={SQL Server Native Client 10.0};Server=64.15.155.142;Database=KonektApp;";		//Beta
-     $username="demodb";
-     $password="Marijuana@77";
+     $dsn="Driver={SQL Server Native Client 10.0};Server=mobi-staging.cunbw6re0gf0.ap-southeast-1.rds.amazonaws.com;Database=KonektApp;";		//Beta
+     $username="konektrds";
+     $password="L0g!nK0n3ktrd5!";
      $SqlLink=odbc_connect($dsn,$username,$password)  or die ("could not connect"); */
 
 	 // PROD
@@ -164,45 +164,7 @@ class ConciergeMessageSender
 	  return $SqlLink;
    }
    
-	/*function ConnectToMssql()
-	{
-		try {  
-			 //$dsn="Driver={SQL Server Native Client 10.0};Server=174.142.77.66;Database=KonektApp;";						 			 
-			 //$username="konekt";
-			 //$password="Mobi!@#";
-			 
-			//$dsn="Driver={SQL Server Native Client 10.0};Server=64.15.155.142;Database=KonektApp;";				//beta				 
-			$username='demodb';
-			$password='Marijuana@77';
-			//$SqlLink=odbc_connect($dsn,$username,$password)  or die ("could not connect");
 
-			$servername = "64.15.155.142";	
-			$connectionOptions = array("Database"=>"KonektApp", "UID"=>$username, "PWD"=>$password);			
-			$SqlLink = sqlsrv_connect($servername, $connectionOptions) or die("could not connect\n");				
-			
-			if( $SqlLink === false) 			
-			{
-				//print_r(sqlsrv_errors());				
-				throw new Exception(print_r( sqlsrv_errors(), true));				
-			}			
-			
-		}
-		catch (Exception $e) {											
-				LogErr($e->getMessage());	
-
-				$file = 'data.txt';				
-				$handle = fopen($file, 'a');
-				$logTime = new DateTime();
-				$logTime= $logTime->format('Y-m-d H:i:s');
-				fwrite($handle, "--------------------------------------------------------------------------------------------------");
-				fwrite($handle,"\r\n");
-				fwrite($handle, 'helper con  '." ".$e ->__toString(). " "   ."\r\n" . $logTime);
-				fwrite($handle, "--------------------------------------------------------------------------------------------------". "\r\n\r\n");
-				fclose($handle);
-				
-		} 
-		  return $SqlLink;
-	} */
 	
 	private function GenerateResponse($custrow,$outrow,$Mode)
 	{
@@ -227,7 +189,24 @@ class ConciergeMessageSender
 		$EntityId = $outrow['EntityId'];
 					
 		$PartialCommonStr .= "<Message>";
-		$PartialCommonStr .= "<EntityId>" . $EntityId . "</EntityId>";
+		
+		/*Commented to handle API case for third party 05-Dec-2013 Using Konekt account */
+		//$PartialCommonStr .= "<EntityId>" . $EntityId . "</EntityId>";
+		
+		// Parse without sections
+		$ini_array = parse_ini_file("conciergeconfig.ini");
+		$KonektEntityId = $ini_array['konektaccount'];
+		
+		$Source = trim($custrow['BookingSource']);
+		if(strtolower($Source) === strtolower("API"))
+		{						
+			$PartialCommonStr .= "<EntityId>" . $KonektEntityId . "</EntityId>";
+		}
+		else
+		{
+			$PartialCommonStr .= "<EntityId>" . $EntityId . "</EntityId>";
+		}
+		
 		$PartialCommonStr .= "<CampaignId></CampaignId>";
 		$PartialCommonStr .= "<MsgType>General</MsgType>";
 		$PartialCommonStr .= "<AcquireCust>No</AcquireCust>";
