@@ -989,8 +989,8 @@ function TableCheckIn(bid,btime) {
    if (flag == true) {
 */
         $.confirm({
-            'title': 'Check In Confirmation',
-            'message': 'You are about to check in this booking. <br />Do you want to Continue?',
+            'title': 'Check-in Confirmation',
+            'message': 'You are about to check-in this booking. <br />Do you want to Continue?',
             'buttons': {
                 'Yes': {
                     'class': 'blue',
@@ -1009,7 +1009,7 @@ function TableCheckIn(bid,btime) {
                                 if (data[0].Success == 1) {
 
                                     $('.loading').remove();
-                                    $().toastmessage('showSuccessToast', "Table Checked In Successfully");
+                                    $().toastmessage('showSuccessToast', "Table Checked-in Successfully");
                                     $(this).attr('disabled', true);
                                     RefreshDynamicDivs();
                                     RefreshCounter();
@@ -1021,16 +1021,16 @@ function TableCheckIn(bid,btime) {
                                 }
                                 else if (data[0].Success == -2) {
                                     $('.loading').remove();
-                                   // $().toastmessage('showWarningToast', "Table can only be checked in <br \> + - 15 minutes from booking time.<br \> Please edit this booking to check-in");
+                                   // $().toastmessage('showWarningToast', "Table can only be checked-in <br \> + - 15 minutes from booking time.<br \> Please edit this booking to check-in");
                                    $().toastmessage('showWarningToast', "Sorry, Outlet timing is over.");
 							   }
                                 else if (data[0].Success == -3) {
                                     $('.loading').remove();
-                                   //$().toastmessage('showWarningToast', "This customer is already checked in");
+                                   //$().toastmessage('showWarningToast', "This customer is already checked-in");
 							   }							   
                                 else {
                                     $('.loading').remove();
-                                    $().toastmessage('showErrorToast', "Table Checked In Failed");
+                                    $().toastmessage('showErrorToast', "Table Checked-in Failed");
                                 }
                             },
 
