@@ -189,7 +189,7 @@ class ConciergeMessageSender
 		$EntityId = $outrow['EntityId'];
 					
 		$PartialCommonStr .= "<Message>";
-		
+		$PartialCommonStr .= "<RefType>Concierge</RefType>";		
 		/*Commented to handle API case for third party 05-Dec-2013 Using Konekt account */
 		//$PartialCommonStr .= "<EntityId>" . $EntityId . "</EntityId>";
 		
