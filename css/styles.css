@@ -464,3 +464,93 @@ white-space: normal;
 }
 
 
+/* ************************** Customer Profile Css **********************************/
+
+.overviewFullOuterDiv
+{
+	float: left;
+	min-width: 100%;
+	max-width: 100%;
+	height: 165px;
+	margin-top:5px;
+}
+.overviewOuterDiv
+{
+	float: left;
+	min-width: 50%;
+	max-width: 50%;
+	height: 190px;
+}
+.overviewHeader
+{
+	color: #952229;
+	padding: 7px;
+}
+.overviewFullBlock
+{
+	border: 1px solid lightgrey;
+	padding: 8px;
+	position: absolute;
+	width: 93%;
+	height:auto;
+	border-radius:10px;
+}
+.overviewBlock
+{
+	border: 1px solid lightgrey;
+	padding: 8px;
+	position: absolute;
+	width: 45%;
+	border-radius:5px;
+}
+.overviewFullKey
+{
+	float: left;
+	min-width:15%;
+	max-width:15%;
+	clear:both;
+	border:1px solid transparent;
+}
+.overviewKey
+{
+	float: left;
+	min-width:27%;
+	max-width:27%;
+	clear:both;
+	border:1px solid transparent;
+}
+.overviewVal
+{
+	float: left;
+	min-width:70%;
+	max-width:70%;
+	margin:0 0 5px 5px;
+	border:1px solid transparent;
+	height:21px;
+}
+
+.overviewKeySpan
+{
+	float:right;
+	font-weight:bold;
+	color:#003377;	
+}
+
+.overviewValSpan {
+	float: left;
+	height: 20px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 100%;
+}
+
+.overviewFullVal
+{
+	float: left;
+	width:83%;
+	margin:0 0 5px 5px;
+	border:1px solid transparent;
+	height:21px;
+}
+/* ************************** Customer Profile Css Complete **********************************/
