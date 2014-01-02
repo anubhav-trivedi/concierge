@@ -683,7 +683,7 @@ FROM conciergetablesettings WHERE EntityId='".$entityId."';";
 		$ActualCounter = "";
 		$entityId = $inputDecode->{'e'};
 
-		$sql = "SELECT COUNT(*) AS rcnt
+		$sql = "SELECT COUNT(CustomerId) AS rcnt
 		FROM customers INNER JOIN conciergesettings ON customers.AccountId = conciergesettings.AccountId
 		WHERE customers.IsAppSynced = 'No' AND conciergesettings.EntityId='".$entityId ."' ;";
 
